@@ -1,0 +1,336 @@
+
+
+
+
+panrg                                                          A. Perrig
+Internet-Draft                                               ETH Zuerich
+Intended status: Informational                             30 March 2022
+Expires: 1 October 2022
+
+
+                             SCION Overview
+                   draft-perrig-scion-overview-latest
+
+Abstract
+
+   SCION (Scalability, Control, and Isolation On Next-generation
+   networks) is an inter-network architecture designed to provide route
+   control, failure isolation, and explicit trust information for end-
+   to-end communication.
+
+   SCION organizes existing ASes into groups of independent routing
+   planes, called isolation domains, which interconnect to provide
+   global connectivity.  Isolation domains provide natural isolation of
+   routing failures and misconfigurations, give endpoints strong control
+   for both inbound and outbound traffic, provide meaningful and
+   enforceable trust, and enable scalable routing updates with high path
+   freshness.
+
+   As a path-based architecture, SCION end hosts learn about available
+   network path segments, and combine them into end-to-end paths that
+   are carried in packet headers.  SCION also enables multi-path
+   communication among end-hosts.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   The latest revision of this draft can be found at
+   https://example.com/LATEST.  Status information for this document may
+   be found at https://datatracker.ietf.org/doc/draft-perrig-scion-
+   overview/.
+
+   Discussion of this document takes place on the WG Working Group
+   mailing list (mailto:WG@example.com), which is archived at
+   https://example.com/WG.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/USER/REPO.
+
+
+
+
+
+
+
+Perrig                   Expires 1 October 2022                 [Page 1]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 1 October 2022.
+
+Copyright Notice
+
+   Copyright (c) 2022 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.1.  Network Structure and Naming  . . . . . . . . . . . . . .   3
+     1.2.  Authentication  . . . . . . . . . . . . . . . . . . . . .   3
+     1.3.  Control Plane . . . . . . . . . . . . . . . . . . . . . .   3
+     1.4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .   4
+     1.5.  Operations  . . . . . . . . . . . . . . . . . . . . . . .   5
+     1.6.  Conventions and Definitions . . . . . . . . . . . . . . .   5
+   2.  Authentication  . . . . . . . . . . . . . . . . . . . . . . .   5
+   3.  Control Plane . . . . . . . . . . . . . . . . . . . . . . . .   5
+   4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+   5.  Operations  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   8.  Normative References  . . . . . . . . . . . . . . . . . . . .   6
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   6
+
+
+
+Perrig                   Expires 1 October 2022                 [Page 2]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+
+1.  Introduction
+
+   SCION is a next-generation Internet architecture, offering high
+   availability even in the presence of network adversaries.  In this
+   Section, we briefly present the key concepts of the SCION
+   architecture, including control- and data-plane features that are
+   relevant to follow the paper.
+
+1.1.  Network Structure and Naming
+
+   SCION reuses the Autonomous Systems (AS) structure, and ensures that
+   network traffic only flows on policy-compliant paths.  To achieve
+   scalability and sovereignty, Isolation Domains (ISD) are introduced.
+   An ISD groups ASes that agree on a set of trust roots, called the
+   Trust Root Configuration (TRC).  An AS can be a member of multiple
+   ISDs.  The ISD is governed by a set of core ASes, which provide
+   connectivity to other ISDs and manage the trust roots.  Typically,
+   the 3-10 largest ISPs of an ISD form the ISD's core.
+
+   Routing is based on the <ISD, AS> tuple, agnostic of local
+   addressing.  Existing AS numbers are inherited from the current
+   Internet, but a 48-bit namespace allows for additional SCION AS
+   numbers beyond the 32-bit space in use today.  Host addressing
+   extends the network address with a local address, forming the <ISD,
+   AS, local address> 3-tuple.  The local address is not used in inter-
+   domain routing or forwarding, does not need to be globally unique,
+   and can thus be an IPv4, IPv6, or MAC address, for example.
+
+1.2.  Authentication
+
+   Control-Plane PKI/TRC
+
+1.3.  Control Plane
+
+   The SCION control plane discovers and distributes AS-level path
+   segments.  A path segment encodes a network path at the granularity
+   of inter-domain interfaces on either end of an inter-domain link
+   connecting two consecutive ASes on a path.
+
+   Each end-to-end path consists of up to three path segments: corepath,
+   up-path, and down-path segments.  Core-path segments refer to path
+   segments containing only core ASes, an up-path segment is a path
+   segment from a customer (leaf AS) to a provider (core AS) inside one
+   ISD, and a down-path segment is a path segment from a provider (core
+   AS) to a customer (leaf AS) inside an ISD.
+
+
+
+
+Perrig                   Expires 1 October 2022                 [Page 3]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
+   To address the suboptimality of hierarchical routing, SCION
+   introduces peering links and shortcuts.  In a shortcut, a path only
+   contains an up-path and a down-path segment, which can cross over at
+   a non-core AS that is common to both paths.  Peering links can be
+   added to up- or down-path segments, resulting in an operation similar
+   to today's Internet.
+
+   Routing (or path segment construction) is conducted hierarchically on
+   two levels: (1) among all core ASes of all ISDs, which constructs
+   core-path segments, and (2) within each ISD, which constructs up- and
+   down-path segments.  The path segment construction process is
+   referred to as beaconing, where a Path-segment Construction Beacon
+   (PCB) is initiated by core ASes to iteratively construct path
+   segments.  Up- and down-path segments are interchangeable, simply by
+   reversing the order of ASes in a segment.  The beaconing process in
+   each AS is performed by its beacon server which is a part of its
+   Control Service (CS), that performs control-plane-related tasks.
+
+   Core beaconing is the process of constructing path segments between
+   core ASes.  During core beaconing, a core AS either initiates PCBs or
+   propagates PCBs received from neighboring core ASes to all other
+   neighboring core ASes.
+
+   Intra-ISD beaconing is the second level of the beaconing hierarchy,
+   which creates path segments from core ASes to non-core ASes.  For
+   this, core ASes create PCBs and send them to their non-core neighbors
+   (typically customer ASes).  Each non-core AS propagates the received
+   PCBs to its respective customers.  This procedure continues until the
+   PCB reaches an AS without any customer (leaf AS) and as a result, all
+   ASes receive path segments to reach the core ASes of their ISD.  Non-
+   core ASes can include their peering links in the PCBs, enabling
+   valley-free forwarding if both up- and down-path segments contain the
+   same peering link.
+
+   A global path server infrastructure is used to disseminate path
+   segments.  Each AS contains a path server as a part of the control
+   service.  The infrastructure bears similarities to DNS, where
+   information is fetched on-demand only.  A core AS's path server
+   stores all the intra-ISD path segments that were registered by leaf
+   ASes of its own ISD, and core-path segments to reach other core ASes.
+
+1.4.  Data Plane
+
+   Name resolution in SCION returns the <ISD, AS, local address>
+   3-tuple.  Core- and down-path segments are fetched based on the <ISD,
+   AS> tuple.  Hosts can then combine one of their up-path segments with
+   the received core- and down-path segments.
+
+
+
+
+Perrig                   Expires 1 October 2022                 [Page 4]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
+   Shortcut paths that avoid a core AS are possible, if the up- and
+   down-path contain the same AS, or if a peering link is available
+   between an AS in the up-path and an AS in the down-path segment.
+   Cryptographic protections ensure authentic path segments and prevent
+   unauthorized path combinations.
+
+   The path segments contain compact hop-fields, that encode information
+   about which interfaces may be used to enter and leave an AS.  The
+   hop-fields are cryptographically protected, preventing path
+   alteration.  This so-called Packet-Carried Forwarding State (PCFS)
+   replaces signaling to use a path, ensuring that routers do not need
+   any local state on either paths or flows.
+
+1.5.  Operations
+
+   SCI-ED, SSFC
+
+1.6.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.  Authentication
+
+   From the book v2, use: chapter 2.2
+
+3.  Control Plane
+
+   From the book v2, use: chapters 2.1, 2.3, 2.5.
+
+4.  Data Plane
+
+   From the book v2, use: chapters 2.4, 5.1
+
+5.  Operations
+
+   From the book v2, use: chapters 13 introduction (table 13.1), 13.1,
+   14.1, 15.3, 15.4
+
+6.  Security Considerations
+
+   The SCION architecture introduces the following security
+   considerations:
+
+
+
+
+
+Perrig                   Expires 1 October 2022                 [Page 5]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
+7.  IANA Considerations
+
+   This document has no IANA actions.  TODO: It does have IANA actions,
+   specially regarding ISD and AS numbering.
+
+8.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+Acknowledgments
+
+   TODO acknowledge.
+
+Author's Address
+
+   Adrian Perrig
+   ETH Zuerich
+   Email: adrian.perrig@inf.ethz.ch
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Perrig                   Expires 1 October 2022                 [Page 6]
