@@ -3,7 +3,7 @@
 # Internet-Draft Markdown Template
 #
 # Rename this file from draft-todo-yourname-protocol.md to get started.
-# Draft name format is "draft-<yourname>-<workgroup>-<name>.md".
+# Draft name format is "draft-perrig-scion-overview.md".
 #
 # For initial setup, you only need to edit the first block of fields.
 # Only "title" needs to be changed; delete "abbrev" if your title is short.
@@ -19,11 +19,11 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "SCION Overview"
+abbrev: "SCION I-D"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-perrig-scion-overview
 v: 3
 area: AREA
 workgroup: WG Working Group
