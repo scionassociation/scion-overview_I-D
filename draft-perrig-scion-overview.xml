@@ -32,12 +32,11 @@
     <abstract>
 
 
-<t>SCION (Scalability, Control, and Isolation On Next-generation networks) is an inter-network architecture designed to provide route control, failure isolation, and explicit trust information for end-to-end communication.</t>
+<t>The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of malicious actors, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.</t>
 
-<t>SCION organizes existing ASes into groups of independent routing planes, called isolation domains, which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control for both inbound and outbound traffic, provide meaningful and enforceable trust,
-and enable scalable routing updates with high path freshness.</t>
+<t>The inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) was explicitly designed from the outset to offer availability and security by default. SCION provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.</t>
 
-<t>As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. SCION also enables multi-path communication among end-hosts.</t>
+<t>This document presents the key concepts of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.</t>
 
 
 
@@ -65,28 +64,20 @@ and enable scalable routing updates with high path freshness.</t>
 
 <section anchor="introduction"><name>Introduction</name>
 
-<t>SCION is a next-generation Internet architecture, offering high
-availability even in the presence of network adversaries. In this Section, we briefly present the key concepts of the SCION architecture, including control- and data-plane features that are relevant to follow the paper.</t>
+<t>SCION is a next-generation Internet architecture, offering high availability even in the presence of network adversaries. In this section, we briefly present the key concepts of the SCION architecture, including control- and data-plane features that are relevant to follow the paper.</t>
 
+<t>SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.</t>
+
+<t>As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. SCION also enables multi-path communication among end hosts.</t>
+
+<section anchor="why-scion"><name>Why SCION?</name>
+
+</section>
 <section anchor="network-structure-and-naming"><name>Network Structure and Naming</name>
 
-<t>SCION reuses the Autonomous Systems (AS) structure, and ensures that
-network traffic only flows on policy-compliant paths. To achieve
-scalability and sovereignty, Isolation Domains (ISD) are introduced.
-An ISD groups ASes that agree on a set of trust roots, called
-the Trust Root Configuration (TRC). An AS can be a member of
-multiple ISDs. The ISD is governed by a set of core ASes, which
-provide connectivity to other ISDs and manage the trust roots. Typically,
-the 3–10 largest ISPs of an ISD form the ISD’s core.</t>
+<t>SCION reuses the Autonomous Systems (AS) structure, and ensures that network traffic only flows on policy-compliant paths. To achieve scalability and sovereignty, Isolation Domains (ISD) are introduced. An ISD groups ASes that agree on a set of trust roots, called the Trust Root Configuration (TRC). An AS can be a member of multiple ISDs. The ISD is governed by a set of core ASes, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.</t>
 
-<t>Routing is based on the &lt;ISD, AS&gt; tuple, agnostic of local addressing.
-Existing AS numbers are inherited from the current Internet,
-but a 48-bit namespace allows for additional SCION AS numbers
-beyond the 32-bit space in use today. Host addressing extends the
-network address with a local address, forming the &lt;ISD, AS, local address&gt; 3-tuple.
-The local address is not used in inter-domain routing or forwarding,
-does not need to be globally unique, and can
-thus be an IPv4, IPv6, or MAC address, for example.</t>
+<t>Routing is based on the &lt;ISD, AS&gt; tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the &lt;ISD, AS, local address&gt; 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.</t>
 
 </section>
 <section anchor="authentication"><name>Authentication</name>
@@ -214,15 +205,15 @@ chapters 2.4, 5.1</t>
 chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4</t>
 
 </section>
-<section anchor="security-considerations"><name>Security Considerations</name>
-
-<t>The SCION architecture introduces the following security considerations:</t>
-
-</section>
 <section anchor="iana-considerations"><name>IANA Considerations</name>
 
 <t>This document has no IANA actions.
 TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
+
+</section>
+<section anchor="security-considerations"><name>Security Considerations</name>
+
+<t>The SCION architecture introduces the following security considerations:</t>
 
 </section>
 
@@ -281,81 +272,88 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
   </back>
 
 <!-- ##markdown-source:
-H4sIAKJTRWIAA41ZzXIbxxG+z1OM6QuZwkKhRCcOylEZJimLFYlkCKpcTiqH
-we4AmNJiZ7MzSwpyucrvkFNueZY8ip8kX3fPLnZJSo4OEDA729M/X3/dPcyy
-TEUXSzvTB4vTi6tLfXVnmztn7w+UWS4be9c/uMjODlRuol37ZjfTrlp5pQqf
-V2aLt4vGrGJW26Zx6yzkzleZT5KyEi+FqCDqhTKNNTPdxLW69837dePbeqZr
-UzVr9d7usFbM9EUVbVPZmJ2RUHVnq9bOlNZp9w/f43vc1Tj1B8hw1Vp/T0+w
-ujWupA3f2g9mW5d2mvstlk2Tb2Z6E2MdZs+eDZ49Y1lrFzftcqbfLc5vnt2c
-X19hTXR++qU389vzxa1Spo0b30CzTGv4I8z0fKqv2QWQgH/imnnROFONHvhm
-PdPnt6/131rbuHwjq1bUN7x/Kr78Fn6e2rj5OMUuVflma6K7gzsUBWD/S2VZ
-ps0yxMbkUSkJ2eEiN6VZutLF3USf+io2vpxoUxX6IniYiDDpq0pf2g8xW9vK
-NrIE31N0wpF2AbthGwKSpVX2pos2j21jdWGDW1e20NHruvF3rrAawYhW591x
-K1hFW113pGhgP9Sly13UsWlD1L05OB/ftK2KLPoM/0HSdttWLueH0844+NBU
-7qMNkORCJBjMF/gFZb1AJWi/ws/C1pBiq8iK0b66NJUNEw3vlFC9V0wXHiGo
-8OR+g6iI3bCjgrFDA9elX5pSpyfuDu6dDjyapPTbKwNXYf/+HOjV6ZK8E9gn
-WxcgdOXWrUQCmqwRX3JG7aFN0Aiwx1vJueyppY+k6tK3kEBSIFl+AAyrlcsn
-vSZbC5dV61VbSgjI57k1y9JKFCZKlnklMHhK26va1gVlhb5HvuiNW2+QuPi2
-gvYb+DMgNHPYwavZ0gS4doiViZbAUUg3PsCY0pqmAmohX5s7OIKP63DGwoNd
-bxG6IJgBEpaugrIbu5VAD2BC+wMeGQgD3HKD/KHoVniSv7dRb6wpbBOmSQ9T
-Bp9sDXrbltFlfOQIbtpsyd90DOs8Tam2dUVRWqW+JLZqfNHmtLvDJqUN7Bhn
-VUdrD5ziVytwAM4gj6rkBk5ZbUF9pD/MRQhtsFVuCTt9Jhag2GBgJoy6oH04
-eGFzSbJ7q5d4tCp36eXIgkCzBJ/c1pEThNaSQ0Z6uSov28LtwZZxCAABk3EC
-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
-sDERVJTrraDkzkebbkx8ADESXlO5RkvSVnJV7z7afsggh8sd61RGxicnAdqI
-qT3qja+zlbNlEVKplWFQDTNGLjIHV8cy8W3NjhrNLuctPWH1gPY7bsfnC0nX
-/SFygzm0nQtAst8Wk842ojNxZhlTU5rIPPgs3W9f8/VndpouRF/tGW8RwTwK
-bdUr0DXmqZIVpht9U3KT4/muQqhnItds0vwYuU2nabrwqr8LoEogqRNI9GDa
-FQjSRQLdnkh+XnV9dOCrv+wcSbJYvMJUn8Z6ttBXEs0zu+IOgrffpptM+otR
-0Adv3y1uDybyv7684u835399d3FzfkbfF6/nb970X1TasXh99e7N2f7b/s3T
-q7dvzy/P5GWs6tGSOng7//FASOng6voWNDJ/cyAoduSQvOVWmIIotyMMB4SM
-ujATVGEDRuGl3Lh8d3r93/8cn+iffvri5tXp8+PjP/38c/rx9fEfT/AD5Jz+
-aMKDk/yEV3fK1DU4nVtPmgZM7aIpqbcPNHSBPInW4ezf/Z0884+Z/maZ18cn
-L9MCGTxa7Hw2WmSfPV559LI48YmlJ47pvTlaf+Dpsb7zH0e/O78PFuk6/uG1
-0avufm/p/Xt993xCiJ4ptPc15eHz6XN+7cEd0uffCnjteIKPF/Tx1ZQlDIvN
-b79+MtFfTY/5xWEW/NaLxy/6S2a5Co5Ms8cvpseYAeg/fJ7w51ekHT5P+JCF
-zVu+96G5iu4LzCCRHl//68F8T+rIZT6lfugE5SNBM/5TyPxy/sQBw5TYGLo5
-lJ0mT/x7e3V2NdMXUfPF4gasONow0dSxOmZAuVUiRairoJTor1z5wpf/OLME
-4TEW8veVvwcFpgL600x22uLPByvkiT34WfHhOKnbiWz5H7NI68IVHwAA
+H4sIALOnRWIAA51aUXMbtxF+x69AlBepw6MrW2lTTuqGkeRYU1tSRXkyaacP
+4B1IYnw8XA93UuhMZvIf+tS3/pb+lPySfrsLHO8k2ek0M6ZIHLDYXXz77WIv
+WZap1rWlnemDxenF1aW+urPNnbP3B8osl4296x9cZGcHKjetXftmN9OuWnml
+Cp9XZovVRWNWbVbbpnHrLOTOV5mPkrISi0KrIOqFMo01M920a3Xvm/frxnf1
+TNematbqvd1hrJjpi6q1TWXb7IyEqjtbdXamtI6zv/sW39tdjV2/gwxXrfW3
+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
 
 -->
 

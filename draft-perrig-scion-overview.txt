@@ -13,23 +13,26 @@ Expires: 2 October 2022
 
 Abstract
 
-   SCION (Scalability, Control, and Isolation On Next-generation
-   networks) is an inter-network architecture designed to provide route
-   control, failure isolation, and explicit trust information for end-
-   to-end communication.
+   The Internet has been successful beyond even the most optimistic
+   expectations and is intertwined with many aspects of our society.
+   Unfortunately, the security of today's Internet is far from
+   commensurate with its importance as critical infrastructure.
+   Additionally, the Internet has not primarily been built for high
+   availability in the presence of malicious actors, and recent
+   proposals to improve Internet security and availability have been
+   constrained by the setup of the current architecture.
 
-   SCION organizes existing ASes into groups of independent routing
-   planes, called isolation domains, which interconnect to provide
-   global connectivity.  Isolation domains provide natural isolation of
-   routing failures and misconfigurations, give endpoints strong control
-   for both inbound and outbound traffic, provide meaningful and
-   enforceable trust, and enable scalable routing updates with high path
-   freshness.
+   The inter-network architecture SCION (Scalability, Control, and
+   Isolation On Next-generation networks) was explicitly designed from
+   the outset to offer availability and security by default.  SCION
+   provides route control, failure isolation, and explicit trust
+   information for end-to-end communication.  It also enables multi-path
+   routing between hosts.
 
-   As a path-based architecture, SCION end hosts learn about available
-   network path segments, and combine them into end-to-end paths that
-   are carried in packet headers.  SCION also enables multi-path
-   communication among end-hosts.
+   This document presents the key concepts of the SCION architecture,
+   including its authentication model and the setup of the control- and
+   data plane.  As SCION is already in production use today, we conclude
+   with an overview of SCION deployments.
 
 About This Document
 
@@ -46,9 +49,6 @@ About This Document
 
    Source for this draft and an issue tracker can be found at
    https://github.com/USER/REPO.
-
-
-
 
 
 
@@ -92,20 +92,20 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Network Structure and Naming  . . . . . . . . . . . . . .   3
-     1.2.  Authentication  . . . . . . . . . . . . . . . . . . . . .   3
-     1.3.  Control Plane . . . . . . . . . . . . . . . . . . . . . .   3
-     1.4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .   4
-     1.5.  Operations  . . . . . . . . . . . . . . . . . . . . . . .   5
-     1.6.  Conventions and Definitions . . . . . . . . . . . . . . .   5
+     1.1.  Why SCION?  . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.2.  Network Structure and Naming  . . . . . . . . . . . . . .   3
+     1.3.  Authentication  . . . . . . . . . . . . . . . . . . . . .   4
+     1.4.  Control Plane . . . . . . . . . . . . . . . . . . . . . .   4
+     1.5.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .   5
+     1.6.  Operations  . . . . . . . . . . . . . . . . . . . . . . .   5
+     1.7.  Conventions and Definitions . . . . . . . . . . . . . . .   5
    2.  Authentication  . . . . . . . . . . . . . . . . . . . . . . .   5
-   3.  Control Plane . . . . . . . . . . . . . . . . . . . . . . . .   5
-   4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-   5.  Operations  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   3.  Control Plane . . . . . . . . . . . . . . . . . . . . . . . .   6
+   4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Operations  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    8.  Normative References  . . . . . . . . . . . . . . . . . . . .   6
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 
 
@@ -114,17 +114,33 @@ Perrig                   Expires 2 October 2022                 [Page 2]
 Internet-Draft                  SCION I-D                     March 2022
 
 
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   6
    Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
    SCION is a next-generation Internet architecture, offering high
    availability even in the presence of network adversaries.  In this
-   Section, we briefly present the key concepts of the SCION
+   section, we briefly present the key concepts of the SCION
    architecture, including control- and data-plane features that are
    relevant to follow the paper.
 
-1.1.  Network Structure and Naming
+   SCION organizes existing ASes into groups of independent routing
+   planes, called isolation domains (ISDs), which interconnect to
+   provide global connectivity.  Isolation domains provide natural
+   isolation of routing failures and misconfigurations, give endpoints
+   strong control over both inbound and outbound traffic, provide
+   meaningful and enforceable trust, and enable scalable routing updates
+   with high path-freshness.
+
+   As a path-based architecture, SCION end hosts learn about available
+   network path segments, and combine them into end-to-end paths that
+   are carried in packet headers.  SCION also enables multi-path
+   communication among end hosts.
+
+1.1.  Why SCION?
+
+1.2.  Network Structure and Naming
 
    SCION reuses the Autonomous Systems (AS) structure, and ensures that
    network traffic only flows on policy-compliant paths.  To achieve
@@ -144,11 +160,21 @@ Internet-Draft                  SCION I-D                     March 2022
    domain routing or forwarding, does not need to be globally unique,
    and can thus be an IPv4, IPv6, or MAC address, for example.
 
-1.2.  Authentication
+
+
+
+
+
+Perrig                   Expires 2 October 2022                 [Page 3]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
+1.3.  Authentication
 
    Control-Plane PKI/TRC
 
-1.3.  Control Plane
+1.4.  Control Plane
 
    The SCION control plane discovers and distributes AS-level path
    segments.  A path segment encodes a network path at the granularity
@@ -161,14 +187,6 @@ Internet-Draft                  SCION I-D                     March 2022
    segment from a customer (leaf AS) to a provider (core AS) inside one
    ISD, and a down-path segment is a path segment from a provider (core
    AS) to a customer (leaf AS) inside an ISD.
-
-
-
-
-Perrig                   Expires 2 October 2022                 [Page 3]
-
-Internet-Draft                  SCION I-D                     March 2022
-
 
    To address the suboptimality of hierarchical routing, SCION
    introduces peering links and shortcuts.  In a shortcut, a path only
@@ -200,6 +218,14 @@ Internet-Draft                  SCION I-D                     March 2022
    PCBs to its respective customers.  This procedure continues until the
    PCB reaches an AS without any customer (leaf AS) and as a result, all
    ASes receive path segments to reach the core ASes of their ISD.  Non-
+
+
+
+Perrig                   Expires 2 October 2022                 [Page 4]
+
+Internet-Draft                  SCION I-D                     March 2022
+
+
    core ASes can include their peering links in the PCBs, enabling
    valley-free forwarding if both up- and down-path segments contain the
    same peering link.
@@ -211,20 +237,12 @@ Internet-Draft                  SCION I-D                     March 2022
    stores all the intra-ISD path segments that were registered by leaf
    ASes of its own ISD, and core-path segments to reach other core ASes.
 
-1.4.  Data Plane
+1.5.  Data Plane
 
    Name resolution in SCION returns the <ISD, AS, local address>
    3-tuple.  Core- and down-path segments are fetched based on the <ISD,
    AS> tuple.  Hosts can then combine one of their up-path segments with
    the received core- and down-path segments.
-
-
-
-
-Perrig                   Expires 2 October 2022                 [Page 4]
-
-Internet-Draft                  SCION I-D                     March 2022
-
 
    Shortcut paths that avoid a core AS are possible, if the up- and
    down-path contain the same AS, or if a peering link is available
@@ -239,11 +257,11 @@ Internet-Draft                  SCION I-D                     March 2022
    replaces signaling to use a path, ensuring that routers do not need
    any local state on either paths or flows.
 
-1.5.  Operations
+1.6.  Operations
 
    SCI-ED, SSFC
 
-1.6.  Conventions and Definitions
+1.7.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -254,6 +272,15 @@ Internet-Draft                  SCION I-D                     March 2022
 2.  Authentication
 
    From the book v2, use: chapter 2.2
+
+
+
+
+
+Perrig                   Expires 2 October 2022                 [Page 5]
+
+Internet-Draft                  SCION I-D                     March 2022
+
 
 3.  Control Plane
 
@@ -268,24 +295,15 @@ Internet-Draft                  SCION I-D                     March 2022
    From the book v2, use: chapters 13 introduction (table 13.1), 13.1,
    14.1, 15.3, 15.4
 
-6.  Security Considerations
-
-   The SCION architecture introduces the following security
-   considerations:
-
-
-
-
-
-Perrig                   Expires 2 October 2022                 [Page 5]
-
-Internet-Draft                  SCION I-D                     March 2022
-
-
-7.  IANA Considerations
+6.  IANA Considerations
 
    This document has no IANA actions.  TODO: It does have IANA actions,
    specially regarding ISD and AS numbering.
+
+7.  Security Considerations
+
+   The SCION architecture introduces the following security
+   considerations:
 
 8.  Normative References
 
@@ -307,24 +325,6 @@ Author's Address
    Adrian Perrig
    ETH Zuerich
    Email: adrian.perrig@inf.ethz.ch
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

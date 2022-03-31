@@ -29,40 +29,32 @@ informative:
 
 --- abstract
 
-SCION (Scalability, Control, and Isolation On Next-generation networks) is an inter-network architecture designed to provide route control, failure isolation, and explicit trust information for end-to-end communication.
+The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of malicious actors, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
 
-SCION organizes existing ASes into groups of independent routing planes, called isolation domains, which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control for both inbound and outbound traffic, provide meaningful and enforceable trust,
-and enable scalable routing updates with high path freshness.
+The inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) was explicitly designed from the outset to offer availability and security by default. SCION provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. SCION also enables multi-path communication among end-hosts.
+This document presents the key concepts of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.    
 
 
 --- middle
 
 # Introduction
 
-SCION is a next-generation Internet architecture, offering high
-availability even in the presence of network adversaries. In this Section, we briefly present the key concepts of the SCION architecture, including control- and data-plane features that are relevant to follow the paper.
+SCION is a next-generation Internet architecture, offering high availability even in the presence of network adversaries. In this section, we briefly present the key concepts of the SCION architecture, including control- and data-plane features that are relevant to follow the paper.
+
+SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
+
+As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. SCION also enables multi-path communication among end hosts.
+
+## Why SCION?
+
+
 
 ## Network Structure and Naming
 
-SCION reuses the Autonomous Systems (AS) structure, and ensures that
-network traffic only flows on policy-compliant paths. To achieve
-scalability and sovereignty, Isolation Domains (ISD) are introduced.
-An ISD groups ASes that agree on a set of trust roots, called
-the Trust Root Configuration (TRC). An AS can be a member of
-multiple ISDs. The ISD is governed by a set of core ASes, which
-provide connectivity to other ISDs and manage the trust roots. Typically,
-the 3–10 largest ISPs of an ISD form the ISD’s core.
+SCION reuses the Autonomous Systems (AS) structure, and ensures that network traffic only flows on policy-compliant paths. To achieve scalability and sovereignty, Isolation Domains (ISD) are introduced. An ISD groups ASes that agree on a set of trust roots, called the Trust Root Configuration (TRC). An AS can be a member of multiple ISDs. The ISD is governed by a set of core ASes, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.
 
-Routing is based on the <ISD, AS> tuple, agnostic of local addressing.
-Existing AS numbers are inherited from the current Internet,
-but a 48-bit namespace allows for additional SCION AS numbers
-beyond the 32-bit space in use today. Host addressing extends the
-network address with a local address, forming the <ISD, AS, local address> 3-tuple.
-The local address is not used in inter-domain routing or forwarding,
-does not need to be globally unique, and can
-thus be an IPv4, IPv6, or MAC address, for example.
+Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the <ISD, AS, local address> 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.
 
 ## Authentication
 
@@ -179,15 +171,16 @@ chapters 2.4, 5.1
 From the book v2, use:
 chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
 
+# IANA Considerations
+
+This document has no IANA actions.
+TODO: It does have IANA actions, specially regarding ISD and AS numbering.
+
 
 # Security Considerations
 
 The SCION architecture introduces the following security considerations:
 
-# IANA Considerations
-
-This document has no IANA actions.
-TODO: It does have IANA actions, specially regarding ISD and AS numbering.
 
 --- back
 
