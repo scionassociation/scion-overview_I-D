@@ -31,7 +31,7 @@ informative:
 
 The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of malicious actors, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
 
-This document introduces the new inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks), which is explicitly designed from the outset to offer availability and security by default. SCION provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
+This document introduces SCION (Scalability, Control, and Isolation On Next-generation networks), a next-generation inter-network architecture explicitly designed from the outset to offer availability and security by default. SCION provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
 The document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.    
 
