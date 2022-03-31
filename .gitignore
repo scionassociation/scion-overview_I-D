@@ -14,3 +14,4 @@ draft-perrig-scion-overview.xml
 lib
 report.xml
 venv/
+.DS_Store
