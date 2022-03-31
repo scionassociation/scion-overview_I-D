@@ -33,34 +33,40 @@ The Internet has been successful beyond even the most optimistic expectations an
 
 The inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) was explicitly designed from the outset to offer availability and security by default. SCION provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-This document presents the key concepts of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.    
+This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.    
 
 
 --- middle
 
 # Introduction
 
-SCION is a next-generation Internet architecture, offering high availability even in the presence of network adversaries. In this section, we briefly present the key concepts of the SCION architecture, including control- and data-plane features that are relevant to follow the paper.
+The Introduction section briefly presents the key concepts of the next-generation Internet architecture SCION. We start this section with an explanation of why we designed SCION in the first place.
+
+The sections after the Introduction provide further insight into SCION's main concepts and features. We complete the document with some concrete case studies where SCION has been applied successfully.
+
+
+## Why SCION?
+
+SCION book 2, chapter 1
+
+
+## Key Concepts
+
+### Network Structure and Naming
 
 SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
 
 As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. SCION also enables multi-path communication among end hosts.
 
-## Why SCION?
-
-
-
-## Network Structure and Naming
-
 SCION reuses the Autonomous Systems (AS) structure, and ensures that network traffic only flows on policy-compliant paths. To achieve scalability and sovereignty, Isolation Domains (ISD) are introduced. An ISD groups ASes that agree on a set of trust roots, called the Trust Root Configuration (TRC). An AS can be a member of multiple ISDs. The ISD is governed by a set of core ASes, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.
 
 Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the <ISD, AS, local address> 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.
 
-## Authentication
+### Authentication
 
 Control-Plane PKI/TRC
 
-## Control Plane
+### Control Plane
 
 The SCION control plane discovers and distributes AS-level path
 segments. A path segment encodes a network path at the granularity
@@ -120,7 +126,7 @@ A core AS’s path server stores all the intra-ISD path segments that
 were registered by leaf ASes of its own ISD, and core-path segments
 to reach other core ASes.
 
-## Data Plane
+### Data Plane
 
 Name resolution in SCION returns the <ISD, AS, local address> 3-tuple.
 Core- and down-path segments are fetched based on the <ISD, AS> tuple.
@@ -139,14 +145,17 @@ path alteration. This so-called Packet-Carried Forwarding State
 (PCFS) replaces signaling to use a path, ensuring that routers do
 not need any local state on either paths or flows.
 
-## Operations
-
-SCI-ED, SSFC
 
 
 ## Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
+
+
+
+> **NOTE**
+> Ideally, the following chapters address the questions raised in [RFC 9217](https://www.ietf.org/rfc/rfc9217.html)
+
 
 # Authentication
 
@@ -166,10 +175,13 @@ From the book v2, use:
 chapters 2.4, 5.1
 
 
-# Operations
+# Deployments
+
+*SCI-ED, SSFC, SCIONLab*
 
 From the book v2, use:
 chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
+
 
 # IANA Considerations
 
