@@ -42,9 +42,7 @@ As a path-based architecture, SCION end hosts learn about available network path
 # Introduction
 
 SCION is a next-generation Internet architecture, offering high
-availability even in the presence of network adversaries.
-In this Section, we briefly present the key concepts of the SCION architecture,
-including control- and data-plane features that are relevant to follow the paper.
+availability even in the presence of network adversaries. In this Section, we briefly present the key concepts of the SCION architecture, including control- and data-plane features that are relevant to follow the paper.
 
 ## Network Structure and Naming
 
