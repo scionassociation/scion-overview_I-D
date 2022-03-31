@@ -49,6 +49,31 @@ The sections after the Introduction provide further insight into SCION's main co
 
 SCION book 2, chapter 1
 
+Today's Internet
+
+- Internet Protocol:  
+  - Lack of transparency and control
+  - Stateful routers
+- BGP:
+  - Outages
+  - Lack of fault isolation
+  - Poor scalability
+  - Convergence
+  - Single path
+  - Lack of security
+- General problems:
+  - Lack of authentication
+  - Attacks
+- Problems with RPKI and BGPsec
+
+Solutions should be/have:
+
+- Available in the presence of adversaries
+- Transparent and controllable
+- Efficient and scalable
+- Extensible and algorithm agile
+- Deployable
+- Formally verifiable
 
 ## Key Concepts
 
