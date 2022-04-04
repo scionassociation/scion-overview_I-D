@@ -23,6 +23,13 @@ author:
      email: adrian.perrig@inf.ethz.ch
 
 normative:
+  RFC0791:
+  RFC1653:
+  RFC2460:
+  RFC4271:
+  RFC8200:   
+
+
 
 informative:
 
@@ -47,24 +54,38 @@ The sections after the Introduction provide further insight into SCION's main co
 
 ## Why SCION?
 
-SCION book 2, chapter 1
+Two protocols effectively define today’s Internet architecture: the Internet Protocol (IP) {{RFC8200}}, {{RFC0791}} and the Border Gateway Protocol (BGP) {{RFC4271}}. These protocols have remained virtually unchanged since the standardization of IPv6 {{RFC2460}} and BGP-4 {{RFC1653}} in the 1990s. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. This section presents a compact overview of the Internet's most salient problems and shortcomings, which together are the reason why we developed SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.
 
-Today's Internet
+### Internet Protocol
 
-- Internet Protocol:  
-  - Lack of transparency and control
-  - Stateful routers
-- BGP:
+IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts. Its first major version, IPv4, was specified in 1981 {{RFC0791}} and its (non-backward compatible) successor, IPv6, was introduced in 1998 {{RFC2460}}. IP enables the transmission of packets between a source and a destination along a single path that is opaque from the end host’s perspective. To forward packets, end hosts (as well as routers) do not need a complete path, but only a table to determine the next hop solely based on the destination address. Neither senders nor receivers can typically influence the path that their packets take. This approach is simple, but it also comes with many drawbacks:
+
+**Lack of transparency and control**
+
+Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination—even though multipath communication offers numerous benefits, which we will encounter throughout the book.
+
+**Stateful routers**
+
+IP routers maintain forwarding tables to determine the next hop of a received packet. This basic requirement has undesirable consequences. Performing a forwarding-table lookup for every packet is a time-consuming operation. Therefore, high-performance networking equipment typically relies on ternary content-addressable memory (TCAM) hardware, which is expensive and energy-intensive. Moreover, the constantly growing size of forwarding tables, partially due to the slow but steady deployment of IPv6, poses a problem for routers, as the storage capacity of TCAM hardware is limited. Routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state (460).
+
+### BGP
+
   - Outages
   - Lack of fault isolation
   - Poor scalability
   - Convergence
   - Single path
   - Lack of security
-- General problems:
+
+### General problems
+
   - Lack of authentication
-  - Attacks
-- Problems with RPKI and BGPsec
+  - Attack
+
+### Problems with RPKI and BGPsec
+
+
+### Answer
 
 Solutions should be/have:
 

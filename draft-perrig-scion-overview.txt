@@ -93,19 +93,19 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Why SCION?  . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . .   4
-       1.2.1.  Network Structure and Naming  . . . . . . . . . . . .   4
-       1.2.2.  Authentication  . . . . . . . . . . . . . . . . . . .   5
-       1.2.3.  Control Plane . . . . . . . . . . . . . . . . . . . .   5
-       1.2.4.  Data Plane  . . . . . . . . . . . . . . . . . . . . .   6
-     1.3.  Conventions and Definitions . . . . . . . . . . . . . . .   6
-   2.  Authentication  . . . . . . . . . . . . . . . . . . . . . . .   6
-   3.  Control Plane . . . . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   5.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .   7
+       1.1.1.  Internet Protocol . . . . . . . . . . . . . . . . . .   3
+       1.1.2.  BGP . . . . . . . . . . . . . . . . . . . . . . . . .   4
+       1.1.3.  General problems  . . . . . . . . . . . . . . . . . .   4
+       1.1.4.  Problems with RPKI and BGPsec . . . . . . . . . . . .   4
+       1.1.5.  Answer  . . . . . . . . . . . . . . . . . . . . . . .   5
+     1.2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . .   5
+       1.2.1.  Network Structure and Naming  . . . . . . . . . . . .   5
+       1.2.2.  Authentication  . . . . . . . . . . . . . . . . . . .   6
+       1.2.3.  Control Plane . . . . . . . . . . . . . . . . . . . .   6
+       1.2.4.  Data Plane  . . . . . . . . . . . . . . . . . . . . .   7
+     1.3.  Conventions and Definitions . . . . . . . . . . . . . . .   8
+   2.  Authentication  . . . . . . . . . . . . . . . . . . . . . . .   8
+   3.  Control Plane . . . . . . . . . . . . . . . . . . . . . . . .   8
 
 
 
@@ -114,8 +114,13 @@ Perrig                   Expires 6 October 2022                 [Page 2]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   5.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   8.  Normative References  . . . . . . . . . . . . . . . . . . . .   8
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .   9
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -129,39 +134,34 @@ Internet-Draft                  SCION I-D                     April 2022
 
 1.1.  Why SCION?
 
-   SCION book 2, chapter 1
+   Two protocols effectively define today's Internet architecture: the
+   Internet Protocol (IP) [RFC8200], [RFC0791] and the Border Gateway
+   Protocol (BGP) [RFC4271].  These protocols have remained virtually
+   unchanged since the standardization of IPv6 [RFC2460] and BGP-4
+   [RFC1653] in the 1990s.  However, as the Internet continued to expand
+   and needed to accommodate new uses, numerous issues came to light.
+   This section presents a compact overview of the Internet's most
+   salient problems and shortcomings, which together are the reason why
+   we developed SCION: To address these issues in order to make the
+   Internet more secure, reliable, transparent, and efficient.
 
-   Today's Internet
+1.1.1.  Internet Protocol
 
-   *  Internet Protocol:
+   IP is one of the fundamental protocols of the Internet, as it enables
+   the forwarding of packets between end hosts.  Its first major
+   version, IPv4, was specified in 1981 [RFC0791] and its (non-backward
+   compatible) successor, IPv6, was introduced in 1998 [RFC2460].  IP
+   enables the transmission of packets between a source and a
+   destination along a single path that is opaque from the end host's
+   perspective.  To forward packets, end hosts (as well as routers) do
+   not need a complete path, but only a table to determine the next hop
+   solely based on the destination address.  Neither senders nor
+   receivers can typically influence the path that their packets take.
+   This approach is simple, but it also comes with many drawbacks:
 
-      -  Lack of transparency and control
+   *Lack of transparency and control*
 
-      -  Stateful routers
 
-   *  BGP:
-
-      -  Outages
-
-      -  Lack of fault isolation
-
-      -  Poor scalability
-
-      -  Convergence
-
-      -  Single path
-
-      -  Lack of security
-
-   *  General problems:
-
-      -  Lack of authentication
-
-      -  Attacks
-
-   *  Problems with RPKI and BGPsec
-
-   Solutions should be/have:
 
 
 
@@ -169,6 +169,66 @@ Perrig                   Expires 6 October 2022                 [Page 3]
 
 Internet-Draft                  SCION I-D                     April 2022
 
+
+   Being able to select and verify the path that packets take is
+   desirable in many situations.  End hosts might want to avoid packets
+   being routed through adversarial or untrusted networks, or they might
+   want to choose the most suitable path with regard to a specific
+   metric (e.g., latency or bandwidth).  Unfortunately, IP does not
+   offer such an option.  Although systems that enable loose and strict
+   source routing have been proposed, these extensions are not commonly
+   supported in today's networks.  It is also not possible to
+   simultaneously use multiple distinct paths towards the same
+   destination--even though multipath communication offers numerous
+   benefits, which we will encounter throughout the book.
+
+   *Stateful routers*
+
+   IP routers maintain forwarding tables to determine the next hop of a
+   received packet.  This basic requirement has undesirable
+   consequences.  Performing a forwarding-table lookup for every packet
+   is a time-consuming operation.  Therefore, high-performance
+   networking equipment typically relies on ternary content-addressable
+   memory (TCAM) hardware, which is expensive and energy-intensive.
+   Moreover, the constantly growing size of forwarding tables, partially
+   due to the slow but steady deployment of IPv6, poses a problem for
+   routers, as the storage capacity of TCAM hardware is limited.
+   Routers that keep state for network information can also suffer from
+   denial-of-service (DoS) attacks exhausting the router's state (460).
+
+1.1.2.  BGP
+
+   *  Outages
+
+   *  Lack of fault isolation
+
+   *  Poor scalability
+
+   *  Convergence
+
+   *  Single path
+
+   *  Lack of security
+
+1.1.3.  General problems
+
+   *  Lack of authentication
+
+   *  Attack
+
+1.1.4.  Problems with RPKI and BGPsec
+
+
+
+
+Perrig                   Expires 6 October 2022                 [Page 4]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
+1.1.5.  Answer
+
+   Solutions should be/have:
 
    *  Available in the presence of adversaries
 
@@ -208,6 +268,20 @@ Internet-Draft                  SCION I-D                     April 2022
    connectivity to other ISDs and manage the trust roots.  Typically,
    the 3-10 largest ISPs of an ISD form the ISD's core.
 
+
+
+
+
+
+
+
+
+
+Perrig                   Expires 6 October 2022                 [Page 5]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    Routing is based on the <ISD, AS> tuple, agnostic of local
    addressing.  Existing AS numbers are inherited from the current
    Internet, but a 48-bit namespace allows for additional SCION AS
@@ -216,15 +290,6 @@ Internet-Draft                  SCION I-D                     April 2022
    AS, local address> 3-tuple.  The local address is not used in inter-
    domain routing or forwarding, does not need to be globally unique,
    and can thus be an IPv4, IPv6, or MAC address, for example.
-
-
-
-
-
-Perrig                   Expires 6 October 2022                 [Page 4]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 1.2.2.  Authentication
 
@@ -262,6 +327,17 @@ Internet-Draft                  SCION I-D                     April 2022
    each AS is performed by its beacon server which is a part of its
    Control Service (CS), that performs control-plane-related tasks.
 
+
+
+
+
+
+
+Perrig                   Expires 6 October 2022                 [Page 6]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    Core beaconing is the process of constructing path segments between
    core ASes.  During core beaconing, a core AS either initiates PCBs or
    propagates PCBs received from neighboring core ASes to all other
@@ -274,14 +350,6 @@ Internet-Draft                  SCION I-D                     April 2022
    PCBs to its respective customers.  This procedure continues until the
    PCB reaches an AS without any customer (leaf AS) and as a result, all
    ASes receive path segments to reach the core ASes of their ISD.  Non-
-
-
-
-Perrig                   Expires 6 October 2022                 [Page 5]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    core ASes can include their peering links in the PCBs, enabling
    valley-free forwarding if both up- and down-path segments contain the
    same peering link.
@@ -313,6 +381,19 @@ Internet-Draft                  SCION I-D                     April 2022
    replaces signaling to use a path, ensuring that routers do not need
    any local state on either paths or flows.
 
+
+
+
+
+
+
+
+
+Perrig                   Expires 6 October 2022                 [Page 7]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
 1.3.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -327,16 +408,6 @@ Internet-Draft                  SCION I-D                     April 2022
 2.  Authentication
 
    From the book v2, use: chapter 2.2
-
-
-
-
-
-
-Perrig                   Expires 6 October 2022                 [Page 6]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 3.  Control Plane
 
@@ -365,14 +436,47 @@ Internet-Draft                  SCION I-D                     April 2022
 
 8.  Normative References
 
+   [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
+              DOI 10.17487/RFC0791, September 1981,
+              <https://www.rfc-editor.org/info/rfc791>.
+
+
+
+
+
+
+Perrig                   Expires 6 October 2022                 [Page 8]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
+   [RFC1653]  Klensin, J., Freed, N., and K. Moore, "SMTP Service
+              Extension for Message Size Declaration", RFC 1653,
+              DOI 10.17487/RFC1653, July 1994,
+              <https://www.rfc-editor.org/info/rfc1653>.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+   [RFC2460]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
+              (IPv6) Specification", RFC 2460, DOI 10.17487/RFC2460,
+              December 1998, <https://www.rfc-editor.org/info/rfc2460>.
+
+   [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
+              Border Gateway Protocol 4 (BGP-4)", RFC 4271,
+              DOI 10.17487/RFC4271, January 2006,
+              <https://www.rfc-editor.org/info/rfc4271>.
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
+              (IPv6) Specification", STD 86, RFC 8200,
+              DOI 10.17487/RFC8200, July 2017,
+              <https://www.rfc-editor.org/info/rfc8200>.
 
 Acknowledgments
 
@@ -389,4 +493,12 @@ Author's Address
 
 
 
-Perrig                   Expires 6 October 2022                 [Page 7]
+
+
+
+
+
+
+
+
+Perrig                   Expires 6 October 2022                 [Page 9]
