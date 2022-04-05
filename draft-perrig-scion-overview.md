@@ -62,10 +62,10 @@ Two protocols effectively define today’s Internet architecture: the Internet P
 
 IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts, along a single path that is opaque from the end host’s perspective. Its first major version, IPv4, was specified in 1981 {{RFC0791}} and its (non-backward compatible) successor, IPv6, was introduced in 1998 {{RFC2460}}. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need the complete path to forward packets, nor can they influence the path the packets take. Unfortunately, this approach comes with many drawbacks:
 
-- **Lack of transparency and control**
+- __Lack of transparency and control__  
 Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination.
 
-- **Stateful routers**
+- __Stateful routers__
 IP routers maintain forwarding tables to determine the next hop of a received packet. This basic requirement has undesirable consequences. Performing a forwarding-table lookup for every packet is a time-consuming operation. Therefore, high-performance networking equipment typically relies on ternary content-addressable memory (TCAM) hardware, which is expensive and energy-intensive. Moreover, the constantly growing size of forwarding tables, partially due to the slow but steady deployment of IPv6, poses a problem for routers, as the storage capacity of TCAM hardware is limited. Routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
 
 ### BGP
@@ -73,18 +73,18 @@ IP routers maintain forwarding tables to determine the next hop of a received pa
 BGP is the routing protocol that provides connectivity between autonomous systems (ASes), such as Internet service providers (ISPs). The protocol enables ISPs to perform traffic engineering and select routes based on policies that reflect the ISPs' business relationships. This happens through an intricate decision process that is used to select the best route to a destination {{CAESAR2005}}.
 Unfortunately, BGP comes with a number of shortcomings:
 
-- **Outages**
+- __Outages__  
 Since the control plane‹ and the data plane‹ are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state (313), which can lead to intermittent outages. As an indicator of these problems, a study has shown, for example, that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates (307).
-- **Lack of fault isolation**
+- __Lack of fault isolation__  
 BGP is a globally distributed protocol, running among all BGP speakers in the entire Internet. BGP update messages are thus disseminated globally. Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world, as occurred in the AS 7007 incident, which disrupted global connectivity due to a single faulty router (369).
-- **Poor scalability**
+- **Poor scalability**  
 The amount of work required to be performed by BGP is proportional to the number of destinations. Moreover, path changes are disseminated profusely and sometimes throughout the entire Internet. This reduces scalability and prevents BGPsec (a proposal for a secured version of BGP that we discuss in Section 1.1.3) from frequently disseminating freshly signed routing updates.
-- **Convergence**
+- **Convergence**  
 ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, a situation could arise where an AS A configures AS B as the next hop for a particular destination, while B uses A as a next hop for the same destination. In this case, a packet would be sent back and forth between the two ASes, which constitutes a forwarding loop.
 Unfortunately, convergence to a consistent and stable state depends on the policies of individual ASes. It has been shown that for certain situations, BGP will never converge to a stable state (221) and other topologies cause BGP wedgies, where BGP converges but non-deterministically (220). In general, even if BGP converges after the topology changes, this process can require several minutes (447) and users may experience outages during this process. In addition, BGP convergence constitutes an attack vector for malicious actors and makes verifying security and availability properties highly challenging.
-- **Single path**
+- **Single path**  
 At the end of the BGP decision process used to determine how to reach a given destination, a single path is selected. Although some multipath protocols allow simultaneous use of multiple network interfaces, BGP does not provide path control to end hosts and does not allow use of multiple AS-level paths. This can even lead to outages when BGP selects a legitimate but inefficient route through a link that is too small to satisfy the demand (bottleneck routing). In such a situation, end hosts have no choice but to wait until ASes in the Internet manually modify policies such that a more appropriate path is chosen.
-- **Lack of security**
+- **Lack of security**  
 BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities (some of which we describe in §1.1.5) and has only been addressed in recent years through RPKI and BGPsec, which have problems of their own, as we discuss in the next section.
 
 ### Problems with RPKI and BGPsec
