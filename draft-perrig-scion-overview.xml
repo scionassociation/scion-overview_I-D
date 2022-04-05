@@ -23,7 +23,7 @@
       </address>
     </author>
 
-    <date year="2022" month="April" day="04"/>
+    <date year="2022" month="April" day="05"/>
 
     <area>rtg</area>
     <workgroup>panrg</workgroup>
@@ -36,7 +36,7 @@
 
 <t>The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.</t>
 
-<t>The document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.</t>
+<t>This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.</t>
 
 
 
@@ -74,27 +74,39 @@
 
 <section anchor="internet-protocol"><name>Internet Protocol</name>
 
-<t>IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts. Its first major version, IPv4, was specified in 1981 <xref target="RFC0791"/> and its (non-backward compatible) successor, IPv6, was introduced in 1998 <xref target="RFC2460"/>. IP enables the transmission of packets between a source and a destination along a single path that is opaque from the end host’s perspective. To forward packets, end hosts (as well as routers) do not need a complete path, but only a table to determine the next hop solely based on the destination address. Neither senders nor receivers can typically influence the path that their packets take. This approach is simple, but it also comes with many drawbacks:</t>
+<t>IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts, along a single path that is opaque from the end host’s perspective. Its first major version, IPv4, was specified in 1981 <xref target="RFC0791"/> and its (non-backward compatible) successor, IPv6, was introduced in 1998 <xref target="RFC2460"/>. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need the complete path to forward packets, nor can they influence the path the packets take. Unfortunately, this approach comes with many drawbacks:</t>
 
-<t><strong>Lack of transparency and control</strong></t>
-
-<t>Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination—even though multipath communication offers numerous benefits, which we will encounter throughout the book.</t>
-
-<t><strong>Stateful routers</strong></t>
-
-<t>IP routers maintain forwarding tables to determine the next hop of a received packet. This basic requirement has undesirable consequences. Performing a forwarding-table lookup for every packet is a time-consuming operation. Therefore, high-performance networking equipment typically relies on ternary content-addressable memory (TCAM) hardware, which is expensive and energy-intensive. Moreover, the constantly growing size of forwarding tables, partially due to the slow but steady deployment of IPv6, poses a problem for routers, as the storage capacity of TCAM hardware is limited. Routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state (460).</t>
+<t><list style="symbols">
+  <t><strong>Lack of transparency and control</strong>
+Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination.</t>
+  <t><strong>Stateful routers</strong>
+IP routers maintain forwarding tables to determine the next hop of a received packet. This basic requirement has undesirable consequences. Performing a forwarding-table lookup for every packet is a time-consuming operation. Therefore, high-performance networking equipment typically relies on ternary content-addressable memory (TCAM) hardware, which is expensive and energy-intensive. Moreover, the constantly growing size of forwarding tables, partially due to the slow but steady deployment of IPv6, poses a problem for routers, as the storage capacity of TCAM hardware is limited. Routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state <xref target="SCHUCHARD2011"/>.</t>
+</list></t>
 
 </section>
 <section anchor="bgp"><name>BGP</name>
 
+<t>BGP is the routing protocol that provides connectivity between autonomous systems (ASes), such as Internet service providers (ISPs). The protocol enables ISPs to perform traffic engineering and select routes based on policies that reflect the ISPs' business relationships. This happens through an intricate decision process that is used to select the best route to a destination <xref target="CAESAR2005"/>.
+Unfortunately, BGP comes with a number of shortcomings:</t>
+
 <t><list style="symbols">
-  <t>Outages</t>
-  <t>Lack of fault isolation</t>
-  <t>Poor scalability</t>
-  <t>Convergence</t>
-  <t>Single path</t>
-  <t>Lack of security</t>
+  <t><strong>Outages</strong>
+Since the control plane‹ and the data plane‹ are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state (313), which can lead to intermittent outages. As an indicator of these problems, a study has shown, for example, that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates (307).</t>
+  <t><strong>Lack of fault isolation</strong>
+BGP is a globally distributed protocol, running among all BGP speakers in the entire Internet. BGP update messages are thus disseminated globally. Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world, as occurred in the AS 7007 incident, which disrupted global connectivity due to a single faulty router (369).</t>
+  <t><strong>Poor scalability</strong>
+The amount of work required to be performed by BGP is proportional to the number of destinations. Moreover, path changes are disseminated profusely and sometimes throughout the entire Internet. This reduces scalability and prevents BGPsec (a proposal for a secured version of BGP that we discuss in Section 1.1.3) from frequently disseminating freshly signed routing updates.</t>
+  <t><strong>Convergence</strong>
+ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, a situation could arise where an AS A configures AS B as the next hop for a particular destination, while B uses A as a next hop for the same destination. In this case, a packet would be sent back and forth between the two ASes, which constitutes a forwarding loop.
+Unfortunately, convergence to a consistent and stable state depends on the policies of individual ASes. It has been shown that for certain situations, BGP will never converge to a stable state (221) and other topologies cause BGP wedgies, where BGP converges but non-deterministically (220). In general, even if BGP converges after the topology changes, this process can require several minutes (447) and users may experience outages during this process. In addition, BGP convergence constitutes an attack vector for malicious actors and makes verifying security and availability properties highly challenging.</t>
+  <t><strong>Single path</strong>
+At the end of the BGP decision process used to determine how to reach a given destination, a single path is selected. Although some multipath protocols allow simultaneous use of multiple network interfaces, BGP does not provide path control to end hosts and does not allow use of multiple AS-level paths. This can even lead to outages when BGP selects a legitimate but inefficient route through a link that is too small to satisfy the demand (bottleneck routing). In such a situation, end hosts have no choice but to wait until ASes in the Internet manually modify policies such that a more appropriate path is chosen.</t>
+  <t><strong>Lack of security</strong>
+BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities (some of which we describe in §1.1.5) and has only been addressed in recent years through RPKI and BGPsec, which have problems of their own, as we discuss in the next section.</t>
 </list></t>
+
+</section>
+<section anchor="problems-with-rpki-and-bgpsec"><name>Problems with RPKI and BGPsec</name>
 
 </section>
 <section anchor="general-problems"><name>General problems</name>
@@ -103,9 +115,6 @@
   <t>Lack of authentication</t>
   <t>Attack</t>
 </list></t>
-
-</section>
-<section anchor="problems-with-rpki-and-bgpsec"><name>Problems with RPKI and BGPsec</name>
 
 </section>
 <section anchor="answer"><name>Answer</name>
@@ -391,6 +400,56 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
 
     </references>
 
+    <references title='Informative References'>
+
+
+
+<reference anchor='SCHUCHARD2011'>
+  <front>
+    <title>Losing control of the internet: using the data plane to attack the control plane</title>
+    <author fullname='Max Schuchard' initials='M.' surname='Schuchard'>
+      <organization/>
+    </author>
+    <author fullname='Abedelaziz Mohaisen' initials='A.' surname='Mohaisen'>
+      <organization/>
+    </author>
+    <author fullname='Denis Foo Kune' initials='D.' surname='Foo Kune'>
+      <organization/>
+    </author>
+    <author fullname='Nicholas Hopper' initials='N.' surname='Hopper'>
+      <organization/>
+    </author>
+    <author fullname='Yongdae Kim' initials='Y.' surname='Kim'>
+      <organization/>
+    </author>
+    <author fullname='Eugene Y. Vasserman' initials='E.' surname='Vasserman'>
+      <organization/>
+    </author>
+    <date year='2010'/>
+  </front>
+  <seriesInfo name='Proceedings of the 17th ACM conference on Computer and communications security - CCS' value='&apos;10'/>
+  <seriesInfo name='DOI' value='10.1145/1866307.1866411'/>
+</reference>
+
+<reference anchor='CAESAR2005'>
+  <front>
+    <title>BPG routing policies in ISP networks</title>
+    <author fullname='M. Caesar' initials='M.' surname='Caesar'>
+      <organization/>
+    </author>
+    <author fullname='J. Rexford' initials='J.' surname='Rexford'>
+      <organization/>
+    </author>
+    <date month='November' year='2005'/>
+  </front>
+  <seriesInfo name='IEEE Network' value='Vol. 19, pp. 5-11'/>
+  <seriesInfo name='DOI' value='10.1109/mnet.2005.1541715'/>
+</reference>
+
+
+
+
+    </references>
 
 
 <section numbered="false" anchor="acknowledgments"><name>Acknowledgments</name>
@@ -403,124 +462,155 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
   </back>
 
 <!-- ##markdown-source:
-H4sIAGwXS2IAA41a2XIbR5Z9r6/Ilh+GVKAgUZIXMTyepkjKZrQWjkCFo6ej
-HxJVCSBbhSq4FsKwQxH+h5mXeZtvmU/xl8w592bWQkruYQRJoCrr5l3PXbLS
-NE1a3xbu1DxYnF+9fWPe3rr61rv9g8Qul7W77W9cpRcPksy2bl3Vh1Pjy1WV
-JHmVlXaLp/Partp05+rar9Mm81WZVoFSWuChpk1A6mlia2dPTd2uk31Vf1jX
-Vbc7NTtb1uvkgzvgWn5qrsrW1aVr0wsSTW5d2bnTxJiw+sfv8bk97LDrj6Dh
-y7X5nndwdWt9wQV/dj/b7a5w86za4rKts82p2bTtrjl99Gh075HQWvt20y1P
-zfvF5btH7y6v3+Ka8vzph16d3VwubpLEdu2mqsFZagz00Zyas7m5FhWAAn5U
-NWd57W05uVHV61NzefOD+Y/O1T7b6FWn7FtZP1dd/hl6nrt288scq5Kyqre2
-9beijncvzx9//fwkfDz56sun4eOTZ189Dh+fPfk6LvjmyePHp9glwQ+N11NK
-kjRNjV02bW2zNkluNq43gdnYxiydK03TZZlrmlVX4PuhKnPjYBjTYvG2alpT
-7Vq/9U3rM+N+3rmsBfWqbIzFSt9APSDY7n3pcrOHvmGq8mBsw5WNqVam6mrT
-VJl37WFu3pO/tithhOIwk00al3W1bw9c21a5Pfz+2383A5/YoqxaA/NsXdl0
-NZ7UfTzI++0O5GyZOexoMpDxmS3owrWF1F3WdrWbw1C5J9O2iJtO1ED6u9pv
-be2Lgypl2fmiNeDVbPx6Y+wtDGiXviCfXpWzq13juDP43trCIzQ6aCVrq7qZ
-iXZql7mSpKtd1diigXjkuEb8DAz04vOJyT4bi3XCTQZ9w4ai4+UhaK3tdqIy
-fAGFmjsxHHzrVGq1d+l+btO1K10tZlNzpdiYUTp5wCgaHC2gwcDCzJxXZVtX
-hcpz1VSFUnlbmjd3CAeSzbGxfiui2jyHihrh0C4hdAoLcq2j4zSda+Zhzz2M
-AN+iDltYIHeNX3PVqq628njVtRCYRKvVytVTPZG1XotLPr6yXdHODeWfSEjV
-e1A3QBW4URaFW4Ea7/sooMobWTLwJARCH1uQlp7hyjxtqxT/xDu7Er7Hm3Nz
-BVMUTYUVdllguy3Y8enOwmu5M4FtCXXRtBuEWBNsBcztqCLg1i2esuJ7aYFw
-LEzE3GhyVdxYuhkYzIouJ3XGBkGM+lamEMs5yFCs++6jekjlbm5ba3aFLRk3
-TdgHQWgLAHwu3g815ggtUu0ap0E7M3shRA5CgAIax1wrpdztiupAKWF9BS2C
-1NbneeGS5AsGRk++h6xhQxha/i9r71bwFY3CVr0MiUZ4cDuFnvYTAdAH3n3f
-n5sfoZnW1rD4BiLHvaI09AdbKhlQ328OFLr31qAqRYeVr+EyWJ/FSAzUoMkV
-OIgoNEgWnNOsuhr3auYdmJ9uB7cX2v/SMA+Wg4i018pZStAI8/BD5DK4djt2
-J+G/qbZqoJr3M9tQVHgLHG2P7aJH9WnB7uD8kGpID8UBkiRffGF+hOCy+t8g
-2b4i522VVQA4h+jMmHwkilcArE9B+ljzp1M4vg6kzNHV9bH59deQ3j5+nOkX
-5sWPH3s3foGyAqr6Hklhbw+jp198Hx9novz4UcCgcSNWBV1rZmba7tYjKzE9
-mK7MNrZcU3JPdJdoQYrJbZ37X3rjX13ffqUbMCkHlrBr+kyvMmvjavCGk+fP
-H8NCP1R7BHM9Y7KaiM0I9CiGckIc3ExyAX5L53K9aDNiDHTZ0qX3DDxkmRIG
-rpl2FE9h1i01bgp6DmUeeXEfKVbcBInqHqhEfuhoTP1IWj5kMODYVh2uQWnU
-ggJwBhzsN6hysOXaidOiChRKwIqGkRNDBB5R7WKMnJqbSXZoXOQf6lKLQoat
-/eCmWtpWdSgXAHa1KzzRFfm8tmWzs8yAAbdXK8A2vs7prl/c964kubompiEV
-RdFXHSzMaEH5MDjJHb2I4ZAPIq7Lg1W9p2sAdbEaav3g2qaHdyYHhXgkhSag
-wtb+A+kDum8k1cCVns0kB7Jo8itGHRRx8vybk3tOT2A/KlGDL7ER91Vbth78
-HMdYrWoh+pUS9QFkItXn34z9FnxdT+QRbaLea4Kj35XIAkm6mgUXfZToB8/V
-sLBFBS1YBs66QKwx37UbKzVctbM/dW7I6FExggyoiKVeBHDM6RtBp3Hv2aBG
-cwSJ9q4oaAnJ4jUqjrySGo7RErxbQJAMzFDKwdFLRLY1LcWkb+W4XW8FnkKK
-APkdJCuIXEuAY45nFEXHAqrPzlH8eHF3BBS8lRVkLdWep1ERhSXbGJaiBRPm
-quhchJJBKfjm6169Lbw9BCyQt64soorB6ymLCuFDVQH5CNp9rY0ObU93aFDx
-P3z4Cp/Eb/uoyLRECln+4cMkeeHorlEZjSuge1kD9v3qcIfRMYvkiQmvlofh
-T8JB4wGektzm5rI31VbS196WUrjZ28rnI28iB2JAIjk+sMrOqT5U4YhBKLQr
-pe5yeV9bzngZzB3u0M42VdW4oWVpOq+mFiFEU7Vb06PISAyzzGxdiybNHLn5
-ej6TzpDKwh5LKGPv83ZzfK9lQbjkldOmQYtRRJ0WOzut/s4KdI+UpzmAe9bC
-1KLGmCmEU8FR7t3GaIp14VD0a9vg8lmASDgpGiCtIICDsSkS1266HRshDfEh
-40a9SUUqNVyjkQLCjY/m9yxPUe8hjzD/YSupV+F3JmffV2atKJJFPcNScaJh
-qhkFx++//VfoG0V2JUH1T2pjVVkzJK4lKrOVb/tMsmfxiPCGJaqu1EJJvAP6
-kX2XVfVhTkdfoBF17FoDDNCxYZzwTSqlltXSCKDbAHOfBQDEjY2BHJ01RCVA
-Aa5Su586j6qBWZGlErJGHw3s0nCbod7IuIDtggTaiIe0jW7wAQW4tBFw+kPY
-S4xk0G+7lNQ6eRyJsw6NxQ0rNTwERJDeYKebSAMcjM0nyOROeBxgiPnSNYJq
-yGW2lkoZHtWmAdWEr61Dkj2Yo5vzs9fHkLDOwbeLxvHSptELb9WHWVavDymb
-Srk4N6/BXCU1TugsWDuxqVvX1Z68Nf4XSbr3zDKDDurWC7N5J64pflZUe4E/
-xBL7j6GBiGXYjO4s/VKoU0StwQ/6WqtBX27XrHyh6jBuoJS9kJSu8FsUpvnc
-vAteJKH7wbkda8BWsn1U9KQfJORLdDWdYILkudyVECetVmnDOgs2OrqoFmiQ
-25ZwDV1ubNdI2EvNJHtK4OpmR8jQx6GGQWmZJMak5m3XQoxGPkesl3536F7l
-3nUFVpuhl5eLaOdhmzVdVL4vhkw9IRjbad37e+meir4MTCZrp32m3DoTAfXh
-61g7Cgy/u/7LVSyVsUmia87KZu/qJFlURac9EorMrsiBDo8IiEhsIKo9v6ad
-uwOYPnVAM6m5GSrCceqTp3H7MtaHisOiI72hEMs9pLop1hW0sNkau/ay4EKc
-L6x+SevTWyVrSjEq7dFfkJ/OQ4um8r0JHrOIIykh/8YyvCG1NF5VvbYlYoNu
-4dUpzhZSEiMQZEAq5agH4OxYdYD7mDOkW4enM9BlthLHNHlFFETRdLW4aI77
-KCasQiUls35b9Y3nuqiWsHK44289B3ZX94jF5SX7Tg7b+hVgL7IUJiraMaCa
-BNGVX3eKY2CVEw5WdbvKsyVBLmTpGOwkfQmAnkO+cok0oM0QSOsXlDa04Kxn
-ZeugunLNZKCohMDMnNY3LCFCW6AZONq757XbsasKDirjPsZDugL7m5LlXpKc
-CbrwqtaG07mLGnCoUQtn65IjL6CW7b02woYkxcatZQYyC/65XYZctFWDj2ZL
-IfUSiIhSma3r0CGEnLEBLsL54zDtc5OnaR62Wyp8aE+iG9aOnaXE11nXVmW1
-ZZZehErm6Azw1Q9Wo1obsbRwGIUMJtLCewUIl8yzqwqfHVIp0D1rN5FNSn7U
-ux6ZcIxYGp30BefXJaeRgzNejDz7WPQytDmowEqD6zFqJIxUf+vaOTJiOQDT
-KpmTvbqq2iF+KPuNXH+H6wzlwXWRGd+dH8sOZwtB/SWCmWlzCZflJDiWTgw5
-HUGSFeSWNSUJE9x+/4wtLRmMwRldehyFMveUfoNENaRsyWSmDVsvAvaL+V7z
-79Pff/vPk8eobIH5WHS1uBYQsaofpi/tbxcXknbIDTzhXQgMrXqGVuhbrJuB
-2+9M20lXYtdlJQcDoFlUnLyHWgJPoxMYcIz13pL5VC0FUZhmh24wDrCHRpsZ
-35pn36RLtD08bgGes+ksxJeYhm0/1A+OP9omHGSICp4ICX3cjyaWHMdAJwPH
-WmGH8rafkIcxhc4Ap1LOTKzwxtqZTRd9Z56moi51hsm9eLjRNRrQOpxXoO3h
-CaIOtdJsaD6k24VnLCNyy/DKowANoMIudCMlthhcpgxaL4Hk67PziRgmnoOF
-jDxN6kk4B0ivmWoMkvgjxIEuDbeM3NJRp9ojormkJ7YSWSXtsUyZPdsfGNkx
-PsOMW8qQiIyIsQlUSkeQS5k3QVLtpBHrtuzg5yxaJE2ONClfVrC/gFBo3Ql9
-GgqTtYUvPyQx+GjZfaWFfdZxPKFgIgjC3efJt39KpaxSUJSoIblATbH7Poum
-ZxFOyy2Z5zMOzRR7E3VkYbBPIIFYn8macDQ3DCV1BV01Gfrd3LMipQZ5PobI
-s3OTpt8lySVnDHcSjcjqGx2fo0GRIpygOclap4IUMl5Jul2qcxYxa7Uv08nS
-OZRTu+k1MLfSGd/ksjgMtCZOz7wxAkeYKWwUHURbpYmHCJxYgAlqfbSX5giJ
-eGWYsqTtD9BaJ0eB8LHM2HMnc0CJ3jDTuivFsFdyZ69I0ww0Za9P8KB7JYq9
-PBOYnpA13VLMaYvgH8iHtdQZBIwABqHWSPpkx9kZTAqNqRcNA9qOSf1KUl34
-Pov6CsoVZTcj1X5O/JibgChJVldgWAo0JlTDWWQQvZ/16VhCsIk1nCb55HrC
-aEydeZhvgwXC0n0H4qS3YVKV0AKLSd8Pc3SB2BBPun/MMEpkR1U99ZSsD9iq
-PFaWS57DgJex2gtgSSkQIAAFvz86OQ6lE+4ODiqBigvMz0FbSb+H5tW7UlHX
-R0+OJVohl2Mwig8GXfdPM8I+G1w3G/d5yeidnAcnEFBCrg5nCcwJFivFo/T0
-x5prlreBTHI+JvNCFpuj6/MXx3rkj8RrWy1lBh3wdLsV08j5T8/JNMrnyfvP
-yhMLObQncgYj8/1EZqBysls7GZqHhKsnBdUq9klSVQmhuWShXsaoBxP1DF/1
-MnVm/lYxfBuVYtisg3AceSRWBhMC2VgU090itvTni+NZGJQqwaY/UJXMl9au
-EGW1tvnAQpuAOGLON6GbVR6lKBylk6mC4hS+1/o8uegkrLIJ1ZnMwTUsQ8KL
-VmsM7Ngw2DhhtOvhUj/4IrglJaruzbIaiEcj09G1HP3kEkjIc02bssS8JyYS
-KSuzcKitxyvDohh8h1kSwgA5kfxNtSD8TXgawRCHby9lTuxZ0/erlJRKCvdL
-OLvXjksnTb4eqETB0GAME7Qe00nueK75c4x/I33qGVhQp2wp0UEdx5OOJNJr
-woRRPCDndCAeB3K+2PpCqIEIT9WyjTTV2C4hckiLWR4+lW8EzBuZZxI/Z2I3
-0URgLJkqFQwK/TC4GyGbKkey1puxngXEfTjyD8cZE5APgxrKP9OihQOPW7ZZ
-B/bXk9Mzv9J08Xm4S0LOGubP4+3YpscZRnhM4nj6MhCxUMptqYyaxm05v75T
-36B3CTAxZMmY/oWm1QuKCqNXKEwY9CkwT3emm9dNEnIWYlE99+LNImLweKAI
-NleuhbXZfaW528oEpOQZ/Fm0jp6djUTljJPuUajL+D4M71gaYJXsuSOqRBR7
-rlYMDK6jRqezwgJDXXQ/iSW9yygcjCGAncEFXyUJbcEbmgvMhQkfXSMOHKCc
-svn/tVCCnX+YPaLS/qhxnSc/yJxGOyRBU52/DOfBcOVYFPXSSgs4CezsD7jh
-RCUUXpMRjhyDDeBMnuNpzIwxwA3uh0Dww6T3fCoJIOd5YDGOAilV+5ahP7SV
-cYVGTjKp9kY37guB4r0+7NoKncsOcCwH4+EtlkTHPsP0946PkfiO+Ro1SVfq
-C5X+F9d3GVR4ODLUnvGTrUD/psKm2qUr74q8mcXjNHaDyThkdOA2mnFqy7e1
-fKevD3onh0pWcpC9lXr8bKHxOmyik7ax7JIBgvw8kwuyEc9UmUU7OqXhyW2V
-hnnStYzp0vMwuHs5QJ4cYSWoq14Cr9FQFcIwXyeyhVQ5lYwrbDjJFpVr9WPb
-/qArr5Lh8BupQENHTxCGdlddkLMEDlD4Ik+ivfutvpOnFrvgOzteDSxW4RtV
-fHe3MQ9ev1/cPJjpf/PmrXx+d/nv76/eXV7w8+KHs1ev+g9JWLH44e37VxfD
-p+HJ87evX1++udCHcdVMLiUPXp/99YEiz4O31zeAirNXD9RTeQYd322SF05k
-CCIm3/HtJua9JHcN+t2lDlZenF//7/+c8NWcP/HNh5OT5x8/hi/fnHz9DF+A
-wOGtP+mO9CuPmhO72wG4pb5kyW93vrWFniuhswJCErt5Ivk3aubvp+bbZbY7
-efZduECBJxejziYXRWf3r9x7WJX4iUuf2KbX5uT6HU1P+T376+R71PvoIn++
-Mw8fgszlw4f4eJW7Yd64qjifk3JwY3finuMe96eO58V0ttr6MPP6G2xgnj85
-+frvR/GV7P1+P/euXc2rev2oXmX85Yr5pt0Wx/Tce/Opl3GSyONhc/tkxsA5
-TQIX5sn8iTx2Z1b1x081eOxkhj9P+edLefltktP++ePPZubL+Yk+OLz4CF9B
-7ksvkZMWi5fnoal/ZZcP/znNk6f9pFvn0XqefPJ0foI2hP/w95n8/ZKM4+8z
-2f/q7M2ZDKo4rrB9iI9jSd+F1pU2C+B88/bi7SnfH5DBo7yeMF4w07cpwhHz
-OgAbaw7GUj+S5UBY2FjEF3Xvs/Kpl1rNaNIxdbD+jd9sQii+9b7UA0hzln0o
-qz1gOCTxX0+VIZf/64MV4tg9+JiIjBAorkQ0/x/FatC3PzEAAA==
+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
 
 -->
 
