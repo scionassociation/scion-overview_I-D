@@ -22,17 +22,28 @@ author:
      org: ETH Zuerich
      email: adrian.perrig@inf.ethz.ch
 
-normative:
-  RFC0791:
-  RFC1653:
-  RFC2460:
-  RFC4271:
-  RFC8200:   
+normative:   
 
 
 informative:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   CAESAR2005: DOI.10.1109/MNET.2005.1541715
+  LABOVITZ2000: DOI.10.1145/347059.347428
+  KUSHMAN2007: DOI.10.1145/1232919.1232927
+  GRIFFIN1999: DOI.10.1145/316194.316231
+  RFC4264:
+  RFC0791:
+  RFC1653:
+  RFC2460:
+  RFC4271:
+  RFC6480:
+  RFC8200:
+  RFC8205:
+  SAHOO2009: DOI.10.1016/j.comcom.2009.03.009
+  LYCHEV2013: DOI.10.1145/2534169.2486010
+  LI2014: DOI.10.14722/sent.2014.23001
+  COOPER2013: DOI.10.1145/2535771.2535787
+  ROTHENBERGER2017: DOI.10.1145/3065913.3065922
 
 
 
@@ -60,12 +71,12 @@ Two protocols effectively define today’s Internet architecture: the Internet P
 
 ### Internet Protocol
 
-IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts, along a single path that is opaque from the end host’s perspective. Its first major version, IPv4, was specified in 1981 {{RFC0791}} and its (non-backward compatible) successor, IPv6, was introduced in 1998 {{RFC2460}}. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need the complete path to forward packets, nor can they influence the path the packets take. Unfortunately, this approach comes with many drawbacks:
+IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts. Its first major version, IPv4, was specified in 1981 {{RFC0791}} and its (non-backward compatible) successor, IPv6, was introduced in 1998 {{RFC2460}}. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need to know the complete path to forward packets, nor can they influence the path the packets take. Unfortunately, this approach comes with many drawbacks:
 
-- __Lack of transparency and control__  
+- **Lack of transparency and control**  
 Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination.
 
-- __Stateful routers__
+- **Stateful routers**  
 IP routers maintain forwarding tables to determine the next hop of a received packet. This basic requirement has undesirable consequences. Performing a forwarding-table lookup for every packet is a time-consuming operation. Therefore, high-performance networking equipment typically relies on ternary content-addressable memory (TCAM) hardware, which is expensive and energy-intensive. Moreover, the constantly growing size of forwarding tables, partially due to the slow but steady deployment of IPv6, poses a problem for routers, as the storage capacity of TCAM hardware is limited. Routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
 
 ### BGP
@@ -73,27 +84,45 @@ IP routers maintain forwarding tables to determine the next hop of a received pa
 BGP is the routing protocol that provides connectivity between autonomous systems (ASes), such as Internet service providers (ISPs). The protocol enables ISPs to perform traffic engineering and select routes based on policies that reflect the ISPs' business relationships. This happens through an intricate decision process that is used to select the best route to a destination {{CAESAR2005}}.
 Unfortunately, BGP comes with a number of shortcomings:
 
-- __Outages__  
-Since the control plane‹ and the data plane‹ are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state (313), which can lead to intermittent outages. As an indicator of these problems, a study has shown, for example, that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates (307).
-- __Lack of fault isolation__  
-BGP is a globally distributed protocol, running among all BGP speakers in the entire Internet. BGP update messages are thus disseminated globally. Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world, as occurred in the AS 7007 incident, which disrupted global connectivity due to a single faulty router (369).
+- **Outages**    
+Since the control plane and the data plane are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state {{LABOVITZ2000}}, which can lead to intermittent outages. As an indicator of these problems, a study has shown, for example, that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates {{KUSHMAN2007}}.
+- **Lack of fault isolation**   
+BGP is a globally distributed protocol, running among all BGP speakers in the entire Internet. BGP update messages are thus disseminated globally. Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.
 - **Poor scalability**  
-The amount of work required to be performed by BGP is proportional to the number of destinations. Moreover, path changes are disseminated profusely and sometimes throughout the entire Internet. This reduces scalability and prevents BGPsec (a proposal for a secured version of BGP that we discuss in Section 1.1.3) from frequently disseminating freshly signed routing updates.
+The amount of work required to be performed by BGP is proportional to the number of destinations. Moreover, path changes are disseminated profusely and sometimes throughout the entire Internet. This reduces scalability and prevents BGPsec from frequently disseminating freshly signed routing updates.
 - **Convergence**  
-ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, a situation could arise where an AS A configures AS B as the next hop for a particular destination, while B uses A as a next hop for the same destination. In this case, a packet would be sent back and forth between the two ASes, which constitutes a forwarding loop.
-Unfortunately, convergence to a consistent and stable state depends on the policies of individual ASes. It has been shown that for certain situations, BGP will never converge to a stable state (221) and other topologies cause BGP wedgies, where BGP converges but non-deterministically (220). In general, even if BGP converges after the topology changes, this process can require several minutes (447) and users may experience outages during this process. In addition, BGP convergence constitutes an attack vector for malicious actors and makes verifying security and availability properties highly challenging.
+ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, AS A could configure AS B as the next hop for a particular destination, while B uses A as a next hop for the same destination. In this case, a packet would be sent back and forth between the two ASes, which constitutes a forwarding loop.
+Unfortunately, convergence to a consistent and stable state depends on the policies of individual ASes. In certain situations, BGP will never converge to a stable state {{GRIFFIN1999}}. Other topologies cause BGP wedgies, where BGP converges but non-deterministically {{RFC4264}}. In general, BGP convergence after topology changes can require several minutes, during which users may experience outages {{SAHOO2009}}. In addition, BGP convergence constitutes an attack vector for malicious actors and makes verifying security and availability properties highly challenging.
 - **Single path**  
-At the end of the BGP decision process used to determine how to reach a given destination, a single path is selected. Although some multipath protocols allow simultaneous use of multiple network interfaces, BGP does not provide path control to end hosts and does not allow use of multiple AS-level paths. This can even lead to outages when BGP selects a legitimate but inefficient route through a link that is too small to satisfy the demand (bottleneck routing). In such a situation, end hosts have no choice but to wait until ASes in the Internet manually modify policies such that a more appropriate path is chosen.
+BGP only allows the selection of a single path to a destination. Although some multipath protocols support simultaneous use of multiple network interfaces, BGP does not provide path control to end hosts and does not allow use of multiple AS-level paths. This can even lead to outages when BGP selects a legitimate but inefficient route through a link that is too small to satisfy the demand (bottleneck routing). In such a situation, end hosts have no choice but to wait until ASes in the Internet manually modify policies such that a more appropriate path is chosen.
 - **Lack of security**  
-BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities (some of which we describe in §1.1.5) and has only been addressed in recent years through RPKI and BGPsec, which have problems of their own, as we discuss in the next section.
+BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see also [Attacks](#attack). RPKI and BGPsec tried to addressed these security issues in recent years. However, RPKI and BGPsec have problems of their own, as we discuss in the next section.
 
-### Problems with RPKI and BGPsec
+### RPKI and BGPsec
 
+ Researchers recognized the issues arising from the lack of security mechanisms in core Internet protocols, and started working on improvements already in the late 1990s and early 2000s. While change was very slow initially (RPKI {{RFC6480}} and BGPsec {{RFC8205}} were only standardized in 2012 and 2017, respectively), there has been a substantial increase in RPKI deployment in recent years. However, RPKI and BGPsec have issues of their own, which we will discuss in the following sections. These issues made us believe that a more radical change to today’s Internet architecture will be necessary to fundamentally resolve its security problems.
 
-### General problems
+#### RPKI and Route Origin Authorizations
 
-  - Lack of authentication
-  - Attack
+RPKI provides certificates to ASes, and certificates for the IP addresses they own, which are called Route Origin Authorizations (ROAs). Unfortunately, ROAs only prevent the simplest form of BGP hijacks, see [Attacks](#attack).
+
+#### Problems with BGPsec in Partial Deployment
+
+BGPsec was standardized not before 2017, and it will likely take many years until it reaches global deployment. However, the protocol provides very little security benefits unless it is consistently used and enforced by all ASes, see {{LYCHEV2013}}. In a partial deployment, BGPsec can even cause instabilities and is prone to downgrade attacks.
+
+#### Problems with BGPsec in Full Deployment
+
+Even if all ASes in the world were to deploy BGPsec, many issues remain, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}, respectively.
+RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}. As very few organizations are at the root of the RPKI hierarchy, these organizations have the power to create or revoke certificates. Depending on the jurisdiction, local courts of some countries may gain the power to shut down parts of the Internet, which makes some ISPs reluctant to deploy RPKI.
+Finally, BGPsec further exacerbates BGP’s scalability issues. To provide global connectivity, every one of the currently about 75,000 ASes in the world needs to know how to reach every other AS. This requires a large number of BGP update messages, the processing of which requires many more resources in BGPsec due to the additional cryptographic operations.
+Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated. This is particularly cumbersome, as Internet routers need to store and exchange a fast-growing number of paths, caused by the increasing fragmentation of the IP address space and the trend towards announcing ever smaller IP address ranges.
+
+### Lack of Authentication
+
+The necessity of authenticating digital data is becoming increasingly prevalent, as adversaries exploit the absence of authentication to inject malicious information to attack the network. Unfortunately, not only BGP but virtually all original protocols used in the Internet lack authentication features.
+Infrastructures to provide authentication have been added in an ad hoc manner: RPKI provides the roots of trust for the authentication of BGPsec messages; TLS (433) allows browsers to authenticate web servers; and DNSSEC (33) provides authentication for DNS. Nevertheless, the current situation is still unsatisfactory in many regards. For example, all these protocols are sensitive to the compromise of a single entity. DNSSEC and RPKI rely on a single or very small number of roots of trust, while TLS is based on an oligopolistic trust model in which any one of hundreds of authorities can issue a certificate for any domain name. The Internet Control Message Protocol (ICMP) (135)(417) does not even have an authenticated counterpart, thus allowing the injection of fake ICMP packets. The Internet also lacks a general infrastructure to enable two end hosts to establish a shared secret key for end-to-end encrypted and authenticated communication; the simplest mechanism today is to rely on trust-on-first-use (TOFU) approaches (538), which opportunistically send the public key unauthenticated to the other communicating party.
+
+### Attacks {#attack}
 
 
 
