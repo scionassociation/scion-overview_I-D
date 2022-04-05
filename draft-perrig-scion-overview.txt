@@ -98,14 +98,14 @@ Table of Contents
        1.1.3.  RPKI and BGPsec . . . . . . . . . . . . . . . . . . .   6
        1.1.4.  Lack of Authentication  . . . . . . . . . . . . . . .   7
        1.1.5.   Attacks  . . . . . . . . . . . . . . . . . . . . . .   7
-       1.1.6.  Answer  . . . . . . . . . . . . . . . . . . . . . . .   7
-     1.2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . .   8
-       1.2.1.  Network Structure and Naming  . . . . . . . . . . . .   8
-       1.2.2.  Authentication  . . . . . . . . . . . . . . . . . . .   8
-       1.2.3.  Control Plane . . . . . . . . . . . . . . . . . . . .   9
-       1.2.4.  Data Plane  . . . . . . . . . . . . . . . . . . . . .  10
-     1.3.  Conventions and Definitions . . . . . . . . . . . . . . .  10
-   2.  Authentication  . . . . . . . . . . . . . . . . . . . . . . .  10
+     1.2.  Goals for a Secure Internet Architecture  . . . . . . . .   8
+     1.3.  Network Structure and Naming  . . . . . . . . . . . . . .   8
+     1.4.  Conventions and Definitions . . . . . . . . . . . . . . .   9
+   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .   9
+     2.1.  Authentication  . . . . . . . . . . . . . . . . . . . . .   9
+     2.2.  Control Plane . . . . . . . . . . . . . . . . . . . . . .   9
+     2.3.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .  11
+   3.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .  11
 
 
 
@@ -114,22 +114,21 @@ Perrig                   Expires 7 October 2022                 [Page 2]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   3.  Control Plane . . . . . . . . . . . . . . . . . . . . . . . .  10
-   4.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-   5.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .  11
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  11
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  14
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  14
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  12
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  15
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
-   The Introduction section briefly presents the key concepts of the
-   next-generation Internet architecture SCION.  We start this section
-   with an explanation of why we designed SCION in the first place.
+   The Introduction section explains why we designed SCION in the first
+   place.  It presents an overview of the Internet's most salient
+   problems and shortcomings, which together are the reason why we
+   developed SCION: To address these issues in order to make the
+   Internet more secure, reliable, transparent, and efficient.
 
    The sections after the Introduction provide further insight into
    SCION's main concepts and features.  We complete the document with
@@ -143,10 +142,7 @@ Internet-Draft                  SCION I-D                     April 2022
    unchanged since the standardization of IPv6 [RFC2460] and BGP-4
    [RFC1653] in the 1990s.  However, as the Internet continued to expand
    and needed to accommodate new uses, numerous issues came to light.
-   This section presents a compact overview of the Internet's most
-   salient problems and shortcomings, which together are the reason why
-   we developed SCION: To address these issues in order to make the
-   Internet more secure, reliable, transparent, and efficient.
+   The following sections describe these issues in more details.
 
 1.1.1.  Internet Protocol
 
@@ -160,8 +156,12 @@ Internet-Draft                  SCION I-D                     April 2022
    packets take.  Unfortunately, this approach comes with many
    drawbacks:
 
-
-
+   *  *Lack of transparency and control*
+      Being able to select and verify the path that packets take is
+      desirable in many situations.  End hosts might want to avoid
+      packets being routed through adversarial or untrusted networks, or
+      they might want to choose the most suitable path with regard to a
+      specific metric (e.g., latency or bandwidth).  Unfortunately, IP
 
 
 
@@ -170,12 +170,6 @@ Perrig                   Expires 7 October 2022                 [Page 3]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   *  *Lack of transparency and control*
-      Being able to select and verify the path that packets take is
-      desirable in many situations.  End hosts might want to avoid
-      packets being routed through adversarial or untrusted networks, or
-      they might want to choose the most suitable path with regard to a
-      specific metric (e.g., latency or bandwidth).  Unfortunately, IP
       does not offer such an option.  Although systems that enable loose
       and strict source routing have been proposed, these extensions are
       not commonly supported in today's networks.  It is also not
@@ -218,6 +212,12 @@ Internet-Draft                  SCION I-D                     April 2022
       perceived quality of voice-over-IP (VoIP) calls is highly
       correlated with BGP updates [KUSHMAN2007].
 
+   *  *Lack of fault isolation*
+      BGP is a globally distributed protocol, running among all BGP
+      speakers in the entire Internet.  BGP update messages are thus
+      disseminated globally.  Due to the lack of any routing hierarchy
+      or isolation between different areas, a single faulty BGP speaker
+      can affect routing in the entire world.
 
 
 
@@ -225,13 +225,6 @@ Perrig                   Expires 7 October 2022                 [Page 4]
 
 Internet-Draft                  SCION I-D                     April 2022
 
-
-   *  *Lack of fault isolation*
-      BGP is a globally distributed protocol, running among all BGP
-      speakers in the entire Internet.  BGP update messages are thus
-      disseminated globally.  Due to the lack of any routing hierarchy
-      or isolation between different areas, a single faulty BGP speaker
-      can affect routing in the entire world.
 
    *  *Poor scalability*
       The amount of work required to be performed by BGP is proportional
@@ -268,7 +261,14 @@ Internet-Draft                  SCION I-D                     April 2022
       no choice but to wait until ASes in the Internet manually modify
       policies such that a more appropriate path is chosen.
 
-
+   *  *Lack of security*
+      BGP has no built-in security mechanisms and does not provide any
+      tools for ASes to authenticate the information they receive
+      through BGP update messages.  This opens up a multitude of attack
+      opportunities--see also Attacks (Section 1.1.5).  RPKI and BGPsec
+      tried to addressed these security issues in recent years.
+      However, RPKI and BGPsec have problems of their own, as we discuss
+      in the next section.
 
 
 
@@ -281,15 +281,6 @@ Perrig                   Expires 7 October 2022                 [Page 5]
 
 Internet-Draft                  SCION I-D                     April 2022
 
-
-   *  *Lack of security*
-      BGP has no built-in security mechanisms and does not provide any
-      tools for ASes to authenticate the information they receive
-      through BGP update messages.  This opens up a multitude of attack
-      opportunities--see also Attacks (Section 1.1.5).  RPKI and BGPsec
-      tried to addressed these security issues in recent years.
-      However, RPKI and BGPsec have problems of their own, as we discuss
-      in the next section.
 
 1.1.3.  RPKI and BGPsec
 
@@ -325,11 +316,20 @@ Internet-Draft                  SCION I-D                     April 2022
    Even if all ASes in the world were to deploy BGPsec, many issues
    remain, such as the creation of wormholes and forwarding loops by
    attackers, or the introduction of circular dependencies, see [LI2014]
-   and [COOPER2013], respectively.  RPKI and BGPsec also cause issues
-   for network sovereignty [ROTHENBERGER2017].  As very few
-   organizations are at the root of the RPKI hierarchy, these
-   organizations have the power to create or revoke certificates.
-   Depending on the jurisdiction, local courts of some countries may
+   and [COOPER2013], respectively.
+   RPKI and BGPsec also cause issues for network sovereignty
+   [ROTHENBERGER2017].  As very few organizations are at the root of the
+   RPKI hierarchy, these organizations have the power to create or
+   revoke certificates.  Depending on the jurisdiction, local courts of
+   some countries may gain the power to shut down parts of the Internet,
+   which makes some ISPs reluctant to deploy RPKI.
+   Finally, BGPsec further exacerbates BGP's scalability issues.  To
+   provide global connectivity, every one of the currently about 75,000
+   ASes in the world needs to know how to reach every other AS.  This
+   requires a large number of BGP update messages, the processing of
+   which requires many more resources in BGPsec due to the additional
+   cryptographic operations.
+   Furthermore, prefix aggregation no longer works in BGPsec because the
 
 
 
@@ -338,54 +338,54 @@ Perrig                   Expires 7 October 2022                 [Page 6]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   gain the power to shut down parts of the Internet, which makes some
-   ISPs reluctant to deploy RPKI.  Finally, BGPsec further exacerbates
-   BGP's scalability issues.  To provide global connectivity, every one
-   of the currently about 75,000 ASes in the world needs to know how to
-   reach every other AS.  This requires a large number of BGP update
-   messages, the processing of which requires many more resources in
-   BGPsec due to the additional cryptographic operations.  Furthermore,
-   prefix aggregation no longer works in BGPsec because the digital
-   signatures are not aggregated.  This is particularly cumbersome, as
-   Internet routers need to store and exchange a fast-growing number of
-   paths, caused by the increasing fragmentation of the IP address space
-   and the trend towards announcing ever smaller IP address ranges.
+   digital signatures are not aggregated.  This is particularly
+   cumbersome, as Internet routers need to store and exchange a fast-
+   growing number of paths, caused by the increasing fragmentation of
+   the IP address space and the trend towards announcing ever smaller IP
+   address ranges.
 
 1.1.4.  Lack of Authentication
 
-   The necessity of authenticating digital data is becoming increasingly
-   prevalent, as adversaries exploit the absence of authentication to
-   inject malicious information to attack the network.  Unfortunately,
-   not only BGP but virtually all original protocols used in the
-   Internet lack authentication features.  Infrastructures to provide
-   authentication have been added in an ad hoc manner: RPKI provides the
-   roots of trust for the authentication of BGPsec messages; TLS (433)
-   allows browsers to authenticate web servers; and DNSSEC (33) provides
-   authentication for DNS.  Nevertheless, the current situation is still
-   unsatisfactory in many regards.  For example, all these protocols are
-   sensitive to the compromise of a single entity.  DNSSEC and RPKI rely
-   on a single or very small number of roots of trust, while TLS is
-   based on an oligopolistic trust model in which any one of hundreds of
-   authorities can issue a certificate for any domain name.  The
-   Internet Control Message Protocol (ICMP) (135)(417) does not even
-   have an authenticated counterpart, thus allowing the injection of
-   fake ICMP packets.  The Internet also lacks a general infrastructure
-   to enable two end hosts to establish a shared secret key for end-to-
-   end encrypted and authenticated communication; the simplest mechanism
-   today is to rely on trust-on-first-use (TOFU) approaches (538), which
-   opportunistically send the public key unauthenticated to the other
-   communicating party.
+   Authenticating digital data is becoming increasingly important, as
+   adversaries exploit the absence of authentication to inject malicious
+   information.  Infrastructures to provide authentication, such as
+   RPKI/BGPsec, TLS [RFC8446], and DNSSEC [RFC4033], have been added in
+   an ad-hoc manner.
+   Unfortunately, all these protocols are sensitive to the compromise of
+   a single entity.  DNSSEC and RPKI rely on a single or very small
+   number of roots of trust.  TLS is based on an oligopolistic trust
+   model, in which any one of hundreds of authorities can issue a
+   certificate for any domain name.  The Internet Control Message
+   Protocol (ICMP) does not even have an authenticated counterpart, thus
+   allowing the injection of fake ICMP packets, see [RFC4443] and
+   [RFC0791].
+   The Internet neither supports the establishment of a shared secret
+   key between two end hosts for encrypted and authenticated end-to-end
+   communication; the simplest mechanism today is to rely on trust-on-
+   first-use (TOFU) approaches.  They opportunistically send the public
+   key unauthenticated to the other communicating party.
 
 1.1.5.   Attacks
 
-1.1.6.  Answer
+   The current Internet architecture offers little to no protection
+   against attacks such as prefix hijacking, spoofing, denial of
+   service, DNS hijacking, and composed versions thereof (which use a
+   combination of vulnerabilities, or use a vulnerability in one
+   protocol to compromise another protocol).
 
-   Solutions should be/have:
-
-   *  Available in the presence of adversaries
-
-   *  Transparent and controllable
-
+   *  *Prefix hijacking*
+      Due to a lack of authentication and fault isolation in BGP,
+      numerous Internet outages are caused by prefix hijacking, a
+      malicious or erroneous announcement of IP address space.  Prefix
+      hijacking can also be used for interception (142).  This problem
+      is exacerbated by the fact that defining BGP routing policies is
+      often a complicated, manual, and thus error-prone process.
+      Unfortunately, BGP hijacks are still possible when RPKI is
+      deployed and are only resolved in a full deployment of BGPsec:
+      With RPKI, a malicious AS trying to hijack a particular IP prefix
+      can still send a BGP update message claiming that it is directly
+      connected to its legitimate owner (for which there exists a valid
+      ROA).  Recipients of such an announcement would accept it, since
 
 
 
@@ -393,6 +393,33 @@ Perrig                   Expires 7 October 2022                 [Page 7]
 
 Internet-Draft                  SCION I-D                     April 2022
 
+
+      the legitimate owner of the addresses is noted as the last AS in
+      the BGP message.  They would then start sending traffic intended
+      for those IP addresses to the attacker, who can inspect, reroute,
+      or drop it.
+      In settings where route origin validation (ROV) is deployed,
+      Morillo et al. recently point out several new attacks: hidden
+      hijack, non-routed prefix hijack, and super-prefix hijack of non-
+      routed prefixes [MORILLO2021].
+
+   *  *Spoofing and DDoS attacks*
+      ICMP can be employed to send error or diagnostic messages (used by
+      tools such as ping or traceroute).  Because ICMP packets are not
+      authenticated, the source address can easily be spoofed.  This can
+      lead to distributed denial-of-service (DDoS) attacks [KUMAR2007],
+      or be used to disconnect two BGP routers from each other
+      [RFC5927].  Since regular IP packets are not authenticated either,
+      they suffer from the same problem, i.e., the source IP address can
+      be spoofed.
+
+1.2.  Goals for a Secure Internet Architecture
+
+   Solutions should be/have:
+
+   *  Available in the presence of adversaries
+
+   *  Transparent and controllable
 
    *  Efficient and scalable
 
@@ -402,9 +429,7 @@ Internet-Draft                  SCION I-D                     April 2022
 
    *  Formally verifiable
 
-1.2.  Key Concepts
-
-1.2.1.  Network Structure and Naming
+1.3.  Network Structure and Naming
 
    SCION organizes existing ASes into groups of independent routing
    planes, called isolation domains (ISDs), which interconnect to
@@ -413,6 +438,17 @@ Internet-Draft                  SCION I-D                     April 2022
    strong control over both inbound and outbound traffic, provide
    meaningful and enforceable trust, and enable scalable routing updates
    with high path-freshness.
+
+
+
+
+
+
+
+Perrig                   Expires 7 October 2022                 [Page 8]
+
+Internet-Draft                  SCION I-D                     April 2022
+
 
    As a path-based architecture, SCION end hosts learn about available
    network path segments, and combine them into end-to-end paths that
@@ -437,25 +473,38 @@ Internet-Draft                  SCION I-D                     April 2022
    domain routing or forwarding, does not need to be globally unique,
    and can thus be an IPv4, IPv6, or MAC address, for example.
 
-1.2.2.  Authentication
+1.4.  Conventions and Definitions
 
-   Control-Plane PKI/TRC
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
+2.  Key Concepts
 
+2.1.  Authentication
 
+   Control-Plane PKI/TRC From the book v2, use:
+   chapter 2.2
 
+2.2.  Control Plane
 
-Perrig                   Expires 7 October 2022                 [Page 8]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
-1.2.3.  Control Plane
+   From the book v2, use: chapters 2.1, 2.3, 2.5.
 
    The SCION control plane discovers and distributes AS-level path
    segments.  A path segment encodes a network path at the granularity
    of inter-domain interfaces on either end of an inter-domain link
    connecting two consecutive ASes on a path.
+
+
+
+
+
+Perrig                   Expires 7 October 2022                 [Page 9]
+
+Internet-Draft                  SCION I-D                     April 2022
+
 
    Each end-to-end path consists of up to three path segments: corepath,
    up-path, and down-path segments.  Core-path segments refer to path
@@ -498,14 +547,6 @@ Internet-Draft                  SCION I-D                     April 2022
    valley-free forwarding if both up- and down-path segments contain the
    same peering link.
 
-
-
-
-Perrig                   Expires 7 October 2022                 [Page 9]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    A global path server infrastructure is used to disseminate path
    segments.  Each AS contains a path server as a part of the control
    service.  The infrastructure bears similarities to DNS, where
@@ -513,7 +554,17 @@ Internet-Draft                  SCION I-D                     April 2022
    stores all the intra-ISD path segments that were registered by leaf
    ASes of its own ISD, and core-path segments to reach other core ASes.
 
-1.2.4.  Data Plane
+
+
+
+Perrig                   Expires 7 October 2022                [Page 10]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
+2.3.  Data Plane
+
+   From the book v2, use: chapters 2.4, 5.1
 
    Name resolution in SCION returns the <ISD, AS, local address>
    3-tuple.  Core- and down-path segments are fetched based on the <ISD,
@@ -533,70 +584,45 @@ Internet-Draft                  SCION I-D                     April 2022
    replaces signaling to use a path, ensuring that routers do not need
    any local state on either paths or flows.
 
-1.3.  Conventions and Definitions
+3.  Deployments
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
-   capitals, as shown here.
+   SCI-ED, SSFC, SCIONLab From the book v2, use: chapters 13
+   introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
 
-      *NOTE* Ideally, the following chapters address the questions
-      raised in RFC 9217 (https://www.ietf.org/rfc/rfc9217.html)
-
-2.  Authentication
-
-   From the book v2, use: chapter 2.2
-
-3.  Control Plane
-
-   From the book v2, use: chapters 2.1, 2.3, 2.5.
-
-
-
-
-
-
-Perrig                   Expires 7 October 2022                [Page 10]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
-4.  Data Plane
-
-   From the book v2, use: chapters 2.4, 5.1
-
-5.  Deployments
-
-   _SCI-ED, SSFC, SCIONLab_
-
-   From the book v2, use: chapters 13 introduction (table 13.1), 13.1,
-   14.1, 15.3, 15.4
-
-6.  IANA Considerations
+4.  IANA Considerations
 
    This document has no IANA actions.  TODO: It does have IANA actions,
    specially regarding ISD and AS numbering.
 
-7.  Security Considerations
+5.  Security Considerations
 
    The SCION architecture introduces the following security
    considerations:
 
-8.  References
+6.  References
 
-8.1.  Normative References
+6.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
+
+
+
+
+
+Perrig                   Expires 7 October 2022                [Page 11]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-8.2.  Informative References
+6.2.  Informative References
 
    [CAESAR2005]
               Caesar, M. and J. Rexford, "BPG routing policies in ISP
@@ -611,19 +637,19 @@ Internet-Draft                  SCION I-D                     April 2022
               in Networks, DOI 10.1145/2535771.2535787, November 2013,
               <https://doi.org/10.1145/2535771.2535787>.
 
-
-
-Perrig                   Expires 7 October 2022                [Page 11]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    [GRIFFIN1999]
               Griffin, T. and G. Wilfong, "An analysis of BGP
               convergence properties", ACM SIGCOMM Computer
               Communication Review Vol. 29, pp. 277-288,
               DOI 10.1145/316194.316231, October 1999,
               <https://doi.org/10.1145/316194.316231>.
+
+   [KUMAR2007]
+              Kumar, S., "Smurf-based Distributed Denial of Service
+              (DDoS) Attack Amplification in Internet", Second
+              International Conference on Internet Monitoring and
+              Protection (ICIMP 2007), DOI 10.1109/icimp.2007.42, July
+              2007, <https://doi.org/10.1109/icimp.2007.42>.
 
    [KUSHMAN2007]
               Kushman, N., Kandula, S., and D. Katabi, "Can you hear me
@@ -639,6 +665,15 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.1145/347059.347428, 2000,
               <https://doi.org/10.1145/347059.347428>.
 
+
+
+
+
+Perrig                   Expires 7 October 2022                [Page 12]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    [LI2014]   Li, Q., Hu, Y., and X. Zhang, "Even Rockets Cannot Make
               Pigs Fly Sustainably: Can BGP be Secured with BGPsec?",
               Proceedings 2014 Workshop on Security of Emerging
@@ -651,6 +686,14 @@ Internet-Draft                  SCION I-D                     April 2022
               ACM SIGCOMM Computer Communication Review Vol. 43, pp.
               171-182, DOI 10.1145/2534169.2486010, September 2013,
               <https://doi.org/10.1145/2534169.2486010>.
+
+   [MORILLO2021]
+              Morillo, R., Furuness, J., Morris, C., Breslin, J.,
+              Herzberg, A., and B. Wang, "ROV++: Improved Deployable
+              Defense against BGP Hijacking", Proceedings 2021 Network
+              and Distributed System Security Symposium,
+              DOI 10.14722/ndss.2021.24438, 2021,
+              <https://doi.org/10.14722/ndss.2021.24438>.
 
    [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
               DOI 10.17487/RFC0791, September 1981,
@@ -665,14 +708,10 @@ Internet-Draft                  SCION I-D                     April 2022
               (IPv6) Specification", RFC 2460, DOI 10.17487/RFC2460,
               December 1998, <https://www.rfc-editor.org/info/rfc2460>.
 
-
-
-
-
-Perrig                   Expires 7 October 2022                [Page 12]
-
-Internet-Draft                  SCION I-D                     April 2022
-
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, DOI 10.17487/RFC4033, March 2005,
+              <https://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4264]  Griffin, T. and G. Huston, "BGP Wedgies", RFC 4264,
               DOI 10.17487/RFC4264, November 2005,
@@ -682,6 +721,24 @@ Internet-Draft                  SCION I-D                     April 2022
               Border Gateway Protocol 4 (BGP-4)", RFC 4271,
               DOI 10.17487/RFC4271, January 2006,
               <https://www.rfc-editor.org/info/rfc4271>.
+
+
+
+
+Perrig                   Expires 7 October 2022                [Page 13]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
+   [RFC4443]  Conta, A., Deering, S., and M. Gupta, Ed., "Internet
+              Control Message Protocol (ICMPv6) for the Internet
+              Protocol Version 6 (IPv6) Specification", STD 89,
+              RFC 4443, DOI 10.17487/RFC4443, March 2006,
+              <https://www.rfc-editor.org/info/rfc4443>.
+
+   [RFC5927]  Gont, F., "ICMP Attacks against TCP", RFC 5927,
+              DOI 10.17487/RFC5927, July 2010,
+              <https://www.rfc-editor.org/info/rfc5927>.
 
    [RFC6480]  Lepinski, M. and S. Kent, "An Infrastructure to Support
               Secure Internet Routing", RFC 6480, DOI 10.17487/RFC6480,
@@ -695,6 +752,10 @@ Internet-Draft                  SCION I-D                     April 2022
    [RFC8205]  Lepinski, M., Ed. and K. Sriram, Ed., "BGPsec Protocol
               Specification", RFC 8205, DOI 10.17487/RFC8205, September
               2017, <https://www.rfc-editor.org/info/rfc8205>.
+
+   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
+              <https://www.rfc-editor.org/info/rfc8446>.
 
    [ROTHENBERGER2017]
               Rothenberger, B., Asoni, D., Barrera, D., and A. Perrig,
@@ -711,6 +772,20 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.1016/j.comcom.2009.03.009, May 2009,
               <https://doi.org/10.1016/j.comcom.2009.03.009>.
 
+
+
+
+
+
+
+
+
+
+Perrig                   Expires 7 October 2022                [Page 14]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    [SCHUCHARD2011]
               Schuchard, M., Mohaisen, A., Foo Kune, D., Hopper, N.,
               Kim, Y., and E. Vasserman, "Losing control of the
@@ -719,16 +794,6 @@ Internet-Draft                  SCION I-D                     April 2022
               and communications security - CCS '10,
               DOI 10.1145/1866307.1866411, 2010,
               <https://doi.org/10.1145/1866307.1866411>.
-
-
-
-
-
-
-Perrig                   Expires 7 October 2022                [Page 13]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 Acknowledgments
 
@@ -772,13 +837,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-Perrig                   Expires 7 October 2022                [Page 14]
+Perrig                   Expires 7 October 2022                [Page 15]

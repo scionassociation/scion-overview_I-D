@@ -26,24 +26,30 @@ normative:
 
 
 informative:
+  RFC4264:
+  RFC0791:
+  RFC1653:
+  RFC2460:
+  RFC4033:
+  RFC4271:
+  RFC4443:
+  RFC5927:
+  RFC6480:
+  RFC8200:
+  RFC8205:
+  RFC8446:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   CAESAR2005: DOI.10.1109/MNET.2005.1541715
   LABOVITZ2000: DOI.10.1145/347059.347428
   KUSHMAN2007: DOI.10.1145/1232919.1232927
   GRIFFIN1999: DOI.10.1145/316194.316231
-  RFC4264:
-  RFC0791:
-  RFC1653:
-  RFC2460:
-  RFC4271:
-  RFC6480:
-  RFC8200:
-  RFC8205:
   SAHOO2009: DOI.10.1016/j.comcom.2009.03.009
   LYCHEV2013: DOI.10.1145/2534169.2486010
   LI2014: DOI.10.14722/sent.2014.23001
   COOPER2013: DOI.10.1145/2535771.2535787
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
+  MORILLO2021: DOI.10.14722/ndss.2021.24438
+  KUMAR2007: DOI.10.1109/ICIMP.2007.42
 
 
 
@@ -60,14 +66,14 @@ This document gives a high-level overview of the SCION architecture, including i
 
 # Introduction
 
-The Introduction section briefly presents the key concepts of the next-generation Internet architecture SCION. We start this section with an explanation of why we designed SCION in the first place.
+The Introduction section explains why we designed SCION in the first place. It presents an overview of the Internet's most salient problems and shortcomings, which together are the reason why we developed SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.
 
 The sections after the Introduction provide further insight into SCION's main concepts and features. We complete the document with some concrete case studies where SCION has been applied successfully.
 
 
 ## Why SCION?
 
-Two protocols effectively define today’s Internet architecture: the Internet Protocol (IP) {{RFC8200}}, {{RFC0791}} and the Border Gateway Protocol (BGP) {{RFC4271}}. These protocols have remained virtually unchanged since the standardization of IPv6 {{RFC2460}} and BGP-4 {{RFC1653}} in the 1990s. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. This section presents a compact overview of the Internet's most salient problems and shortcomings, which together are the reason why we developed SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.
+Two protocols effectively define today’s Internet architecture: the Internet Protocol (IP) {{RFC8200}}, {{RFC0791}} and the Border Gateway Protocol (BGP) {{RFC4271}}. These protocols have remained virtually unchanged since the standardization of IPv6 {{RFC2460}} and BGP-4 {{RFC1653}} in the 1990s. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. The following sections describe these issues in more details.
 
 ### Internet Protocol
 
@@ -112,22 +118,32 @@ BGPsec was standardized not before 2017, and it will likely take many years unti
 
 #### Problems with BGPsec in Full Deployment
 
-Even if all ASes in the world were to deploy BGPsec, many issues remain, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}, respectively.
-RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}. As very few organizations are at the root of the RPKI hierarchy, these organizations have the power to create or revoke certificates. Depending on the jurisdiction, local courts of some countries may gain the power to shut down parts of the Internet, which makes some ISPs reluctant to deploy RPKI.
-Finally, BGPsec further exacerbates BGP’s scalability issues. To provide global connectivity, every one of the currently about 75,000 ASes in the world needs to know how to reach every other AS. This requires a large number of BGP update messages, the processing of which requires many more resources in BGPsec due to the additional cryptographic operations.
+Even if all ASes in the world were to deploy BGPsec, many issues remain, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}, respectively.  
+RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}. As very few organizations are at the root of the RPKI hierarchy, these organizations have the power to create or revoke certificates. Depending on the jurisdiction, local courts of some countries may gain the power to shut down parts of the Internet, which makes some ISPs reluctant to deploy RPKI.  
+Finally, BGPsec further exacerbates BGP’s scalability issues. To provide global connectivity, every one of the currently about 75,000 ASes in the world needs to know how to reach every other AS. This requires a large number of BGP update messages, the processing of which requires many more resources in BGPsec due to the additional cryptographic operations.  
 Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated. This is particularly cumbersome, as Internet routers need to store and exchange a fast-growing number of paths, caused by the increasing fragmentation of the IP address space and the trend towards announcing ever smaller IP address ranges.
 
 ### Lack of Authentication
 
-The necessity of authenticating digital data is becoming increasingly prevalent, as adversaries exploit the absence of authentication to inject malicious information to attack the network. Unfortunately, not only BGP but virtually all original protocols used in the Internet lack authentication features.
-Infrastructures to provide authentication have been added in an ad hoc manner: RPKI provides the roots of trust for the authentication of BGPsec messages; TLS (433) allows browsers to authenticate web servers; and DNSSEC (33) provides authentication for DNS. Nevertheless, the current situation is still unsatisfactory in many regards. For example, all these protocols are sensitive to the compromise of a single entity. DNSSEC and RPKI rely on a single or very small number of roots of trust, while TLS is based on an oligopolistic trust model in which any one of hundreds of authorities can issue a certificate for any domain name. The Internet Control Message Protocol (ICMP) (135)(417) does not even have an authenticated counterpart, thus allowing the injection of fake ICMP packets. The Internet also lacks a general infrastructure to enable two end hosts to establish a shared secret key for end-to-end encrypted and authenticated communication; the simplest mechanism today is to rely on trust-on-first-use (TOFU) approaches (538), which opportunistically send the public key unauthenticated to the other communicating party.
+Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. Infrastructures to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, have been added in an ad-hoc manner.  
+Unfortunately, all these protocols are sensitive to the compromise of a single entity. DNSSEC and RPKI rely on a single or very small number of roots of trust. TLS is based on an oligopolistic trust model, in which any one of hundreds of authorities can issue a certificate for any domain name. The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, thus allowing the injection of fake ICMP packets, see {{RFC4443}} and {{RFC0791}}.  
+The Internet neither supports the establishment of a shared secret key between two end hosts for encrypted and authenticated end-to-end communication; the simplest mechanism today is to rely on trust-on-first-use (TOFU) approaches. They opportunistically send the public key unauthenticated to the other communicating party.
+
 
 ### Attacks {#attack}
 
+The current Internet architecture offers little to no protection against attacks such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof (which use a combination
+of vulnerabilities, or use a vulnerability in one protocol to compromise another protocol).
+
+- **Prefix hijacking**  
+Due to a lack of authentication and fault isolation in BGP, numerous Internet outages are caused by prefix hijacking, a malicious or erroneous announcement of IP address space. Prefix hijacking can also be used for interception (142). This problem is exacerbated by the fact that defining BGP routing policies is often a complicated, manual, and thus error-prone process.  
+Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec: With RPKI, a malicious AS trying to hijack a particular IP prefix can still send a BGP update message claiming that it is directly connected to its legitimate owner (for which there exists a valid ROA). Recipients of such an announcement would accept it, since the legitimate owner of the addresses is noted as the last AS in the BGP message. They would then start sending traffic intended for those IP addresses to the attacker, who can inspect, reroute, or drop it.  
+In settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
+- **Spoofing and DDoS attacks**  
+ICMP can be employed to send error or diagnostic messages (used by tools such as ping or traceroute). Because ICMP packets are not authenticated, the source address can easily be spoofed. This can lead to distributed denial-of-service (DDoS) attacks {{KUMAR2007}}, or be used to disconnect two BGP routers from each other {{RFC5927}}. Since regular IP packets are not authenticated either, they suffer from the same problem, i.e., the source IP address can be spoofed.
 
 
-
-### Answer
+## Goals for a Secure Internet Architecture
 
 Solutions should be/have:
 
@@ -138,9 +154,8 @@ Solutions should be/have:
 - Deployable
 - Formally verifiable
 
-## Key Concepts
 
-### Network Structure and Naming
+## Network Structure and Naming
 
 SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
 
@@ -150,11 +165,22 @@ SCION reuses the Autonomous Systems (AS) structure, and ensures that network tra
 
 Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the <ISD, AS, local address> 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.
 
-### Authentication
+## Conventions and Definitions
+
+{::boilerplate bcp14-tagged}
+
+# Key Concepts
+
+## Authentication
 
 Control-Plane PKI/TRC
+From the book v2, use:  
+chapter 2.2
 
-### Control Plane
+## Control Plane
+
+From the book v2, use:
+chapters 2.1, 2.3, 2.5.
 
 The SCION control plane discovers and distributes AS-level path
 segments. A path segment encodes a network path at the granularity
@@ -214,7 +240,10 @@ A core AS’s path server stores all the intra-ISD path segments that
 were registered by leaf ASes of its own ISD, and core-path segments
 to reach other core ASes.
 
-### Data Plane
+## Data Plane
+
+From the book v2, use:
+chapters 2.4, 5.1
 
 Name resolution in SCION returns the <ISD, AS, local address> 3-tuple.
 Core- and down-path segments are fetched based on the <ISD, AS> tuple.
@@ -234,39 +263,9 @@ path alteration. This so-called Packet-Carried Forwarding State
 not need any local state on either paths or flows.
 
 
-
-## Conventions and Definitions
-
-{::boilerplate bcp14-tagged}
-
-
-
-> **NOTE**
-> Ideally, the following chapters address the questions raised in [RFC 9217](https://www.ietf.org/rfc/rfc9217.html)
-
-
-# Authentication
-
-From the book v2, use:
-chapter 2.2
-
-
-# Control Plane
-
-From the book v2, use:
-chapters 2.1, 2.3, 2.5.
-
-
-# Data Plane
-
-From the book v2, use:
-chapters 2.4, 5.1
-
-
 # Deployments
 
-*SCI-ED, SSFC, SCIONLab*
-
+SCI-ED, SSFC, SCIONLab
 From the book v2, use:
 chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
 
