@@ -39,7 +39,6 @@ informative:
   RFC8205:
   RFC8446:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
-  CAESAR2005: DOI.10.1109/MNET.2005.1541715
   LABOVITZ2000: DOI.10.1145/347059.347428
   KUSHMAN2007: DOI.10.1145/1232919.1232927
   GRIFFIN1999: DOI.10.1145/316194.316231
@@ -55,7 +54,7 @@ informative:
 
 --- abstract
 
-The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is not commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of malicious actors, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
+The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of malicious actors, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
 
 The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
@@ -66,18 +65,18 @@ This document gives a high-level overview of the SCION architecture, including i
 
 # Introduction
 
-The Introduction section explains why we designed SCION in the first place. It presents an overview of the Internet's most salient problems and shortcomings, which together are the reason why we developed SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.
+The Introduction section explains why we designed SCION in the first place. It presents an overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.
 
 The sections after the Introduction provide further insight into SCION's main concepts and features. We complete the document with some concrete case studies where SCION has been applied successfully.
 
 
-## Why SCION?
+## Why SCION - Internet's Issues
 
-Two protocols effectively define today’s Internet architecture: the Internet Protocol (IP) {{RFC8200}}, {{RFC0791}} and the Border Gateway Protocol (BGP) {{RFC4271}}. These protocols have remained virtually unchanged since the standardization of IPv6 {{RFC2460}} and BGP-4 {{RFC1653}} in the 1990s. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. The following sections describe these issues in more details.
+Two protocols effectively define today’s Internet architecture: the Internet Protocol (IP) {{RFC8200}}, {{RFC0791}} and the Border Gateway Protocol (BGP) {{RFC4271}}. These protocols have remained virtually unchanged since the standardization of IPv6 {{RFC2460}} and BGP-4 {{RFC1653}} in the 1990s. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. The following sections describe these issues in more detail.
 
 ### Internet Protocol
 
-IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts. Its first major version, IPv4, was specified in 1981 {{RFC0791}} and its (non-backward compatible) successor, IPv6, was introduced in 1998 {{RFC2460}}. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need to know the complete path to forward packets, nor can they influence the path the packets take. Unfortunately, this approach comes with many drawbacks:
+IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts. Its first major version, IPv4, was specified in 1981 {{RFC0791}} and its (non-backward compatible) successor, IPv6, was introduced in 1998 {{RFC2460}}. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need to know the complete path to forward packets, nor can they influence the path the packets take. But this approach comes with several drawbacks:
 
 - **Lack of transparency and control**  
 Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination.
@@ -87,17 +86,17 @@ IP routers maintain forwarding tables to determine the next hop of a received pa
 
 ### BGP
 
-BGP is the routing protocol that provides connectivity between autonomous systems (ASes), such as Internet service providers (ISPs). The protocol enables ISPs to perform traffic engineering and select routes based on policies that reflect the ISPs' business relationships. This happens through an intricate decision process that is used to select the best route to a destination {{CAESAR2005}}.
-Unfortunately, BGP comes with a number of shortcomings:
+BGP is the routing protocol that provides connectivity between autonomous systems (ASes), such as Internet service providers (ISPs). The protocol enables ISPs to perform traffic engineering and select routes based on policies that reflect the ISPs' business relationships.
+However, BGP suffers from a number of shortcomings:
 
 - **Outages**    
-Since the control plane and the data plane are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state {{LABOVITZ2000}}, which can lead to intermittent outages. As an indicator of these problems, a study has shown, for example, that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates {{KUSHMAN2007}}.
+Since the control plane and the data plane are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state {{LABOVITZ2000}}, which can lead to intermittent outages. As an indicator of these problems, a study has shown that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates {{KUSHMAN2007}}.
 - **Lack of fault isolation**   
 BGP is a globally distributed protocol, running among all BGP speakers in the entire Internet. BGP update messages are thus disseminated globally. Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.
 - **Poor scalability**  
 The amount of work required to be performed by BGP is proportional to the number of destinations. Moreover, path changes are disseminated profusely and sometimes throughout the entire Internet. This reduces scalability and prevents BGPsec from frequently disseminating freshly signed routing updates.
 - **Convergence**  
-ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, AS A could configure AS B as the next hop for a particular destination, while B uses A as a next hop for the same destination. In this case, a packet would be sent back and forth between the two ASes, which constitutes a forwarding loop.
+ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, forwarding loops may occur.
 Unfortunately, convergence to a consistent and stable state depends on the policies of individual ASes. In certain situations, BGP will never converge to a stable state {{GRIFFIN1999}}. Other topologies cause BGP wedgies, where BGP converges but non-deterministically {{RFC4264}}. In general, BGP convergence after topology changes can require several minutes, during which users may experience outages {{SAHOO2009}}. In addition, BGP convergence constitutes an attack vector for malicious actors and makes verifying security and availability properties highly challenging.
 - **Single path**  
 BGP only allows the selection of a single path to a destination. Although some multipath protocols support simultaneous use of multiple network interfaces, BGP does not provide path control to end hosts and does not allow use of multiple AS-level paths. This can even lead to outages when BGP selects a legitimate but inefficient route through a link that is too small to satisfy the demand (bottleneck routing). In such a situation, end hosts have no choice but to wait until ASes in the Internet manually modify policies such that a more appropriate path is chosen.
@@ -106,7 +105,8 @@ BGP has no built-in security mechanisms and does not provide any tools for ASes 
 
 ### RPKI and BGPsec
 
- Researchers recognized the issues arising from the lack of security mechanisms in core Internet protocols, and started working on improvements already in the late 1990s and early 2000s. While change was very slow initially (RPKI {{RFC6480}} and BGPsec {{RFC8205}} were only standardized in 2012 and 2017, respectively), there has been a substantial increase in RPKI deployment in recent years. However, RPKI and BGPsec have issues of their own, which we will discuss in the following sections. These issues made us believe that a more radical change to today’s Internet architecture will be necessary to fundamentally resolve its security problems.
+ Researchers already started working on improving the Internet's security in the late 1990s and early 2000s. While change was very slow initially (RPKI {{RFC6480}} and BGPsec {{RFC8205}} were only standardized in 2012 and 2017, respectively), there has been a substantial increase in RPKI deployment in recent years.  
+ But RPKI and BGPsec have issues of their own, which we discuss in the following sections. These issues made us believe that a more radical change to today’s Internet architecture is necessary to fundamentally resolve its (security) problems.
 
 #### RPKI and Route Origin Authorizations
 
@@ -119,26 +119,27 @@ BGPsec was standardized not before 2017, and it will likely take many years unti
 #### Problems with BGPsec in Full Deployment
 
 Even if all ASes in the world were to deploy BGPsec, many issues remain, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}, respectively.  
-RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}. As very few organizations are at the root of the RPKI hierarchy, these organizations have the power to create or revoke certificates. Depending on the jurisdiction, local courts of some countries may gain the power to shut down parts of the Internet, which makes some ISPs reluctant to deploy RPKI.  
-Finally, BGPsec further exacerbates BGP’s scalability issues. To provide global connectivity, every one of the currently about 75,000 ASes in the world needs to know how to reach every other AS. This requires a large number of BGP update messages, the processing of which requires many more resources in BGPsec due to the additional cryptographic operations.  
-Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated. This is particularly cumbersome, as Internet routers need to store and exchange a fast-growing number of paths, caused by the increasing fragmentation of the IP address space and the trend towards announcing ever smaller IP address ranges.
+RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}. As very few organizations are at the root of the RPKI hierarchy, these organizations have control over the creation or revocation of certificates. Depending on the jurisdiction, local courts of some countries may gain the power to shut down parts of the Internet, which makes some ISPs reluctant to deploy RPKI.  
+Additionally, BGPsec further exacerbates BGP’s scalability issues. To provide global connectivity, every one of the currently about 75,000 ASes in the world needs to know how to reach every other AS. This requires a large number of BGP update messages, the processing of which requires many more resources in BGPsec due to the additional cryptographic operations.  
+Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated. This is particularly cumbersome, as Internet routers need to store and exchange a fast-growing number of paths (caused by the increasing fragmentation of the IP address space and the trend towards announcing ever smaller IP address ranges).
 
-### Lack of Authentication
+### Other Internet Issues
 
-Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. Infrastructures to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, have been added in an ad-hoc manner.  
-Unfortunately, all these protocols are sensitive to the compromise of a single entity. DNSSEC and RPKI rely on a single or very small number of roots of trust. TLS is based on an oligopolistic trust model, in which any one of hundreds of authorities can issue a certificate for any domain name. The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, thus allowing the injection of fake ICMP packets, see {{RFC4443}} and {{RFC0791}}.  
-The Internet neither supports the establishment of a shared secret key between two end hosts for encrypted and authenticated end-to-end communication; the simplest mechanism today is to rely on trust-on-first-use (TOFU) approaches. They opportunistically send the public key unauthenticated to the other communicating party.
+#### Lack of Authentication
+
+Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. To address these issues, infrastructures to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, have been added in an ad-hoc manner.  
+Unfortunately, these protocols are sensitive to the compromise of a single entity. DNSSEC and RPKI rely on a single or very small number of roots of trust, whereas TLS is based on an oligopolistic trust model, in which any one of hundreds of authorities can issue a certificate for any domain name. The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, thus allowing the injection of fake ICMP packets, see {{RFC4443}} and {{RFC0791}}.  
+The Internet also does not support the establishment of a shared secret key between two end hosts for encrypted and authenticated end-to-end communication; the simplest mechanism today is to rely on trust-on-first-use (TOFU) approaches. They opportunistically send the public key unauthenticated to the other communicating party.
 
 
-### Attacks {#attack}
+#### Attacks {#attack}
 
-The current Internet architecture offers little to no protection against attacks such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof (which use a combination
-of vulnerabilities, or use a vulnerability in one protocol to compromise another protocol).
+The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof (which use a combination of vulnerabilities, or use a vulnerability in one protocol to compromise another protocol).
 
 - **Prefix hijacking**  
-Due to a lack of authentication and fault isolation in BGP, numerous Internet outages are caused by prefix hijacking, a malicious or erroneous announcement of IP address space. Prefix hijacking can also be used for interception (142). This problem is exacerbated by the fact that defining BGP routing policies is often a complicated, manual, and thus error-prone process.  
+Due to a lack of authentication and fault isolation in BGP, numerous Internet outages are caused by prefix hijacking. Prefix hijacking can also be used for interception (142). This problem is exacerbated by the fact that defining BGP routing policies is often a complicated, manual, and thus error-prone process.  
 Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec: With RPKI, a malicious AS trying to hijack a particular IP prefix can still send a BGP update message claiming that it is directly connected to its legitimate owner (for which there exists a valid ROA). Recipients of such an announcement would accept it, since the legitimate owner of the addresses is noted as the last AS in the BGP message. They would then start sending traffic intended for those IP addresses to the attacker, who can inspect, reroute, or drop it.  
-In settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
+Also, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
 - **Spoofing and DDoS attacks**  
 ICMP can be employed to send error or diagnostic messages (used by tools such as ping or traceroute). Because ICMP packets are not authenticated, the source address can easily be spoofed. This can lead to distributed denial-of-service (DDoS) attacks {{KUMAR2007}}, or be used to disconnect two BGP routers from each other {{RFC5927}}. Since regular IP packets are not authenticated either, they suffer from the same problem, i.e., the source IP address can be spoofed.
 
