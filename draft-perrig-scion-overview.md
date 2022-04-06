@@ -172,7 +172,8 @@ We seek to achieve greater transparency and control for the forwarding paths of 
 
 This requirement has not only beneficial repercussions, but also fragile if implemented incorrectly. We will discuss both.  
 
-The beneficial aspects of path control are:  
+The beneficial aspects of path control are:
+
 - *Separation of control plane and data plane*:  
 To enable path control, the control plane (which determines networking paths) must be separated from the data plane (which forwards packets according to the determined paths). The separation ensures that forwarding cannot retroactively be influenced by control-plane operations, e.g., routing changes. The separation contributes to enhanced availability.  
 - *Multipath communication*:  
@@ -182,7 +183,8 @@ Applications that transmit sensitive data can benefit from path control by ensur
 - *Defending against network attacks*:  
 If the packet’s path is carried in its header (which is one way to achieve path control), then the destination can reverse the path to return its response to the sender, mitigating reflection attacks. Path control also enables circumvention of malicious network entities or congested network areas, providing a powerful mechanism against DoS and DDoS attacks.  
 
-The fragile aspects that need to be handled with care are the following:  
+The fragile aspects that need to be handled with care are the following:
+
 - *Respecting the forwarding policies of ISPs*:  
 If senders have complete path control, they may violate ISPs’ forwarding policies. We thus need to ensure that ISPs offer a set of policy-compliant paths which senders can choose from.  
 - *Preventing malicious path creation*:  
