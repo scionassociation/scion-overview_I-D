@@ -172,29 +172,20 @@ We seek to achieve greater transparency and control for the forwarding paths of 
 
 This requirement has not only beneficial repercussions, but also fragile if implemented incorrectly. We will discuss both.  
 
-The beneficial aspects of path control are:
+The beneficial aspects of path control are:  
 
-- *Separation of control plane and data plane*:  
-To enable path control, the control plane (which determines networking paths) must be separated from the data plane (which forwards packets according to the determined paths). The separation ensures that forwarding cannot retroactively be influenced by control-plane operations, e.g., routing changes. The separation contributes to enhanced availability.  
-- *Multipath communication*:  
-Path control lets any sender select multiple paths to carry packets towards the destination. Multipath communication is a powerful mechanism to enhance availability {{ANDERSEN2001}} and enables fast failover, where end hosts can immediately switch to a backup path in the event that a link on their currently used path fails.  
-- *Geofencing*:  
-Applications that transmit sensitive data can benefit from path control by ensuring that packets only traverse certain trusted ASes and avoid others. This is important for certain industries, like the financial sector or healthcare.  
-- *Defending against network attacks*:  
-If the packet’s path is carried in its header (which is one way to achieve path control), then the destination can reverse the path to return its response to the sender, mitigating reflection attacks. Path control also enables circumvention of malicious network entities or congested network areas, providing a powerful mechanism against DoS and DDoS attacks.  
+- *Separation of control plane and data plane*: To enable path control, the control plane (which determines networking paths) must be separated from the data plane (which forwards packets according to the determined paths). The separation ensures that forwarding cannot retroactively be influenced by control-plane operations, e.g., routing changes. The separation contributes to enhanced availability.  
+- *Multipath communication*: Path control lets any sender select multiple paths to carry packets towards the destination. Multipath communication is a powerful mechanism to enhance availability {{ANDERSEN2001}} and enables fast failover, where end hosts can immediately switch to a backup path in the event that a link on their currently used path fails.  
+- *Geofencing*: Applications that transmit sensitive data can benefit from path control by ensuring that packets only traverse certain trusted ASes and avoid others. This is important for certain industries, like the financial sector or healthcare.  
+- *Defending against network attacks*: If the packet’s path is carried in its header (which is one way to achieve path control), then the destination can reverse the path to return its response to the sender, mitigating reflection attacks. Path control also enables circumvention of malicious network entities or congested network areas, providing a powerful mechanism against DoS and DDoS attacks.  
 
-The fragile aspects that need to be handled with care are the following:
+The fragile aspects that need to be handled with care are the following:  
 
-- *Respecting the forwarding policies of ISPs*:  
-If senders have complete path control, they may violate ISPs’ forwarding policies. We thus need to ensure that ISPs offer a set of policy-compliant paths which senders can choose from.  
-- *Preventing malicious path creation*:  
-A malicious sender could exploit path control for attacks, for example by forming malicious forwarding paths such as loops that consume increased network resources.  
-- *Scalability of path control*:  
-Pure source routing does not scale to inter-domain networks, as a source would need to know the full network topology to determine paths. With SCION, a source does not compute an end-to-end path based on a topology, but selects among a set of paths provided by the control plane. We call this path control. To make path control scale, we thus rely on source-selected paths and packet-carried forwarding state instead of on full-fledged source routing.  
-- *Permitting traffic engineering*:  
-Fine-grained path control would inhibit ISPs from operating and performing traffic engineering. We thus seek to provide end-host path control at the granularity of links between ASes, allowing ISPs to fully control internal paths. ISPs can further perform traffic engineering based on per-path bandwidth allocations, which can be encoded in the forwarding information, or dynamically adjusted in the network.  
-- *Network stability*:  
-Past research has shown that uncoordinated path selection by end hosts can lead to persistent oscillations, i.e., an alternating grow-and-shrink pattern of traffic volumes on links (188), {{SHAIKH2001}}. This is often raised as a key concern and represents one of the biggest obstacles to deploy path-aware networks {{RFC9049}}. It is thus imperative that a future Internet architecture take this into account and develop mechanisms preventing these instabilities {{SCHERRER2020}}.  
+- *Respecting the forwarding policies of ISPs*: If senders have complete path control, they may violate ISPs’ forwarding policies. We thus need to ensure that ISPs offer a set of policy-compliant paths which senders can choose from.  
+- *Preventing malicious path creation*: A malicious sender could exploit path control for attacks, for example by forming malicious forwarding paths such as loops that consume increased network resources.  
+- *Scalability of path control*: Pure source routing does not scale to inter-domain networks, as a source would need to know the full network topology to determine paths. With SCION, a source does not compute an end-to-end path based on a topology, but selects among a set of paths provided by the control plane. We call this path control. To make path control scale, we thus rely on source-selected paths and packet-carried forwarding state instead of on full-fledged source routing.  
+- *Permitting traffic engineering*: Fine-grained path control would inhibit ISPs from operating and performing traffic engineering. We thus seek to provide end-host path control at the granularity of links between ASes, allowing ISPs to fully control internal paths. ISPs can further perform traffic engineering based on per-path bandwidth allocations, which can be encoded in the forwarding information, or dynamically adjusted in the network.  
+- *Network stability*: Past research has shown that uncoordinated path selection by end hosts can lead to persistent oscillations, i.e., an alternating grow-and-shrink pattern of traffic volumes on links (188), {{SHAIKH2001}}. This is often raised as a key concern and represents one of the biggest obstacles to deploy path-aware networks {{RFC9049}}. It is thus imperative that a future Internet architecture take this into account and develop mechanisms preventing these instabilities {{SCHERRER2020}}.  
 
 ### Efficiency and Scalability
 
