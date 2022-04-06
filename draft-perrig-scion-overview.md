@@ -59,16 +59,16 @@ This document gives a high-level overview of the SCION architecture, including i
 
 # Introduction
 
-The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.
+The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short description of SCION's network structure and naming.
 
 The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
 
 
-## Why SCION - Internet's Issues
+## Why SCION - Internet's Issues {#why}
 
 ### Issues with IP and BGP
 
-IP and BGP effectively define today’s Internet architecture. These protocols have remained virtually unchanged since the standardization of IPv6 {{RFC8200}} and BGP-4 {{RFC4271}}. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. The following sections list these issues.
+IP and BGP, the two protocols that define today’s Internet architecture, have remained virtually unchanged since the standardization of IPv6 {{RFC8200}} and BGP-4 {{RFC4271}}. But the Internet has never stopped to expand and continually needs to accommodate new uses. This has brought numerous issues to light. The following sections list these issues.
 
 #### Internet Protocol
 
@@ -77,7 +77,7 @@ IP comes with the following drawbacks:
 - **Lack of transparency and control**  
 Today's Internet does not allow end hosts to select and verify paths. It is also not possible to simultaneously use multiple distinct paths towards the same destination.
 - **Stateful routers**  
-The use of forwarding tables by IP routers is time-consuming, expensive, and energy-intensive. The constantly growing size of forwarding tables causes storage problems. Additionally, routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
+The use of forwarding tables by IP routers is time-consuming, expensive, and energy-intensive. Also, the constantly growing size of forwarding tables causes storage problems. Additionally, routers that keep state for network information can suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
 
 #### BGP
 
@@ -88,24 +88,24 @@ The unclear separation of control plane and the data plane as well as convergenc
 - **Lack of fault isolation**   
 Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.
 - **Poor scalability**  
-The bigger the Internet becomes, regarding both the number of destinations and path change disseminations, the higher the workload of BGP gets, making it scale poorly.
+The bigger the Internet becomes, the higher the workload of BGP gets, making it scale poorly.
 - **Convergence**  
 BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or converge only non-deterministically (see {{GRIFFIN1999}} and {{RFC4264}}. Convergence may also take too much time {{SAHOO2009}}.
 - **Single path**  
-BGP only allows the selection of a single path to a destination.
+BGP only allows the selection of a single path to a destination. But having a multi-path choice can be welcome in several situations, e.g., in case of a link failure, or when a packet is routed over a too small and thus inefficient path.
 - **Lack of security**  
-BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see also [Attacks](#attack).
+BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see [Attacks](#attack).
 
 ### Issues with RPKI and BGPsec
 
- RPKI and BGPsec tried to addressed Internet's above-mentioned security shortcomings in recent years--see also {{RFC6480}} and {{RFC8205}}). However, RPKI and BGPsec have issues of their own, as shortly described below.
+ RPKI and BGPsec try to address Internet's above-mentioned security shortcomings, see also {{RFC6480}} and {{RFC8205}}. However, RPKI and BGPsec have issues of their own, as shortly described below.
 
 - **RPKI and Route Origin Authorizations**  
 Unfortunately, the Route Origin Authorizations (ROAs) provided by RPKI only prevent the simplest form of BGP hijacks, see [Attacks](#attack).
 - **Problems with BGPsec in partial deployment**  
-In a partial deployment, BGPsec can even cause instabilities and is prone to downgrade attacks, see {{LYCHEV2013}}.
+BGPsec only provides full security when all ASes consistently use and enforce it. In the current situation, where BGP is only partially deployed, it is not very effective. It can even cause instabilities and is prone to downgrade attacks, see {{LYCHEV2013}}.
 - **Problems with BGPsec in full deployment**  
-Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}.   Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.
+Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec together also cause issues for network sovereignty {{ROTHENBERGER2017}}. Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.
 
 ### Other Internet Issues
 
@@ -113,25 +113,24 @@ Also full deployment of BGPsec raises issues, such as the creation of wormholes 
 
 Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. However, implementation of authentication is not strong in today's Internet:
 
+- Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.  
 - Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, are all sensitive to the compromise of a single entity.  
-- The Internet Control Message Protocol (ICMP) does not have an authenticated counterpart, see {{RFC4443}} and {{RFC0791}}.
-- Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.
+- The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, see {{RFC4443}} and {{RFC0791}}.
+
 
 
 #### Attacks {#attack}
 
-The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof. Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec. Also, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
+The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof. Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec. Additionally, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
 
 
 ## SCION Network Structure and Naming
 
-SCION has been designed to address the security issues of today's Internet. This section gives a high-level description of SCION's structure and naming, to provide a basic understanding of this next-generation inter-network architecture, and to facilitate reading of the rest of this Internet Draft.
+SCION has been designed to address the security issues of today's Internet depicted in the previous section [Why SCION - Internet's Issues](#why). This section gives a high-level description of SCION's structure and naming, providing a basic understanding of this next-generation inter-network architecture.
 
-SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
+To achieve scalability and sovereignty, SCION organizes existing ASes into groups of independent routing planes, called **Isolation Domains (ISD)**. An AS can be a member of multiple ISDs. All ASes in an ISD agree on a set of trust roots, called the **Trust Root Configuration (TRC)**, ensuring that network traffic only flows on policy-compliant paths. The ISD is governed by a set of **core ASes**, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.
 
-As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. SCION also enables multi-path communication among end hosts.
-
-SCION reuses the Autonomous Systems (AS) structure, and ensures that network traffic only flows on policy-compliant paths. To achieve scalability and sovereignty, Isolation Domains (ISD) are introduced. An ISD groups ASes that agree on a set of trust roots, called the Trust Root Configuration (TRC). An AS can be a member of multiple ISDs. The ISD is governed by a set of core ASes, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.
+Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness. As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. This concept is called **packet-carried forwarding state (PCFS)**. SCION also enables multi-path communication among end hosts.
 
 Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the <ISD, AS, local address> 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.
 
@@ -140,6 +139,9 @@ Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing 
 {::boilerplate bcp14-tagged}
 
 # Key Concepts
+
+## Infrastructure Components
+
 
 ## Authentication
 
