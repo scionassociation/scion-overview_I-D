@@ -28,20 +28,15 @@ normative:
 informative:
   RFC4264:
   RFC0791:
-  RFC1653:
-  RFC2460:
   RFC4033:
   RFC4271:
   RFC4443:
-  RFC5927:
   RFC6480:
   RFC8200:
   RFC8205:
   RFC8446:
-  RFC9049:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
-  KUSHMAN2007: DOI.10.1145/1232919.1232927
   GRIFFIN1999: DOI.10.1145/316194.316231
   SAHOO2009: DOI.10.1016/j.comcom.2009.03.009
   LYCHEV2013: DOI.10.1145/2534169.2486010
@@ -49,15 +44,6 @@ informative:
   COOPER2013: DOI.10.1145/2535771.2535787
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
   MORILLO2021: DOI.10.14722/ndss.2021.24438
-  KUMAR2007: DOI.10.1109/ICIMP.2007.42
-  MAN2020: DOI.10.1145/3372297.3417280
-  ZHENG2020: DOI.10.5555/3489212.3489245
-  ALOWAISHEQ2020: DOI.10.1145/3372297.3417864
-  HOUSER2021: DOI.10.1109/SRDS53918.2021.00029
-  DAI2021: DOI.10.1145/3452296.3472933
-  ANDERSEN2001: DOI.10.1145/502034.502048
-  SHAIKH2001: DOI.10.1109/90.917073
-  SCHERRER2020: DOI.10.1145/3453953.3453956
 
 
 --- abstract
@@ -104,7 +90,7 @@ Due to the lack of any routing hierarchy or isolation between different areas, a
 - **Poor scalability**  
 The bigger the Internet becomes, regarding both the number of destinations and path change disseminations, the higher the workload of BGP gets, making it scale poorly.
 - **Convergence**  
-BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or only non-deterministically, or convergence takes too much time (see {{GRIFFIN1999}}, {{RFC4264}}, and {{SAHOO2009}}, respectively).
+BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or converge only non-deterministically (see {{GRIFFIN1999}} and {{RFC4264}}. Convergence may also take too much time {{SAHOO2009}}.
 - **Single path**  
 BGP only allows the selection of a single path to a destination.
 - **Lack of security**  
@@ -119,15 +105,15 @@ Unfortunately, the Route Origin Authorizations (ROAs) provided by RPKI only prev
 - **Problems with BGPsec in partial deployment**  
 In a partial deployment, BGPsec can even cause instabilities and is prone to downgrade attacks, see {{LYCHEV2013}}.
 - **Problems with BGPsec in full deployment**  
-Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}.  
-Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.
+Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec also cause issues for network sovereignty {{ROTHENBERGER2017}}.   Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.
 
 ### Other Internet Issues
 
 #### Lack of Authentication
 
 Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. However, implementation of authentication is not strong in today's Internet:
-- Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, are all sensitive to the compromise of a single entity.   
+
+- Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, are all sensitive to the compromise of a single entity.  
 - The Internet Control Message Protocol (ICMP) does not have an authenticated counterpart, see {{RFC4443}} and {{RFC0791}}.
 - Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.
 
@@ -138,6 +124,8 @@ The current Internet architecture offers little to no protection against several
 
 
 ## SCION Network Structure and Naming
+
+SCION has been designed to address the security issues of today's Internet. This section gives a high-level description of SCION's structure and naming, to provide a basic understanding of this next-generation inter-network architecture, and to facilitate reading of the rest of this Internet Draft.
 
 SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
 

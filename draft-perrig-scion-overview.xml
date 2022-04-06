@@ -36,7 +36,7 @@
 
 <t>The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.</t>
 
-<t>This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, we conclude with an overview of SCION deployments.</t>
+<t>This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, its conclude with an overview of SCION deployments.</t>
 
 
 
@@ -64,152 +64,86 @@
 
 <section anchor="introduction"><name>Introduction</name>
 
-<t>The Introduction section explains why we designed SCION in the first place. It presents an overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.</t>
+<t>The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient.</t>
 
-<t>The sections after the Introduction provide further insight into SCION's main concepts and features. We complete the document with some concrete case studies where SCION has been applied successfully.</t>
+<t>The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.</t>
 
 <section anchor="why-scion-internets-issues"><name>Why SCION - Internet's Issues</name>
 
-<t>Two protocols effectively define today’s Internet architecture: the Internet Protocol (IP) <xref target="RFC8200"/>, <xref target="RFC0791"/> and the Border Gateway Protocol (BGP) <xref target="RFC4271"/>. These protocols have remained virtually unchanged since the standardization of IPv6 <xref target="RFC2460"/> and BGP-4 <xref target="RFC1653"/> in the 1990s. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. The following sections describe these issues in more detail.</t>
+<section anchor="issues-with-ip-and-bgp"><name>Issues with IP and BGP</name>
 
-<section anchor="internet-protocol"><name>Internet Protocol</name>
+<t>IP and BGP effectively define today’s Internet architecture. These protocols have remained virtually unchanged since the standardization of IPv6 <xref target="RFC8200"/> and BGP-4 <xref target="RFC4271"/>. However, as the Internet continued to expand and needed to accommodate new uses, numerous issues came to light. The following sections list these issues.</t>
 
-<t>IP is one of the fundamental protocols of the Internet, as it enables the forwarding of packets between end hosts. Its first major version, IPv4, was specified in 1981 <xref target="RFC0791"/> and its (non-backward compatible) successor, IPv6, was introduced in 1998 <xref target="RFC2460"/>. After this, no major changes have taken place. The IP protocol follows a relatively simple approach: End hosts do not need to know the complete path to forward packets, nor can they influence the path the packets take. But this approach comes with several drawbacks:</t>
+<section anchor="internet-protocol"><name> Internet Protocol</name>
+
+<t>IP comes with the following drawbacks:</t>
 
 <t><list style="symbols">
   <t><strong>Lack of transparency and control</strong><br />
-Being able to select and verify the path that packets take is desirable in many situations. End hosts might want to avoid packets being routed through adversarial or untrusted networks, or they might want to choose the most suitable path with regard to a specific metric (e.g., latency or bandwidth). Unfortunately, IP does not offer such an option. Although systems that enable loose and strict source routing have been proposed, these extensions are not commonly supported in today’s networks. It is also not possible to simultaneously use multiple distinct paths towards the same destination.</t>
+Today's Internet does not allow end hosts to select and verify paths. It is also not possible to simultaneously use multiple distinct paths towards the same destination.</t>
   <t><strong>Stateful routers</strong><br />
-IP routers maintain forwarding tables to determine the next hop of a received packet. This basic requirement has undesirable consequences. Performing a forwarding-table lookup for every packet is a time-consuming operation. Therefore, high-performance networking equipment typically relies on ternary content-addressable memory (TCAM) hardware, which is expensive and energy-intensive. Moreover, the constantly growing size of forwarding tables, partially due to the slow but steady deployment of IPv6, poses a problem for routers, as the storage capacity of TCAM hardware is limited. Routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state <xref target="SCHUCHARD2011"/>.</t>
+The use of forwarding tables by IP routers is time-consuming, expensive, and energy-intensive. The constantly growing size of forwarding tables causes storage problems. Additionally, routers that keep state for network information can also suffer from denial-of-service (DoS) attacks exhausting the router’s state <xref target="SCHUCHARD2011"/>.</t>
 </list></t>
 
 </section>
-<section anchor="bgp"><name>BGP</name>
+<section anchor="bgp"><name> BGP</name>
 
-<t>BGP is the routing protocol that provides connectivity between autonomous systems (ASes), such as Internet service providers (ISPs). The protocol enables ISPs to perform traffic engineering and select routes based on policies that reflect the ISPs' business relationships.
-However, BGP suffers from a number of shortcomings:</t>
+<t>Just as IP, also BGP suffers from a number of shortcomings:</t>
 
 <t><list style="symbols">
   <t><strong>Outages</strong>  <br />
-Since the control plane and the data plane are not clearly separated in today’s Internet, forwarding may suddenly fail during route changes. By attacking routing, an adversary can thus interfere with packet forwarding. Furthermore, when BGP update messages are sent, the network may require up to tens of minutes to converge to a stable state <xref target="LABOVITZ2000"/>, which can lead to intermittent outages. As an indicator of these problems, a study has shown that a sudden degradation in user-perceived quality of voice-over-IP (VoIP) calls is highly correlated with BGP updates <xref target="KUSHMAN2007"/>.</t>
+The unclear separation of control plane and the data plane as well as convergence problems can lead to severe outages problems of up to ten minutes or more <xref target="LABOVITZ2000"/>.</t>
   <t><strong>Lack of fault isolation</strong> <br />
-BGP is a globally distributed protocol, running among all BGP speakers in the entire Internet. BGP update messages are thus disseminated globally. Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.</t>
+Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.</t>
   <t><strong>Poor scalability</strong><br />
-The amount of work required to be performed by BGP is proportional to the number of destinations. Moreover, path changes are disseminated profusely and sometimes throughout the entire Internet. This reduces scalability and prevents BGPsec from frequently disseminating freshly signed routing updates.</t>
+The bigger the Internet becomes, regarding both the number of destinations and path change disseminations, the higher the workload of BGP gets, making it scale poorly.</t>
   <t><strong>Convergence</strong><br />
-ASes must have a consistent view of the network topology and agree on the set of paths to use for packet forwarding. Otherwise, forwarding loops may occur.
-Unfortunately, convergence to a consistent and stable state depends on the policies of individual ASes. In certain situations, BGP will never converge to a stable state <xref target="GRIFFIN1999"/>. Other topologies cause BGP wedgies, where BGP converges but non-deterministically <xref target="RFC4264"/>. In general, BGP convergence after topology changes can require several minutes, during which users may experience outages <xref target="SAHOO2009"/>. In addition, BGP convergence constitutes an attack vector for malicious actors and makes verifying security and availability properties highly challenging.</t>
+BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or converge only non-deterministically (see <xref target="GRIFFIN1999"/> and <xref target="RFC4264"/>. Convergence may also take too much time <xref target="SAHOO2009"/>.</t>
   <t><strong>Single path</strong><br />
-BGP only allows the selection of a single path to a destination. Although some multipath protocols support simultaneous use of multiple network interfaces, BGP does not provide path control to end hosts and does not allow use of multiple AS-level paths. This can even lead to outages when BGP selects a legitimate but inefficient route through a link that is too small to satisfy the demand (bottleneck routing). In such a situation, end hosts have no choice but to wait until ASes in the Internet manually modify policies such that a more appropriate path is chosen.</t>
+BGP only allows the selection of a single path to a destination.</t>
   <t><strong>Lack of security</strong><br />
-BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see also <xref target="attack">Attacks</xref>. RPKI and BGPsec tried to addressed these security issues in recent years. However, RPKI and BGPsec have problems of their own, as we discuss in the next section.</t>
+BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see also <xref target="attack">Attacks</xref>.</t>
 </list></t>
 
 </section>
-<section anchor="rpki-and-bgpsec"><name>RPKI and BGPsec</name>
-
-<t>Researchers already started working on improving the Internet's security in the late 1990s and early 2000s. While change was very slow initially (RPKI <xref target="RFC6480"/> and BGPsec <xref target="RFC8205"/> were only standardized in 2012 and 2017, respectively), there has been a substantial increase in RPKI deployment in recent years.<br />
- But RPKI and BGPsec have issues of their own, which we discuss in the following sections. These issues made us believe that a more radical change to today’s Internet architecture is necessary to fundamentally resolve its (security) problems.</t>
-
-<section anchor="rpki-and-route-origin-authorizations"><name>RPKI and Route Origin Authorizations</name>
-
-<t>RPKI provides certificates to ASes, and certificates for the IP addresses they own, which are called Route Origin Authorizations (ROAs). Unfortunately, ROAs only prevent the simplest form of BGP hijacks, see <xref target="attack">Attacks</xref>.</t>
-
 </section>
-<section anchor="problems-with-bgpsec-in-partial-deployment"><name>Problems with BGPsec in Partial Deployment</name>
+<section anchor="issues-with-rpki-and-bgpsec"><name>Issues with RPKI and BGPsec</name>
 
-<t>BGPsec was standardized not before 2017, and it will likely take many years until it reaches global deployment. However, the protocol provides very little security benefits unless it is consistently used and enforced by all ASes, see <xref target="LYCHEV2013"/>. In a partial deployment, BGPsec can even cause instabilities and is prone to downgrade attacks.</t>
+<t>RPKI and BGPsec tried to addressed Internet's above-mentioned security shortcomings in recent years--see also <xref target="RFC6480"/> and <xref target="RFC8205"/>). However, RPKI and BGPsec have issues of their own, as shortly described below.</t>
 
-</section>
-<section anchor="problems-with-bgpsec-in-full-deployment"><name>Problems with BGPsec in Full Deployment</name>
+<t><list style="symbols">
+  <t><strong>RPKI and Route Origin Authorizations</strong><br />
+Unfortunately, the Route Origin Authorizations (ROAs) provided by RPKI only prevent the simplest form of BGP hijacks, see <xref target="attack">Attacks</xref>.</t>
+  <t><strong>Problems with BGPsec in partial deployment</strong><br />
+In a partial deployment, BGPsec can even cause instabilities and is prone to downgrade attacks, see <xref target="LYCHEV2013"/>.</t>
+  <t><strong>Problems with BGPsec in full deployment</strong><br />
+Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see <xref target="LI2014"/> and <xref target="COOPER2013"/>. RPKI and BGPsec also cause issues for network sovereignty <xref target="ROTHENBERGER2017"/>.   Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.</t>
+</list></t>
 
-<t>Even if all ASes in the world were to deploy BGPsec, many issues remain, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see <xref target="LI2014"/> and <xref target="COOPER2013"/>, respectively.<br />
-RPKI and BGPsec also cause issues for network sovereignty <xref target="ROTHENBERGER2017"/>. As very few organizations are at the root of the RPKI hierarchy, these organizations have control over the creation or revocation of certificates. Depending on the jurisdiction, local courts of some countries may gain the power to shut down parts of the Internet, which makes some ISPs reluctant to deploy RPKI.<br />
-Additionally, BGPsec further exacerbates BGP’s scalability issues. To provide global connectivity, every one of the currently about 75,000 ASes in the world needs to know how to reach every other AS. This requires a large number of BGP update messages, the processing of which requires many more resources in BGPsec due to the additional cryptographic operations.<br />
-Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated. This is particularly cumbersome, as Internet routers need to store and exchange a fast-growing number of paths (caused by the increasing fragmentation of the IP address space and the trend towards announcing ever smaller IP address ranges).</t>
-
-</section>
 </section>
 <section anchor="other-internet-issues"><name>Other Internet Issues</name>
 
 <section anchor="lack-of-authentication"><name>Lack of Authentication</name>
 
-<t>Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. To address these issues, infrastructures to provide authentication, such as RPKI/BGPsec, TLS <xref target="RFC8446"/>, and DNSSEC <xref target="RFC4033"/>, have been added in an ad-hoc manner.<br />
-Unfortunately, these protocols are sensitive to the compromise of a single entity. DNSSEC and RPKI rely on a single or very small number of roots of trust, whereas TLS is based on an oligopolistic trust model, in which any one of hundreds of authorities can issue a certificate for any domain name. The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, thus allowing the injection of fake ICMP packets, see <xref target="RFC4443"/> and <xref target="RFC0791"/>.<br />
-The Internet also does not support the establishment of a shared secret key between two end hosts for encrypted and authenticated end-to-end communication; the simplest mechanism today is to rely on trust-on-first-use (TOFU) approaches. They opportunistically send the public key unauthenticated to the other communicating party.</t>
+<t>Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. However, implementation of authentication is not strong in today's Internet:</t>
+
+<t><list style="symbols">
+  <t>Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS <xref target="RFC8446"/>, and DNSSEC <xref target="RFC4033"/>, are all sensitive to the compromise of a single entity.</t>
+  <t>The Internet Control Message Protocol (ICMP) does not have an authenticated counterpart, see <xref target="RFC4443"/> and <xref target="RFC0791"/>.</t>
+  <t>Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.</t>
+</list></t>
 
 </section>
 <section anchor="attack"><name> Attacks</name>
 
-<t>The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof (which use a combination of vulnerabilities, or use a vulnerability in one protocol to compromise another protocol).</t>
-
-<t><list style="symbols">
-  <t><strong>Prefix hijacking</strong><br />
-Due to a lack of authentication and fault isolation in BGP, numerous Internet outages are caused by prefix hijacking. Prefix hijacking can also be used for interception (142). This problem is exacerbated by the fact that defining BGP routing policies is often a complicated, manual, and thus error-prone process.<br />
-Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec: With RPKI, a malicious AS trying to hijack a particular IP prefix can still send a BGP update message claiming that it is directly connected to its legitimate owner (for which there exists a valid ROA). Recipients of such an announcement would accept it, since the legitimate owner of the addresses is noted as the last AS in the BGP message. They would then start sending traffic intended for those IP addresses to the attacker, who can inspect, reroute, or drop it.<br />
-Also, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes <xref target="MORILLO2021"/>.</t>
-  <t><strong>Spoofing and DDoS attacks</strong><br />
-ICMP can be employed to send error or diagnostic messages (used by tools such as ping or traceroute). Because ICMP packets are not authenticated, the source address can easily be spoofed. This can lead to distributed denial-of-service (DDoS) attacks <xref target="KUMAR2007"/>, or be used to disconnect two BGP routers from each other <xref target="RFC5927"/>. Since regular IP packets are not authenticated either, they suffer from the same problem, i.e., the source IP address can be spoofed.</t>
-  <t><strong>Deceiving Certification Authorities with BGP</strong><br />
-Certification authorities (CAs) issue digital certificates used to protect websites against man-in-the-middle attacks. Ironically, CAs themselves are vulnerable to attacks, as they rely on exchanging unencrypted and unauthenticated packets during domain validation. If attackers manage to redirect these packets, they can obtain fraudulent certificates. This may happen, for example, if an attacker has access to an AS’s border router and is thus able to launch a prefix-hijacking attack. One of the countermeasures proposed by Birge-Lee et al. is to perform domain validation from multiple vantage points. See also <eref target="https://www.usenix.org/conference/usenixsecurity18/presentation/birge-lee">Proceedings USENIX 2018</eref> and <eref target="https://www.usenix.org/conference/usenixsecurity21/presentation/birge-lee">Proceedings USENIX 2021</eref>, respectively. Unfortunately, this does not fully solve the problem, as it only protects CAs from attackers who control a limited number of border routers.</t>
-  <t><strong>DNS Hijacking and Cross-layer Attacks</strong><br />
-Over the past few years, researchers have discovered a flurry of subtle vulnerabilities that can poison DNS caches or hijack name servers. Alarmingly, DNS hijacking has been widely observed in the wild, too, as evidenced by large-scale hijacking campaigns such as Sea Turtle.<br />
-Because of its essential functionality, DNS also plays a central role in broader contexts of Internet security. A recent measurement research shows that DNS vulnerabilities can be leveraged to subvert a range of Internet systems and services including but not limited to PKIs, time synchronization, email, VPN, and web applications. A secure DNS is thus indispensable to a secure Internet. Unfortunately, DNSSEC as the standardized solution has not achieved widespread deployment, in part also because it introduces numerous additional limitations (see the SCION book 2).<br />
-For more information, see <xref target="MAN2020"/>, <xref target="ZHENG2020"/>, <xref target="ALOWAISHEQ2020"/>, <xref target="HOUSER2021"/>, 7, and <xref target="DAI2021"/>, respectively.</t>
-</list></t>
+<t>The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof. Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec. Also, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes <xref target="MORILLO2021"/>.</t>
 
 </section>
-</section>
-</section>
-<section anchor="goals-for-a-secure-internet-architecture"><name>Goals for a Secure Internet Architecture</name>
-
-<t>We are convinced that a real change to today’s Internet architecture is necessary to fundamentally resolve its problems. In this section, we present high-level goals that such a next-generation inter-domain, point-to-point, communication architecture should achieve. We believe that SCION meets these goals.</t>
-
-<section anchor="availability-in-the-presence-of-adversaries"><name>Availability in the Presence of Adversaries</name>
-
-<t>Our overarching goal is the design of a communication infrastructure that remains highly available even in the presence of distributed adversaries: As long as an attacker-free path between end hosts exists, that path should be discovered and provide some guaranteed amount of bandwidth between these end hosts.</t>
-
-</section>
-<section anchor="transparency-and-control"><name> Transparency and Control</name>
-
-<t>We seek to achieve greater transparency and control for the forwarding paths of network packets, and the trust roots used for authentication. When the network offers path transparency, end hosts can predict (and verify) the forwarding path taken by packets. Taking transparency of network paths as a first property, we aim to additionally achieve path control, a stronger property that (1) enables ASes to control the incoming path segments through which they are reachable and (2) allows senders to then create and select end-to-end paths.</t>
-
-<t>This requirement has not only beneficial repercussions, but also fragile if implemented incorrectly. We will discuss both.</t>
-
-<t>The beneficial aspects of path control are:</t>
-
-<t><list style="symbols">
-  <t><em>Separation of control plane and data plane</em>: To enable path control, the control plane (which determines networking paths) must be separated from the data plane (which forwards packets according to the determined paths). The separation ensures that forwarding cannot retroactively be influenced by control-plane operations, e.g., routing changes. The separation contributes to enhanced availability.</t>
-  <t><em>Multipath communication</em>: Path control lets any sender select multiple paths to carry packets towards the destination. Multipath communication is a powerful mechanism to enhance availability <xref target="ANDERSEN2001"/> and enables fast failover, where end hosts can immediately switch to a backup path in the event that a link on their currently used path fails.</t>
-  <t><em>Geofencing</em>: Applications that transmit sensitive data can benefit from path control by ensuring that packets only traverse certain trusted ASes and avoid others. This is important for certain industries, like the financial sector or healthcare.</t>
-  <t><em>Defending against network attacks</em>: If the packet’s path is carried in its header (which is one way to achieve path control), then the destination can reverse the path to return its response to the sender, mitigating reflection attacks. Path control also enables circumvention of malicious network entities or congested network areas, providing a powerful mechanism against DoS and DDoS attacks.</t>
-</list></t>
-
-<t>The fragile aspects that need to be handled with care are the following:</t>
-
-<t><list style="symbols">
-  <t><em>Respecting the forwarding policies of ISPs</em>: If senders have complete path control, they may violate ISPs’ forwarding policies. We thus need to ensure that ISPs offer a set of policy-compliant paths which senders can choose from.</t>
-  <t><em>Preventing malicious path creation</em>: A malicious sender could exploit path control for attacks, for example by forming malicious forwarding paths such as loops that consume increased network resources.</t>
-  <t><em>Scalability of path control</em>: Pure source routing does not scale to inter-domain networks, as a source would need to know the full network topology to determine paths. With SCION, a source does not compute an end-to-end path based on a topology, but selects among a set of paths provided by the control plane. We call this path control. To make path control scale, we thus rely on source-selected paths and packet-carried forwarding state instead of on full-fledged source routing.</t>
-  <t><em>Permitting traffic engineering</em>: Fine-grained path control would inhibit ISPs from operating and performing traffic engineering. We thus seek to provide end-host path control at the granularity of links between ASes, allowing ISPs to fully control internal paths. ISPs can further perform traffic engineering based on per-path bandwidth allocations, which can be encoded in the forwarding information, or dynamically adjusted in the network.</t>
-  <t><em>Network stability</em>: Past research has shown that uncoordinated path selection by end hosts can lead to persistent oscillations, i.e., an alternating grow-and-shrink pattern of traffic volumes on links (188), <xref target="SHAIKH2001"/>. This is often raised as a key concern and represents one of the biggest obstacles to deploy path-aware networks <xref target="RFC9049"/>. It is thus imperative that a future Internet architecture take this into account and develop mechanisms preventing these instabilities <xref target="SCHERRER2020"/>.</t>
-</list></t>
-
-</section>
-<section anchor="efficiency-and-scalability"><name> Efficiency and Scalability</name>
-
-</section>
-<section anchor="extensibility-and-algorithm-agility"><name> Extensibility and Algorithm Agility</name>
-
-</section>
-<section anchor="deployability"><name> Deployability</name>
-
-</section>
-<section anchor="formal-verification"><name> Formal Verification</name>
-
 </section>
 </section>
 <section anchor="scion-network-structure-and-naming"><name>SCION Network Structure and Naming</name>
+
+<t>SCION has been designed to address the security issues of today's Internet. This section gives a high-level description of SCION's structure and naming, to provide a basic understanding of this next-generation inter-network architecture, and to facilitate reading of the rest of this Internet Draft.</t>
 
 <t>SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.</t>
 
@@ -422,35 +356,6 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
 
 
 
-<reference anchor='RFC1653' target='https://www.rfc-editor.org/info/rfc1653'>
-<front>
-<title>SMTP Service Extension for Message Size Declaration</title>
-<author fullname='J. Klensin' initials='J.' surname='Klensin'><organization/></author>
-<author fullname='N. Freed' initials='N.' surname='Freed'><organization/></author>
-<author fullname='K. Moore' initials='K.' surname='Moore'><organization/></author>
-<date month='July' year='1994'/>
-<abstract><t>This memo defines an extension to the SMTP service whereby an SMTP client and server may interact to give the server an opportunity to decline to accept a message (perhaps temporarily) based on the client's estimate of the message size.  [STANDARDS-TRACK]</t></abstract>
-</front>
-<seriesInfo name='RFC' value='1653'/>
-<seriesInfo name='DOI' value='10.17487/RFC1653'/>
-</reference>
-
-
-
-<reference anchor='RFC2460' target='https://www.rfc-editor.org/info/rfc2460'>
-<front>
-<title>Internet Protocol, Version 6 (IPv6) Specification</title>
-<author fullname='S. Deering' initials='S.' surname='Deering'><organization/></author>
-<author fullname='R. Hinden' initials='R.' surname='Hinden'><organization/></author>
-<date month='December' year='1998'/>
-<abstract><t>This document specifies version 6 of the Internet Protocol (IPv6), also sometimes referred to as IP Next Generation or IPng.  [STANDARDS-TRACK]</t></abstract>
-</front>
-<seriesInfo name='RFC' value='2460'/>
-<seriesInfo name='DOI' value='10.17487/RFC2460'/>
-</reference>
-
-
-
 <reference anchor='RFC4033' target='https://www.rfc-editor.org/info/rfc4033'>
 <front>
 <title>DNS Security Introduction and Requirements</title>
@@ -495,19 +400,6 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
 <seriesInfo name='STD' value='89'/>
 <seriesInfo name='RFC' value='4443'/>
 <seriesInfo name='DOI' value='10.17487/RFC4443'/>
-</reference>
-
-
-
-<reference anchor='RFC5927' target='https://www.rfc-editor.org/info/rfc5927'>
-<front>
-<title>ICMP Attacks against TCP</title>
-<author fullname='F. Gont' initials='F.' surname='Gont'><organization/></author>
-<date month='July' year='2010'/>
-<abstract><t>This document discusses the use of the Internet Control Message Protocol (ICMP) to perform a variety of attacks against the Transmission Control Protocol (TCP).  Additionally, this document describes a number of widely implemented modifications to TCP's handling of ICMP error messages that help to mitigate these issues.  This document is not an Internet Standards Track specification; it is published for informational purposes.</t></abstract>
-</front>
-<seriesInfo name='RFC' value='5927'/>
-<seriesInfo name='DOI' value='10.17487/RFC5927'/>
 </reference>
 
 
@@ -566,19 +458,6 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
 <seriesInfo name='DOI' value='10.17487/RFC8446'/>
 </reference>
 
-
-
-<reference anchor='RFC9049' target='https://www.rfc-editor.org/info/rfc9049'>
-<front>
-<title>Path Aware Networking: Obstacles to Deployment (A Bestiary of Roads Not Taken)</title>
-<author fullname='S. Dawkins' initials='S.' role='editor' surname='Dawkins'><organization/></author>
-<date month='June' year='2021'/>
-<abstract><t>This document is a product of the Path Aware Networking Research Group (PANRG).  At the first meeting of the PANRG, the Research Group agreed to catalog and analyze past efforts to develop and deploy Path Aware techniques, most of which were unsuccessful or at most partially successful, in order to extract insights and lessons for Path Aware networking researchers.</t><t>This document contains that catalog and analysis.</t></abstract>
-</front>
-<seriesInfo name='RFC' value='9049'/>
-<seriesInfo name='DOI' value='10.17487/RFC9049'/>
-</reference>
-
 <reference anchor='SCHUCHARD2011'>
   <front>
     <title>Losing control of the internet: using the data plane to attack the control plane</title>
@@ -625,24 +504,6 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
   </front>
   <seriesInfo name='Proceedings of the conference on Applications, Technologies, Architectures, and Protocols for Computer Communication - SIGCOMM' value='&apos;00'/>
   <seriesInfo name='DOI' value='10.1145/347059.347428'/>
-</reference>
-
-<reference anchor='KUSHMAN2007'>
-  <front>
-    <title>Can you hear me now?!: it must be BGP</title>
-    <author fullname='Nate Kushman' initials='N.' surname='Kushman'>
-      <organization/>
-    </author>
-    <author fullname='Srikanth Kandula' initials='S.' surname='Kandula'>
-      <organization/>
-    </author>
-    <author fullname='Dina Katabi' initials='D.' surname='Katabi'>
-      <organization/>
-    </author>
-    <date month='March' year='2007'/>
-  </front>
-  <seriesInfo name='ACM SIGCOMM Computer Communication Review' value='Vol. 37, pp. 75-84'/>
-  <seriesInfo name='DOI' value='10.1145/1232919.1232927'/>
 </reference>
 
 <reference anchor='GRIFFIN1999'>
@@ -786,181 +647,6 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
   <seriesInfo name='DOI' value='10.14722/ndss.2021.24438'/>
 </reference>
 
-<reference anchor='KUMAR2007'>
-  <front>
-    <title>Smurf-based Distributed Denial of Service (DDoS) Attack Amplification in Internet</title>
-    <author fullname='Sanjeev Kumar' initials='S.' surname='Kumar'>
-      <organization/>
-    </author>
-    <date month='July' year='2007'/>
-  </front>
-  <seriesInfo name='Second International Conference on Internet Monitoring and Protection (ICIMP' value='2007)'/>
-  <seriesInfo name='DOI' value='10.1109/icimp.2007.42'/>
-</reference>
-
-<reference anchor='MAN2020'>
-  <front>
-    <title>DNS Cache Poisoning Attack Reloaded: Revolutions with Side Channels</title>
-    <author fullname='Keyu Man' initials='K.' surname='Man'>
-      <organization/>
-    </author>
-    <author fullname='Zhiyun Qian' initials='Z.' surname='Qian'>
-      <organization/>
-    </author>
-    <author fullname='Zhongjie Wang' initials='Z.' surname='Wang'>
-      <organization/>
-    </author>
-    <author fullname='Xiaofeng Zheng' initials='X.' surname='Zheng'>
-      <organization/>
-    </author>
-    <author fullname='Youjun Huang' initials='Y.' surname='Huang'>
-      <organization/>
-    </author>
-    <author fullname='Haixin Duan' initials='H.' surname='Duan'>
-      <organization/>
-    </author>
-    <date month='October' year='2020'/>
-  </front>
-  <seriesInfo name='Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications' value='Security'/>
-  <seriesInfo name='DOI' value='10.1145/3372297.3417280'/>
-</reference>
-
-<reference anchor='ZHENG2020'> <front> <title>*** BROKEN REFERENCE ***</title> <author> <organization/> </author> <date/> </front> </reference>
-<reference anchor='ALOWAISHEQ2020'>
-  <front>
-    <title>Zombie Awakening: Stealthy Hijacking of Active Domains through DNS Hosting Referral</title>
-    <author fullname='Eihal Alowaisheq' initials='E.' surname='Alowaisheq'>
-      <organization/>
-    </author>
-    <author fullname='Siyuan Tang' initials='S.' surname='Tang'>
-      <organization/>
-    </author>
-    <author fullname='Zhihao Wang' initials='Z.' surname='Wang'>
-      <organization/>
-    </author>
-    <author fullname='Fatemah Alharbi' initials='F.' surname='Alharbi'>
-      <organization/>
-    </author>
-    <author fullname='Xiaojing Liao' initials='X.' surname='Liao'>
-      <organization/>
-    </author>
-    <author fullname='XiaoFeng Wang' initials='X.' surname='Wang'>
-      <organization/>
-    </author>
-    <date month='October' year='2020'/>
-  </front>
-  <seriesInfo name='Proceedings of the 2020 ACM SIGSAC Conference on Computer and Communications' value='Security'/>
-  <seriesInfo name='DOI' value='10.1145/3372297.3417864'/>
-</reference>
-
-<reference anchor='HOUSER2021'>
-  <front>
-    <title>A Comprehensive Measurement-based Investigation of DNS Hijacking</title>
-    <author fullname='Rebekah Houser' initials='R.' surname='Houser'>
-      <organization/>
-    </author>
-    <author fullname='Shuai Hao' initials='S.' surname='Hao'>
-      <organization/>
-    </author>
-    <author fullname='Zhou Li' initials='Z.' surname='Li'>
-      <organization/>
-    </author>
-    <author fullname='Daiping Liu' initials='D.' surname='Liu'>
-      <organization/>
-    </author>
-    <author fullname='Chase Cotton' initials='C.' surname='Cotton'>
-      <organization/>
-    </author>
-    <author fullname='Haining Wang' initials='H.' surname='Wang'>
-      <organization/>
-    </author>
-    <date month='September' year='2021'/>
-  </front>
-  <seriesInfo name='2021 40th International Symposium on Reliable Distributed Systems' value='(SRDS)'/>
-  <seriesInfo name='DOI' value='10.1109/srds53918.2021.00029'/>
-</reference>
-
-<reference anchor='DAI2021'>
-  <front>
-    <title>From IP to transport and beyond: cross-layer attacks against applications</title>
-    <author fullname='Tianxiang Dai' initials='T.' surname='Dai'>
-      <organization/>
-    </author>
-    <author fullname='Philipp Jeitner' initials='P.' surname='Jeitner'>
-      <organization/>
-    </author>
-    <author fullname='Haya Shulman' initials='H.' surname='Shulman'>
-      <organization/>
-    </author>
-    <author fullname='Michael Waidner' initials='M.' surname='Waidner'>
-      <organization/>
-    </author>
-    <date month='August' year='2021'/>
-  </front>
-  <seriesInfo name='Proceedings of the 2021 ACM SIGCOMM 2021' value='Conference'/>
-  <seriesInfo name='DOI' value='10.1145/3452296.3472933'/>
-</reference>
-
-<reference anchor='ANDERSEN2001'>
-  <front>
-    <title>Resilient overlay networks</title>
-    <author fullname='David Andersen' initials='D.' surname='Andersen'>
-      <organization/>
-    </author>
-    <author fullname='Hari Balakrishnan' initials='H.' surname='Balakrishnan'>
-      <organization/>
-    </author>
-    <author fullname='Frans Kaashoek' initials='F.' surname='Kaashoek'>
-      <organization/>
-    </author>
-    <author fullname='Robert Morris' initials='R.' surname='Morris'>
-      <organization/>
-    </author>
-    <date month='October' year='2001'/>
-  </front>
-  <seriesInfo name='Proceedings of the eighteenth ACM symposium on Operating systems' value='principles'/>
-  <seriesInfo name='DOI' value='10.1145/502034.502048'/>
-</reference>
-
-<reference anchor='SHAIKH2001'>
-  <front>
-    <title>Evaluating the impact of stale link state on quality-of-service routing</title>
-    <author fullname='A. Shaikh' initials='A.' surname='Shaikh'>
-      <organization/>
-    </author>
-    <author fullname='J. Rexford' initials='J.' surname='Rexford'>
-      <organization/>
-    </author>
-    <author fullname='K.G. Shin' initials='K.' surname='Shin'>
-      <organization/>
-    </author>
-    <date month='April' year='2001'/>
-  </front>
-  <seriesInfo name='IEEE/ACM Transactions on Networking' value='Vol. 9, pp. 162-176'/>
-  <seriesInfo name='DOI' value='10.1109/90.917073'/>
-</reference>
-
-<reference anchor='SCHERRER2020'>
-  <front>
-    <title>Incentivizing Stable Path Selection in Future Internet Architectures</title>
-    <author fullname='Simon Scherrer' initials='S.' surname='Scherrer'>
-      <organization/>
-    </author>
-    <author fullname='Markus Legner' initials='M.' surname='Legner'>
-      <organization/>
-    </author>
-    <author fullname='Adrian Perrig' initials='A.' surname='Perrig'>
-      <organization/>
-    </author>
-    <author fullname='Stefan Schmid' initials='S.' surname='Schmid'>
-      <organization/>
-    </author>
-    <date month='March' year='2021'/>
-  </front>
-  <seriesInfo name='ACM SIGMETRICS Performance Evaluation Review' value='Vol. 48, pp. 12-13'/>
-  <seriesInfo name='DOI' value='10.1145/3453953.3453956'/>
-</reference>
-
 
 
 
@@ -977,255 +663,139 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
   </back>
 
 <!-- ##markdown-source:
-H4sIALx2TWIAA7V923LbWJblO74C7XxoKYOkRUm+SFPT0bQkpxVlW2rJmTlV
-HfUAkock0iDAAkArVY6M6H+Yp3mrb6lP6S+Zvdbe5+CAlLN7Hqai25JI4Fz2
-2Ze1byeHw2HS5m3hztNn9xfXNx/Tmy+u/pK7h2dJNp3W7kv44np4+SyZZa1b
-VvXjeZqXiypJ5tWszNby9rzOFu1w4+o6Xw6bWV6Vw8pGGhbyUtMmMtRJktUu
-O0/rdpk8VPXnZV1tN+fpJivrZfLZPcpn8/P0umxdXbp2eIlBky+u3LrzJE3t
-6Z9/kN/bx43M+rOMkZfL9Ad8I5+us7zAA//qfs3Wm8KNZtVaPs7q2eo8XbXt
-pjl//jz67jnHWubtajs9T3+8v7p7fnd1eyOf6Zqffun95NPV/ackybbtqqpl
-ZcM0FXo05+lklN6SBDKC/E9JM5nXeVb2vqjq5Xl69eld+uetq/PZSj91uvyM
-z4+Ulv8qdB65dvW3kTyVlFW9ztr8i4yapkmS4BD8JzLG3duL0+OXp/br0auz
-sf06fvnixH49Pn155J89OjkJr73yz56envpPX5wdv7JfX56+9q+9Pj6Kfn3h
-fz09fWm/nh2dnuHX+4t3P168m9xdHh+Nx+fp5c31aHw0Go9PXzwfv3758uTo
-1Qg/T8djefj95M3NT9ef/iyDH/WfPTl9dfTibCQ/To9fy5N//PH+3YfJR3nw
-1c6gxyfHZ+OzEX8ev5JHf7i7fvv2+uP47OxsZ8zxy/HZ6Uh+HJ9g9vvJu5sb
-GTF67Gj88vkvOG/5vxG+Gh2djOQH1vqni3dXP8muTvqjHr84OR2/PBsdn75+
-eTQ+wpPX8tRp99Tpq+Pj540r2xE+Hx2fHB1h+oubm9uruycHfPHq1XjEn6+x
-o7ubT++uPr65uvuBz+9Q4OTo5Yuz8cmIP4+P5fkPN3fX79/L1o7HO6so500z
-wuey3NMTJeyHyd0OWY/Onl9fXH+4BQVejU45JGh/vHtIJzLm2Ss5pfGr49fY
-+p9lnT/0Hnwh/5PTfH12PD4e8efpC3lw8v7m58n1/burf/v9YV+/PJWn391A
-TPv7wSrv7y7vX5ycjV/rnoSLjnFUl5PrnWfJUS9k1JdgqeOzkxOs4ePl1d39
-FZhq59kXsqaT0xF+nIJI9+8m1398t/OczH92NDobvzp6daKMf3V3x1Xu8bKs
-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
-e5QN+SdFYf1fIvnqAGZwAAA=
+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
 
 -->
 
