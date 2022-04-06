@@ -38,6 +38,7 @@ informative:
   RFC8200:
   RFC8205:
   RFC8446:
+  RFC9049:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
   KUSHMAN2007: DOI.10.1145/1232919.1232927
@@ -49,7 +50,14 @@ informative:
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
   MORILLO2021: DOI.10.14722/ndss.2021.24438
   KUMAR2007: DOI.10.1109/ICIMP.2007.42
-
+  MAN2020: DOI.10.1145/3372297.3417280
+  ZHENG2020: DOI.10.5555/3489212.3489245
+  ALOWAISHEQ2020: DOI.10.1145/3372297.3417864
+  HOUSER2021: DOI.10.1109/SRDS53918.2021.00029
+  DAI2021: DOI.10.1145/3452296.3472933
+  ANDERSEN2001: DOI.10.1145/502034.502048
+  SHAIKH2001: DOI.10.1109/90.917073
+  SCHERRER2020: DOI.10.1145/3453953.3453956
 
 
 --- abstract
@@ -142,21 +150,60 @@ Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only
 Also, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
 - **Spoofing and DDoS attacks**  
 ICMP can be employed to send error or diagnostic messages (used by tools such as ping or traceroute). Because ICMP packets are not authenticated, the source address can easily be spoofed. This can lead to distributed denial-of-service (DDoS) attacks {{KUMAR2007}}, or be used to disconnect two BGP routers from each other {{RFC5927}}. Since regular IP packets are not authenticated either, they suffer from the same problem, i.e., the source IP address can be spoofed.
+- **Deceiving Certification Authorities with BGP**  
+Certification authorities (CAs) issue digital certificates used to protect websites against man-in-the-middle attacks. Ironically, CAs themselves are vulnerable to attacks, as they rely on exchanging unencrypted and unauthenticated packets during domain validation. If attackers manage to redirect these packets, they can obtain fraudulent certificates. This may happen, for example, if an attacker has access to an AS’s border router and is thus able to launch a prefix-hijacking attack. One of the countermeasures proposed by Birge-Lee et al. is to perform domain validation from multiple vantage points. See also [Proceedings USENIX 2018](https://www.usenix.org/conference/usenixsecurity18/presentation/birge-lee) and [Proceedings USENIX 2021](https://www.usenix.org/conference/usenixsecurity21/presentation/birge-lee), respectively. Unfortunately, this does not fully solve the problem, as it only protects CAs from attackers who control a limited number of border routers.
+- **DNS Hijacking and Cross-layer Attacks**  
+Over the past few years, researchers have discovered a flurry of subtle vulnerabilities that can poison DNS caches or hijack name servers. Alarmingly, DNS hijacking has been widely observed in the wild, too, as evidenced by large-scale hijacking campaigns such as Sea Turtle.  
+Because of its essential functionality, DNS also plays a central role in broader contexts of Internet security. A recent measurement research shows that DNS vulnerabilities can be leveraged to subvert a range of Internet systems and services including but not limited to PKIs, time synchronization, email, VPN, and web applications. A secure DNS is thus indispensable to a secure Internet. Unfortunately, DNSSEC as the standardized solution has not achieved widespread deployment, in part also because it introduces numerous additional limitations (see the SCION book 2).  
+For more information, see {{MAN2020}}, {{ZHENG2020}}, {{ALOWAISHEQ2020}}, {{HOUSER2021}}, 7, and {{DAI2021}}, respectively.
 
 
 ## Goals for a Secure Internet Architecture
 
-Solutions should be/have:
+We are convinced that a real change to today’s Internet architecture is necessary to fundamentally resolve its problems. In this section, we present high-level goals that such a next-generation inter-domain, point-to-point, communication architecture should achieve. We believe that SCION meets these goals.
 
-- Available in the presence of adversaries
-- Transparent and controllable
-- Efficient and scalable
-- Extensible and algorithm agile
-- Deployable
-- Formally verifiable
+### Availability in the Presence of Adversaries  
+
+Our overarching goal is the design of a communication infrastructure that remains highly available even in the presence of distributed adversaries: As long as an attacker-free path between end hosts exists, that path should be discovered and provide some guaranteed amount of bandwidth between these end hosts.
+
+### Transparency and Control
+
+We seek to achieve greater transparency and control for the forwarding paths of network packets, and the trust roots used for authentication. When the network offers path transparency, end hosts can predict (and verify) the forwarding path taken by packets. Taking transparency of network paths as a first property, we aim to additionally achieve path control, a stronger property that (1) enables ASes to control the incoming path segments through which they are reachable and (2) allows senders to then create and select end-to-end paths.  
+
+This requirement has not only beneficial repercussions, but also fragile if implemented incorrectly. We will discuss both.  
+
+The beneficial aspects of path control are:  
+- *Separation of control plane and data plane*:  
+To enable path control, the control plane (which determines networking paths) must be separated from the data plane (which forwards packets according to the determined paths). The separation ensures that forwarding cannot retroactively be influenced by control-plane operations, e.g., routing changes. The separation contributes to enhanced availability.  
+- *Multipath communication*:  
+Path control lets any sender select multiple paths to carry packets towards the destination. Multipath communication is a powerful mechanism to enhance availability {{ANDERSEN2001}} and enables fast failover, where end hosts can immediately switch to a backup path in the event that a link on their currently used path fails.  
+- *Geofencing*:  
+Applications that transmit sensitive data can benefit from path control by ensuring that packets only traverse certain trusted ASes and avoid others. This is important for certain industries, like the financial sector or healthcare.  
+- *Defending against network attacks*:  
+If the packet’s path is carried in its header (which is one way to achieve path control), then the destination can reverse the path to return its response to the sender, mitigating reflection attacks. Path control also enables circumvention of malicious network entities or congested network areas, providing a powerful mechanism against DoS and DDoS attacks.  
+
+The fragile aspects that need to be handled with care are the following:  
+- *Respecting the forwarding policies of ISPs*:  
+If senders have complete path control, they may violate ISPs’ forwarding policies. We thus need to ensure that ISPs offer a set of policy-compliant paths which senders can choose from.  
+- *Preventing malicious path creation*:  
+A malicious sender could exploit path control for attacks, for example by forming malicious forwarding paths such as loops that consume increased network resources.  
+- *Scalability of path control*:  
+Pure source routing does not scale to inter-domain networks, as a source would need to know the full network topology to determine paths. With SCION, a source does not compute an end-to-end path based on a topology, but selects among a set of paths provided by the control plane. We call this path control. To make path control scale, we thus rely on source-selected paths and packet-carried forwarding state instead of on full-fledged source routing.  
+- *Permitting traffic engineering*:  
+Fine-grained path control would inhibit ISPs from operating and performing traffic engineering. We thus seek to provide end-host path control at the granularity of links between ASes, allowing ISPs to fully control internal paths. ISPs can further perform traffic engineering based on per-path bandwidth allocations, which can be encoded in the forwarding information, or dynamically adjusted in the network.  
+- *Network stability*:  
+Past research has shown that uncoordinated path selection by end hosts can lead to persistent oscillations, i.e., an alternating grow-and-shrink pattern of traffic volumes on links (188), {{SHAIKH2001}}. This is often raised as a key concern and represents one of the biggest obstacles to deploy path-aware networks {{RFC9049}}. It is thus imperative that a future Internet architecture take this into account and develop mechanisms preventing these instabilities {{SCHERRER2020}}.  
+
+### Efficiency and Scalability
+
+### Extensibility and Algorithm Agility
+
+### Deployability
+
+### Formal Verification
 
 
-## Network Structure and Naming
+## SCION Network Structure and Naming
 
 SCION organizes existing ASes into groups of independent routing planes, called isolation domains (ISDs), which interconnect to provide global connectivity. Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
 

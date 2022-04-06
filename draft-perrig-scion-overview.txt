@@ -95,17 +95,17 @@ Table of Contents
      1.1.  Why SCION - Internet's Issues . . . . . . . . . . . . . .   3
        1.1.1.  Internet Protocol . . . . . . . . . . . . . . . . . .   3
        1.1.2.  BGP . . . . . . . . . . . . . . . . . . . . . . . . .   4
-       1.1.3.  RPKI and BGPsec . . . . . . . . . . . . . . . . . . .   5
-       1.1.4.  Other Internet Issues . . . . . . . . . . . . . . . .   6
-     1.2.  Goals for a Secure Internet Architecture  . . . . . . . .   8
-     1.3.  Network Structure and Naming  . . . . . . . . . . . . . .   9
-     1.4.  Conventions and Definitions . . . . . . . . . . . . . . .   9
-   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .   9
-     2.1.  Authentication  . . . . . . . . . . . . . . . . . . . . .   9
-     2.2.  Control Plane . . . . . . . . . . . . . . . . . . . . . .  10
-     2.3.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .  11
-   3.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .  11
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
+       1.1.3.  RPKI and BGPsec . . . . . . . . . . . . . . . . . . .   6
+       1.1.4.  Other Internet Issues . . . . . . . . . . . . . . . .   7
+     1.2.  Goals for a Secure Internet Architecture  . . . . . . . .   9
+       1.2.1.  Availability in the Presence of Adversaries . . . . .   9
+       1.2.2.   Transparency and Control . . . . . . . . . . . . . .   9
+       1.2.3.   Efficiency and Scalability . . . . . . . . . . . . .  11
+       1.2.4.   Extensibility and Algorithm Agility  . . . . . . . .  11
+       1.2.5.   Deployability  . . . . . . . . . . . . . . . . . . .  11
+       1.2.6.   Formal Verification  . . . . . . . . . . . . . . . .  11
+     1.3.  SCION Network Structure and Naming  . . . . . . . . . . .  11
+     1.4.  Conventions and Definitions . . . . . . . . . . . . . . .  12
 
 
 
@@ -114,12 +114,18 @@ Perrig                   Expires 8 October 2022                 [Page 2]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  12
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  15
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  15
+   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .  12
+     2.1.  Authentication  . . . . . . . . . . . . . . . . . . . . .  12
+     2.2.  Control Plane . . . . . . . . . . . . . . . . . . . . . .  12
+     2.3.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .  13
+   3.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  14
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
 
 1.  Introduction
 
@@ -154,14 +160,8 @@ Internet-Draft                  SCION I-D                     April 2022
    complete path to forward packets, nor can they influence the path the
    packets take.  But this approach comes with several drawbacks:
 
-   *  *Lack of transparency and control*
-      Being able to select and verify the path that packets take is
-      desirable in many situations.  End hosts might want to avoid
-      packets being routed through adversarial or untrusted networks, or
-      they might want to choose the most suitable path with regard to a
-      specific metric (e.g., latency or bandwidth).  Unfortunately, IP
-      does not offer such an option.  Although systems that enable loose
-      and strict source routing have been proposed, these extensions are
+
+
 
 
 
@@ -170,6 +170,14 @@ Perrig                   Expires 8 October 2022                 [Page 3]
 Internet-Draft                  SCION I-D                     April 2022
 
 
+   *  *Lack of transparency and control*
+      Being able to select and verify the path that packets take is
+      desirable in many situations.  End hosts might want to avoid
+      packets being routed through adversarial or untrusted networks, or
+      they might want to choose the most suitable path with regard to a
+      specific metric (e.g., latency or bandwidth).  Unfortunately, IP
+      does not offer such an option.  Although systems that enable loose
+      and strict source routing have been proposed, these extensions are
       not commonly supported in today's networks.  It is also not
       possible to simultaneously use multiple distinct paths towards the
       same destination.
@@ -208,6 +216,16 @@ Internet-Draft                  SCION I-D                     April 2022
       voice-over-IP (VoIP) calls is highly correlated with BGP updates
       [KUSHMAN2007].
 
+
+
+
+
+
+Perrig                   Expires 8 October 2022                 [Page 4]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    *  *Lack of fault isolation*
       BGP is a globally distributed protocol, running among all BGP
       speakers in the entire Internet.  BGP update messages are thus
@@ -218,14 +236,6 @@ Internet-Draft                  SCION I-D                     April 2022
    *  *Poor scalability*
       The amount of work required to be performed by BGP is proportional
       to the number of destinations.  Moreover, path changes are
-
-
-
-Perrig                   Expires 8 October 2022                 [Page 4]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
       disseminated profusely and sometimes throughout the entire
       Internet.  This reduces scalability and prevents BGPsec from
       frequently disseminating freshly signed routing updates.
@@ -264,6 +274,14 @@ Internet-Draft                  SCION I-D                     April 2022
       However, RPKI and BGPsec have problems of their own, as we discuss
       in the next section.
 
+
+
+
+Perrig                   Expires 8 October 2022                 [Page 5]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
 1.1.3.  RPKI and BGPsec
 
    Researchers already started working on improving the Internet's
@@ -274,14 +292,6 @@ Internet-Draft                  SCION I-D                     April 2022
    But RPKI and BGPsec have issues of their own, which we discuss in the
    following sections.  These issues made us believe that a more radical
    change to today's Internet architecture is necessary to fundamentally
-
-
-
-Perrig                   Expires 8 October 2022                 [Page 5]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    resolve its (security) problems.
 
 1.1.3.1.  RPKI and Route Origin Authorizations
@@ -320,16 +330,6 @@ Internet-Draft                  SCION I-D                     April 2022
    cryptographic operations.
    Furthermore, prefix aggregation no longer works in BGPsec because the
    digital signatures are not aggregated.  This is particularly
-   cumbersome, as Internet routers need to store and exchange a fast-
-   growing number of paths (caused by the increasing fragmentation of
-   the IP address space and the trend towards announcing ever smaller IP
-   address ranges).
-
-1.1.4.  Other Internet Issues
-
-
-
-
 
 
 
@@ -337,6 +337,13 @@ Perrig                   Expires 8 October 2022                 [Page 6]
 
 Internet-Draft                  SCION I-D                     April 2022
 
+
+   cumbersome, as Internet routers need to store and exchange a fast-
+   growing number of paths (caused by the increasing fragmentation of
+   the IP address space and the trend towards announcing ever smaller IP
+   address ranges).
+
+1.1.4.  Other Internet Issues
 
 1.1.4.1.  Lack of Authentication
 
@@ -367,33 +374,6 @@ Internet-Draft                  SCION I-D                     April 2022
    combination of vulnerabilities, or use a vulnerability in one
    protocol to compromise another protocol).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Perrig                   Expires 8 October 2022                 [Page 7]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    *  *Prefix hijacking*
       Due to a lack of authentication and fault isolation in BGP,
       numerous Internet outages are caused by prefix hijacking.  Prefix
@@ -406,6 +386,14 @@ Internet-Draft                  SCION I-D                     April 2022
       can still send a BGP update message claiming that it is directly
       connected to its legitimate owner (for which there exists a valid
       ROA).  Recipients of such an announcement would accept it, since
+
+
+
+Perrig                   Expires 8 October 2022                 [Page 7]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
       the legitimate owner of the addresses is noted as the last AS in
       the BGP message.  They would then start sending traffic intended
       for those IP addresses to the attacker, who can inspect, reroute,
@@ -425,23 +413,35 @@ Internet-Draft                  SCION I-D                     April 2022
       they suffer from the same problem, i.e., the source IP address can
       be spoofed.
 
-1.2.  Goals for a Secure Internet Architecture
+   *  *Deceiving Certification Authorities with BGP*
+      Certification authorities (CAs) issue digital certificates used to
+      protect websites against man-in-the-middle attacks.  Ironically,
+      CAs themselves are vulnerable to attacks, as they rely on
+      exchanging unencrypted and unauthenticated packets during domain
+      validation.  If attackers manage to redirect these packets, they
+      can obtain fraudulent certificates.  This may happen, for example,
+      if an attacker has access to an AS's border router and is thus
+      able to launch a prefix-hijacking attack.  One of the
+      countermeasures proposed by Birge-Lee et al. is to perform domain
+      validation from multiple vantage points.  See also Proceedings
+      USENIX 2018
+      (https://www.usenix.org/conference/usenixsecurity18/presentation/
+      birge-lee) and Proceedings USENIX 2021
+      (https://www.usenix.org/conference/usenixsecurity21/presentation/
+      birge-lee), respectively.  Unfortunately, this does not fully
+      solve the problem, as it only protects CAs from attackers who
+      control a limited number of border routers.
 
-   Solutions should be/have:
-
-   *  Available in the presence of adversaries
-
-   *  Transparent and controllable
-
-   *  Efficient and scalable
-
-   *  Extensible and algorithm agile
-
-   *  Deployable
-
-   *  Formally verifiable
-
-
+   *  *DNS Hijacking and Cross-layer Attacks*
+      Over the past few years, researchers have discovered a flurry of
+      subtle vulnerabilities that can poison DNS caches or hijack name
+      servers.  Alarmingly, DNS hijacking has been widely observed in
+      the wild, too, as evidenced by large-scale hijacking campaigns
+      such as Sea Turtle.
+      Because of its essential functionality, DNS also plays a central
+      role in broader contexts of Internet security.  A recent
+      measurement research shows that DNS vulnerabilities can be
+      leveraged to subvert a range of Internet systems and services
 
 
 
@@ -450,7 +450,134 @@ Perrig                   Expires 8 October 2022                 [Page 8]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-1.3.  Network Structure and Naming
+      including but not limited to PKIs, time synchronization, email,
+      VPN, and web applications.  A secure DNS is thus indispensable to
+      a secure Internet.  Unfortunately, DNSSEC as the standardized
+      solution has not achieved widespread deployment, in part also
+      because it introduces numerous additional limitations (see the
+      SCION book 2).
+      For more information, see [MAN2020], [ZHENG2020],
+      [ALOWAISHEQ2020], [HOUSER2021], 7, and [DAI2021], respectively.
+
+1.2.  Goals for a Secure Internet Architecture
+
+   We are convinced that a real change to today's Internet architecture
+   is necessary to fundamentally resolve its problems.  In this section,
+   we present high-level goals that such a next-generation inter-domain,
+   point-to-point, communication architecture should achieve.  We
+   believe that SCION meets these goals.
+
+1.2.1.  Availability in the Presence of Adversaries
+
+   Our overarching goal is the design of a communication infrastructure
+   that remains highly available even in the presence of distributed
+   adversaries: As long as an attacker-free path between end hosts
+   exists, that path should be discovered and provide some guaranteed
+   amount of bandwidth between these end hosts.
+
+1.2.2.   Transparency and Control
+
+   We seek to achieve greater transparency and control for the
+   forwarding paths of network packets, and the trust roots used for
+   authentication.  When the network offers path transparency, end hosts
+   can predict (and verify) the forwarding path taken by packets.
+   Taking transparency of network paths as a first property, we aim to
+   additionally achieve path control, a stronger property that (1)
+   enables ASes to control the incoming path segments through which they
+   are reachable and (2) allows senders to then create and select end-
+   to-end paths.
+
+   This requirement has not only beneficial repercussions, but also
+   fragile if implemented incorrectly.  We will discuss both.
+
+   The beneficial aspects of path control are:
+   - _Separation of control plane and data plane_:
+   To enable path control, the control plane (which determines
+   networking paths) must be separated from the data plane (which
+   forwards packets according to the determined paths).  The separation
+   ensures that forwarding cannot retroactively be influenced by
+   control-plane operations, e.g., routing changes.  The separation
+   contributes to enhanced availability.
+
+
+
+Perrig                   Expires 8 October 2022                 [Page 9]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
+   - _Multipath communication_:
+   Path control lets any sender select multiple paths to carry packets
+   towards the destination.  Multipath communication is a powerful
+   mechanism to enhance availability [ANDERSEN2001] and enables fast
+   failover, where end hosts can immediately switch to a backup path in
+   the event that a link on their currently used path fails.
+   - _Geofencing_:
+   Applications that transmit sensitive data can benefit from path
+   control by ensuring that packets only traverse certain trusted ASes
+   and avoid others.  This is important for certain industries, like the
+   financial sector or healthcare.
+   - _Defending against network attacks_:
+   If the packet's path is carried in its header (which is one way to
+   achieve path control), then the destination can reverse the path to
+   return its response to the sender, mitigating reflection attacks.
+   Path control also enables circumvention of malicious network entities
+   or congested network areas, providing a powerful mechanism against
+   DoS and DDoS attacks.
+
+   The fragile aspects that need to be handled with care are the
+   following:
+   - _Respecting the forwarding policies of ISPs_:
+   If senders have complete path control, they may violate ISPs'
+   forwarding policies.  We thus need to ensure that ISPs offer a set of
+   policy-compliant paths which senders can choose from.
+   - _Preventing malicious path creation_:
+   A malicious sender could exploit path control for attacks, for
+   example by forming malicious forwarding paths such as loops that
+   consume increased network resources.
+   - _Scalability of path control_:
+   Pure source routing does not scale to inter-domain networks, as a
+   source would need to know the full network topology to determine
+   paths.  With SCION, a source does not compute an end-to-end path
+   based on a topology, but selects among a set of paths provided by the
+   control plane.  We call this path control.  To make path control
+   scale, we thus rely on source-selected paths and packet-carried
+   forwarding state instead of on full-fledged source routing.
+   - _Permitting traffic engineering_:
+   Fine-grained path control would inhibit ISPs from operating and
+   performing traffic engineering.  We thus seek to provide end-host
+   path control at the granularity of links between ASes, allowing ISPs
+   to fully control internal paths.  ISPs can further perform traffic
+   engineering based on per-path bandwidth allocations, which can be
+   encoded in the forwarding information, or dynamically adjusted in the
+   network.
+   - _Network stability_:
+   Past research has shown that uncoordinated path selection by end
+   hosts can lead to persistent oscillations, i.e., an alternating grow-
+
+
+
+Perrig                   Expires 8 October 2022                [Page 10]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
+   and-shrink pattern of traffic volumes on links (188), [SHAIKH2001].
+   This is often raised as a key concern and represents one of the
+   biggest obstacles to deploy path-aware networks [RFC9049].  It is
+   thus imperative that a future Internet architecture take this into
+   account and develop mechanisms preventing these instabilities
+   [SCHERRER2020].
+
+1.2.3.   Efficiency and Scalability
+
+1.2.4.   Extensibility and Algorithm Agility
+
+1.2.5.   Deployability
+
+1.2.6.   Formal Verification
+
+1.3.  SCION Network Structure and Naming
 
    SCION organizes existing ASes into groups of independent routing
    planes, called isolation domains (ISDs), which interconnect to
@@ -483,6 +610,14 @@ Internet-Draft                  SCION I-D                     April 2022
    domain routing or forwarding, does not need to be globally unique,
    and can thus be an IPv4, IPv6, or MAC address, for example.
 
+
+
+
+Perrig                   Expires 8 October 2022                [Page 11]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
 1.4.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -497,14 +632,6 @@ Internet-Draft                  SCION I-D                     April 2022
 
    Control-Plane PKI/TRC From the book v2, use:
    chapter 2.2
-
-
-
-
-Perrig                   Expires 8 October 2022                 [Page 9]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 2.2.  Control Plane
 
@@ -540,27 +667,17 @@ Internet-Draft                  SCION I-D                     April 2022
    each AS is performed by its beacon server which is a part of its
    Control Service (CS), that performs control-plane-related tasks.
 
+
+
+Perrig                   Expires 8 October 2022                [Page 12]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    Core beaconing is the process of constructing path segments between
    core ASes.  During core beaconing, a core AS either initiates PCBs or
    propagates PCBs received from neighboring core ASes to all other
    neighboring core ASes.
-
-
-
-
-
-
-
-
-
-
-
-
-
-Perrig                   Expires 8 October 2022                [Page 10]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
    Intra-ISD beaconing is the second level of the beaconing hierarchy,
    which creates path segments from core ASes to non-core ASes.  For
@@ -602,21 +719,21 @@ Internet-Draft                  SCION I-D                     April 2022
    replaces signaling to use a path, ensuring that routers do not need
    any local state on either paths or flows.
 
+
+
+
+
+
+
+Perrig                   Expires 8 October 2022                [Page 13]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
 3.  Deployments
 
    SCI-ED, SSFC, SCIONLab From the book v2, use: chapters 13
    introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
-
-
-
-
-
-
-
-Perrig                   Expires 8 October 2022                [Page 11]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 4.  IANA Considerations
 
@@ -643,12 +760,41 @@ Internet-Draft                  SCION I-D                     April 2022
 
 6.2.  Informative References
 
+   [ALOWAISHEQ2020]
+              Alowaisheq, E., Tang, S., Wang, Z., Alharbi, F., Liao, X.,
+              and X. Wang, "Zombie Awakening: Stealthy Hijacking of
+              Active Domains through DNS Hosting Referral", Proceedings
+              of the 2020 ACM SIGSAC Conference on Computer and
+              Communications Security, DOI 10.1145/3372297.3417864,
+              October 2020, <https://doi.org/10.1145/3372297.3417864>.
+
+   [ANDERSEN2001]
+              Andersen, D., Balakrishnan, H., Kaashoek, F., and R.
+              Morris, "Resilient overlay networks", Proceedings of the
+              eighteenth ACM symposium on Operating systems principles,
+              DOI 10.1145/502034.502048, October 2001,
+              <https://doi.org/10.1145/502034.502048>.
+
    [COOPER2013]
               Cooper, D., Heilman, E., Brogle, K., Reyzin, L., and S.
               Goldberg, "On the risk of misbehaving RPKI authorities",
+
+
+
+Perrig                   Expires 8 October 2022                [Page 14]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
               Proceedings of the Twelfth ACM Workshop on Hot Topics
               in Networks, DOI 10.1145/2535771.2535787, November 2013,
               <https://doi.org/10.1145/2535771.2535787>.
+
+   [DAI2021]  Dai, T., Jeitner, P., Shulman, H., and M. Waidner, "From
+              IP to transport and beyond: cross-layer attacks against
+              applications", Proceedings of the 2021 ACM SIGCOMM
+              2021 Conference, DOI 10.1145/3452296.3472933, August 2021,
+              <https://doi.org/10.1145/3452296.3472933>.
 
    [GRIFFIN1999]
               Griffin, T. and G. Wilfong, "An analysis of BGP
@@ -657,22 +803,20 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.1145/316194.316231, October 1999,
               <https://doi.org/10.1145/316194.316231>.
 
+   [HOUSER2021]
+              Houser, R., Hao, S., Li, Z., Liu, D., Cotton, C., and H.
+              Wang, "A Comprehensive Measurement-based Investigation of
+              DNS Hijacking", 2021 40th International Symposium on
+              Reliable Distributed Systems (SRDS),
+              DOI 10.1109/srds53918.2021.00029, September 2021,
+              <https://doi.org/10.1109/srds53918.2021.00029>.
+
    [KUMAR2007]
               Kumar, S., "Smurf-based Distributed Denial of Service
               (DDoS) Attack Amplification in Internet", Second
               International Conference on Internet Monitoring and
               Protection (ICIMP 2007), DOI 10.1109/icimp.2007.42, July
               2007, <https://doi.org/10.1109/icimp.2007.42>.
-
-
-
-
-
-
-Perrig                   Expires 8 October 2022                [Page 12]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
    [KUSHMAN2007]
               Kushman, N., Kandula, S., and D. Katabi, "Can you hear me
@@ -688,6 +832,16 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.1145/347059.347428, 2000,
               <https://doi.org/10.1145/347059.347428>.
 
+
+
+
+
+
+Perrig                   Expires 8 October 2022                [Page 15]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    [LI2014]   Li, Q., Hu, Y., and X. Zhang, "Even Rockets Cannot Make
               Pigs Fly Sustainably: Can BGP be Secured with BGPsec?",
               Proceedings 2014 Workshop on Security of Emerging
@@ -700,6 +854,13 @@ Internet-Draft                  SCION I-D                     April 2022
               ACM SIGCOMM Computer Communication Review Vol. 43, pp.
               171-182, DOI 10.1145/2534169.2486010, September 2013,
               <https://doi.org/10.1145/2534169.2486010>.
+
+   [MAN2020]  Man, K., Qian, Z., Wang, Z., Zheng, X., Huang, Y., and H.
+              Duan, "DNS Cache Poisoning Attack Reloaded: Revolutions
+              with Side Channels", Proceedings of the 2020 ACM SIGSAC
+              Conference on Computer and Communications Security,
+              DOI 10.1145/3372297.3417280, October 2020,
+              <https://doi.org/10.1145/3372297.3417280>.
 
    [MORILLO2021]
               Morillo, R., Furuness, J., Morris, C., Breslin, J.,
@@ -722,18 +883,20 @@ Internet-Draft                  SCION I-D                     April 2022
               (IPv6) Specification", RFC 2460, DOI 10.17487/RFC2460,
               December 1998, <https://www.rfc-editor.org/info/rfc2460>.
 
-
-
-
-Perrig                   Expires 8 October 2022                [Page 13]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
               RFC 4033, DOI 10.17487/RFC4033, March 2005,
               <https://www.rfc-editor.org/info/rfc4033>.
+
+
+
+
+
+
+Perrig                   Expires 8 October 2022                [Page 16]
+
+Internet-Draft                  SCION I-D                     April 2022
+
 
    [RFC4264]  Griffin, T. and G. Huston, "BGP Wedgies", RFC 4264,
               DOI 10.17487/RFC4264, November 2005,
@@ -771,6 +934,11 @@ Internet-Draft                  SCION I-D                     April 2022
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
 
+   [RFC9049]  Dawkins, S., Ed., "Path Aware Networking: Obstacles to
+              Deployment (A Bestiary of Roads Not Taken)", RFC 9049,
+              DOI 10.17487/RFC9049, June 2021,
+              <https://www.rfc-editor.org/info/rfc9049>.
+
    [ROTHENBERGER2017]
               Rothenberger, B., Asoni, D., Barrera, D., and A. Perrig,
               "Internet Kill Switches Demystified", Proceedings of the
@@ -781,7 +949,7 @@ Internet-Draft                  SCION I-D                     April 2022
 
 
 
-Perrig                   Expires 8 October 2022                [Page 14]
+Perrig                   Expires 8 October 2022                [Page 17]
 
 Internet-Draft                  SCION I-D                     April 2022
 
@@ -794,6 +962,13 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.1016/j.comcom.2009.03.009, May 2009,
               <https://doi.org/10.1016/j.comcom.2009.03.009>.
 
+   [SCHERRER2020]
+              Scherrer, S., Legner, M., Perrig, A., and S. Schmid,
+              "Incentivizing Stable Path Selection in Future Internet
+              Architectures", ACM SIGMETRICS Performance Evaluation
+              Review Vol. 48, pp. 12-13, DOI 10.1145/3453953.3453956,
+              March 2021, <https://doi.org/10.1145/3453953.3453956>.
+
    [SCHUCHARD2011]
               Schuchard, M., Mohaisen, A., Foo Kune, D., Hopper, N.,
               Kim, Y., and E. Vasserman, "Losing control of the
@@ -802,6 +977,16 @@ Internet-Draft                  SCION I-D                     April 2022
               and communications security - CCS '10,
               DOI 10.1145/1866307.1866411, 2010,
               <https://doi.org/10.1145/1866307.1866411>.
+
+   [SHAIKH2001]
+              Shaikh, A., Rexford, J., and K. Shin, "Evaluating the
+              impact of stale link state on quality-of-service routing",
+              IEEE/ACM Transactions on Networking Vol. 9, pp. 162-176,
+              DOI 10.1109/90.917073, April 2001,
+              <https://doi.org/10.1109/90.917073>.
+
+   [ZHENG2020]
+              "*** BROKEN REFERENCE ***".
 
 Acknowledgments
 
@@ -820,21 +1005,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Perrig                   Expires 8 October 2022                [Page 15]
+Perrig                   Expires 8 October 2022                [Page 18]
