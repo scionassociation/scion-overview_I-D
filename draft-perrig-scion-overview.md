@@ -59,7 +59,7 @@ This document gives a high-level overview of the SCION architecture, including i
 
 # Introduction
 
-The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short description of SCION's network structure and naming.
+The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short overview of SCION's basic elements.
 
 The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
 
@@ -124,23 +124,80 @@ Authenticating digital data is becoming increasingly important, as adversaries e
 The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof. Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec. Additionally, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
 
 
-## SCION Network Structure and Naming
+## SCION Overview
 
-SCION has been designed to address the security issues of today's Internet depicted in the previous section [Why SCION - Internet's Issues](#why). This section gives a high-level description of SCION's structure and naming, providing a basic understanding of this next-generation inter-network architecture.
+SCION has been designed to address the security issues of today's Internet depicted in the previous section [Why SCION - Internet's Issues](#why). This section gives a high-level description of SCION's basic elements, providing a basic understanding of this next-generation inter-network architecture.
 
-To achieve scalability and sovereignty, SCION organizes existing ASes into groups of independent routing planes, called **Isolation Domains (ISD)**. An AS can be a member of multiple ISDs. All ASes in an ISD agree on a set of trust roots, called the **Trust Root Configuration (TRC)**, ensuring that network traffic only flows on policy-compliant paths. The ISD is governed by a set of **core ASes**, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.
+### Network Structure and Naming
 
-Isolation domains provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness. As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. This concept is called **packet-carried forwarding state (PCFS)**. SCION also enables multi-path communication among end hosts.
+SCION's main goal is to offer highly available and efficient point-to-point packet delivery—even in the presence of actively malicious entities. To achieve scalability and sovereignty, SCION organizes existing ASes into groups of independent routing planes, called **Isolation Domains (ISD)**. An AS can be a member of multiple ISDs. All ASes in an ISD agree on a set of trust roots, called the **Trust Root Configuration (TRC)**, ensuring that network traffic only flows on policy-compliant paths. The ISD is governed by a set of **core ASes**, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.
+
+Isolation domains serve the following purposes:
+
+- They allow SCION to support trust heterogeneity, as each ISD can independently define its roots of trust;
+- They provide transparency for trust relationships;
+- They isolate the routing process within an ISD from external influences such as attacks and misconfigurations; and
+- They improve the scalability of the routing protocol by separating it into a process within and one between ISDs.
+
+ISDs provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
+
+**Links**  
+There are three types of links in SCION: core links, parent-child links, and peering links.
+
+- A *core link* can only exist between two core ASes.  
+- A *parent-child link* requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
+- A *peering link* also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
+
+Figure 1 shows a high-level overview of the SCION network structure:
+
+       .............................                                                     
+     .                               .                                                   
+   .       [TCR]                      .                                                  
+ .            (::::::::::::::)          .               ...........................      
+.          (::::: ISD core :::::)         .            .                           .     
+.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .    
+.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)         .
+.      (:: +---+ : |CAS|===+---+====)=====.=========.=====(====+---+ ::: +---+ ::)      .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)     .
+.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)      .
+.       /            |             o      .         .        /(::::::::::::::)\         .
+.      o             |           +---+    .         .       /                  \        .
+.    +---+           |          /|ASb|    .         .      /                    o       .
+.    |ASa|           |         / +---+    .         .     o                   +---+     .
+.    +---+           |        /    |      .         .   +---+                 |ASy|     .
+.      |             |       /     |      .         .   |ASx| --------------- +---+     .
+.      |             |      /      o      .         .   +---+                           .
+.      o             o     /     +---+    .         .     |                             .
+.    +---+         +---+  /      |ASe|    .         .     o                             .
+.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                           .
+ .   +---+         +---+                 .           .  |ASz|           ISD 2          .
+  .                                     .             . +---+                         .  
+   .             ISD 1                 .                .                            .   
+    ...................................                  ............................     
+
+!(images/SCIONnetwork.png)  
+
+|  
+|  
+o  Parent AS - child AS    ----  Peering link    ===  Core link  
+
+                                  Figure 1: SCION network structure  
+
+
+### Routing
+
+As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. This concept is called **packet-carried forwarding state (PCFS)**. SCION also enables multi-path communication among end hosts.
 
 Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the <ISD, AS, local address> 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.
+
+### Infrastructure Components
+
 
 ## Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
 # Key Concepts
-
-## Infrastructure Components
 
 
 ## Authentication
@@ -150,9 +207,6 @@ From the book v2, use:
 chapter 2.2
 
 ## Control Plane
-
-From the book v2, use:
-chapters 2.1, 2.3, 2.5.
 
 The SCION control plane discovers and distributes AS-level path
 segments. A path segment encodes a network path at the granularity
@@ -213,9 +267,6 @@ were registered by leaf ASes of its own ISD, and core-path segments
 to reach other core ASes.
 
 ## Data Plane
-
-From the book v2, use:
-chapters 2.4, 5.1
 
 Name resolution in SCION returns the <ISD, AS, local address> 3-tuple.
 Core- and down-path segments are fetched based on the <ISD, AS> tuple.
