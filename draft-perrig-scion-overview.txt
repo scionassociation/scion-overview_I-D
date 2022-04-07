@@ -32,8 +32,8 @@ Abstract
 
    This document gives a high-level overview of the SCION architecture,
    including its authentication model and the setup of the control- and
-   data plane.  As SCION is already in production use today, its
-   conclude with an overview of SCION deployments.
+   data plane.  As SCION is already in production use today, this draft
+   concludes with an overview of SCION deployments.
 
 About This Document
 
