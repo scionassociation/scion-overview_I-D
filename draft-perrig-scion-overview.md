@@ -150,7 +150,9 @@ There are three types of links in SCION: core links, parent-child links, and pee
 
 Figure 1 shows a high-level overview of the SCION network structure:
 
-!(https://github.com/scionfoundation/scion-overview_I-D/blob/main/images/SCIONnetwork.png)
+!(SCIONnetwork.svg)
+
+!(SCIONnetwork.pdf)
 
 |  
 |  
