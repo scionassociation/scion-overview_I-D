@@ -64,7 +64,7 @@
 
 <section anchor="introduction"><name>Introduction</name>
 
-<t>The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short overview of SCION's basic elements.</t>
+<t>The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with an overview of SCION's main elements.</t>
 
 <t>The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.</t>
 
@@ -143,9 +143,9 @@ Also full deployment of BGPsec raises issues, such as the creation of wormholes 
 </section>
 <section anchor="scion-overview"><name>SCION Overview</name>
 
-<t>SCION has been designed to address the security issues of today's Internet depicted in the previous section <xref target="why">Why SCION - Internet's Issues</xref>. This section gives a high-level description of SCION's basic elements, providing a basic understanding of this next-generation inter-network architecture.</t>
+<t>SCION has been designed to address the security issues of today's Internet depicted in the previous section <xref target="why">Why SCION - Internet's Issues</xref>. This section gives a high-level description of SCION's main elements, providing a basic understanding of this next-generation inter-network architecture.</t>
 
-<section anchor="network-structure-and-naming"><name>Network Structure and Naming</name>
+<section anchor="network-architecture-and-naming"><name>Network Architecture and Naming</name>
 
 <t>SCION's main goal is to offer highly available and efficient point-to-point packet delivery—even in the presence of actively malicious entities. To achieve scalability and sovereignty, SCION organizes existing ASes into groups of independent routing planes, called <strong>Isolation Domains (ISD)</strong>. An AS can be a member of multiple ISDs. All ASes in an ISD agree on a set of trust roots, called the <strong>Trust Root Configuration (TRC)</strong>, ensuring that network traffic only flows on policy-compliant paths. The ISD is governed by a set of <strong>core ASes</strong>, which provide connectivity to other ISDs and manage the trust roots. Typically, the 3–10 largest ISPs of an ISD form the ISD’s core.</t>
 
@@ -171,9 +171,14 @@ There are three types of links in SCION: core links, parent-child links, and pee
 
 <t>Figure 1 shows a high-level overview of the SCION network structure:</t>
 
-<t>Figure: !(SCIONnetwork.txt)</t>
+<t>Figure: !(SCIONnetwork)</t>
 
 <t>Figure 1: SCION network structure</t>
+
+<figure><artwork><![CDATA[
+  ...............................                                                           .                                  .                                                        .       [TCR]                         .                                                      .            (::::::::::::::)           .              ...........................         .          (::::: ISD core :::::)         .            .                           .        .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .       .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .      .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .     .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .     .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .     .       /            |             o      .         .        /(::::::::::::::)\       .     .      o             |           +---+    .         .       /                  \      .     .    +---+           |          /|ASb|    .         .      /                    o     .     .    |ASa|           |         / +---+    .         .     o                   +---+   .     .    +---+           |        /    |      .         .   +---+                 |ASy|   .     .      |             |       /     |      .         .   |ASx| --------------- +---+   .     .      |             |      /      o      .         .   +---+                         .     .      o             o     /     +---+    .         .     |                           .     .    +---+         +---+  /      |ASe|    .         .     o                           .     .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .      .   +---+         +---+                 .           .  |ASz|           ISD 2        .        .                                     .             . +---+                       .          .             ISD 1                 .                .                          .       
+ ................................                    ..........................        
+]]></artwork></figure>
 
 <t>|<br />
 |<br />
@@ -182,12 +187,33 @@ o  Parent AS - child AS    ----  Peering link    ===  Core link</t>
 </section>
 <section anchor="routing"><name>Routing</name>
 
-<t>As a path-based architecture, SCION end hosts learn about available network path segments, and combine them into end-to-end paths that are carried in packet headers. This concept is called <strong>packet-carried forwarding state (PCFS)</strong>. SCION also enables multi-path communication among end hosts.</t>
+<t>SCION operates on two routing levels: intra-ISD and inter-ISD. As a path-based architecture, SCION end hosts learn about available network path segments through <strong>path-segment construction beacons (PCBs)</strong>. A PCB is initiated by a core AS and then disseminated either within an ISD (to explore intra-ISD paths) oder among core ASes (to explore core paths across different ISDs). The PCBs accumulate cryptographically protected path- and forwarding information on AS-level, and store this information in the form of <strong>hop fields (HFs)</strong>. End hosts use the information from these PCBs/hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called <strong>packet-carried forwarding state (PCFS)</strong>. The concept also enables multi-path communication among end hosts.</t>
 
-<t>Routing is based on the &lt;ISD, AS&gt; tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the &lt;ISD, AS, local address&gt; 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.</t>
+<t>The process of creating a end-to-end forwarding path contains the following steps:</t>
+
+<t><list style="numbers">
+  <t>First, an AS discovers paths to other ASes, during the <em>path exploration</em> (or beaconing) phase.</t>
+  <t>The AS then selects a few PCBs according to defined selection criteria, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the <em>path registration</em> phase.</t>
+  <t>During the <em>path resolution</em> process, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs<br />
+   a. a <em>path lookup</em> step, to obtain path segments, and
+   b. a <em>path combination</em> step, to combine the forwarding path from the segments.</t>
+</list></t>
+
+<t><strong>ISD and AS numbering</strong><br />
+Routing is based on the &lt;ISD, AS&gt; tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the &lt;ISD, AS, local address&gt; 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.</t>
 
 </section>
 <section anchor="infrastructure-components"><name> Infrastructure Components</name>
+
+<t>The <strong>beacon service</strong>, the <strong>path service</strong>, and the <strong>certificate service</strong> are the main infrastructure components of the SCION network architecture. Each AS can have one or more servers per service, depending on the AS's size and type. It is also possible to combine the services into one or more <em>control services</em>. <em>internal routers</em> forward packets inside the AS, while <em>border routers</em> provide interconnectivity between ASes.</t>
+
+<t><list style="symbols">
+  <t>The beacon service discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which it forwards to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.</t>
+  <t>The path service stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they upload them to the path service in the ISD core.</t>
+  <t>The certificate service keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).</t>
+</list></t>
+
+<t><em>Border routers</em> connect different ASes supporting SCION. The main task of border routers is to forward packets to the next border router or the destination host within the AS. Since SCION can operate using any intra-AS routing protocol (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS), the <em>internal routers</em> do not need to be changed to support SCION.</t>
 
 </section>
 </section>
@@ -205,90 +231,39 @@ appear in all capitals, as shown here.</t>
 
 <section anchor="authentication"><name>Authentication</name>
 
-<t>Control-Plane PKI/TRC
-From the book v2, use:<br />
-chapter 2.2</t>
+<t>SCION’s control plane relies on a public-key infrastructure we call the <strong>control-plane PKI (CP-PKI)</strong>, in which each ISD defines its own roots of trust and policies in a file called trust root configuration (TRC). A TRC is a signed collection of certificates, which also contains ISD-specific policies, for example, specifying how many signatures an updated TRC should contain to be valid.
+Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of <strong>AS certificates</strong> and PCBs.</t>
 
 </section>
 <section anchor="control-plane"><name>Control Plane</name>
 
-<t>The SCION control plane discovers and distributes AS-level path
-segments. A path segment encodes a network path at the granularity
-of inter-domain interfaces on either end of an inter-domain link
-connecting two consecutive ASes on a path.
-<!-- Constructing interdomain paths at the granularity of inter-AS links increases the
-number of available paths and enables optimization of paths with
-regard to different criteria. --></t>
+<t>The SCION control plane discovers and distributes AS-level path segments. A path segment encodes a network path at the granularity
+of inter-domain interfaces on either end of an inter-domain link connecting two consecutive ASes on a path.
+<!-- Constructing inter-domain paths at the granularity of inter-AS links increases the number of available paths and enables optimization of paths with regard to different criteria. --></t>
 
-<t>Each end-to-end path consists of up to three path segments: corepath,
-up-path, and down-path segments. Core-path segments
-refer to path segments containing only core ASes, an up-path
-segment is a path segment from a customer (leaf AS) to a provider
-(core AS) inside one ISD, and a down-path segment is a path
-segment from a provider (core AS) to a customer (leaf AS) inside
+<t>Each end-to-end path consists of up to three path segments: core path, up-path, and down-path segments. Core-path segments
+refer to path segments containing only core ASes, an up-path segment is a path segment from a customer (leaf AS) to a provider
+(core AS) inside one ISD, and a down-path segment is a path segment from a provider (core AS) to a customer (leaf AS) inside
 an ISD.</t>
 
-<t>To address the suboptimality of hierarchical routing, SCION
-introduces peering links and shortcuts.
-In a shortcut, a path only contains an up-path and a down-path segment, which can
-cross over at a non-core AS that is common to both paths.
-Peering links can be added to up- or down-path segments, resulting in an
-operation similar to today’s Internet.</t>
+<t>To address the sub-optimality of hierarchical routing, SCION introduces peering links and shortcuts. In a shortcut, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. Peering links can be added to up- or down-path segments, resulting in an operation similar to today’s Internet.</t>
 
-<t>Routing (or path segment construction) is conducted hierarchically
-on two levels: (1) among all core ASes of all ISDs, which
-constructs core-path segments, and (2) within each ISD, which constructs
-up- and down-path segments. The path segment construction process
-is referred to as beaconing, where a Path-segment
-Construction Beacon (PCB) is initiated by core ASes to iteratively construct path segments.
-Up- and down-path segments are interchangeable,
-simply by reversing the order of ASes in a segment.
-The beaconing process in each AS is performed by its beacon server which is
-a part of its Control Service (CS), that performs control-plane-related tasks.</t>
+<t>Routing (or path segment construction) is conducted hierarchically on two levels: (1) among all core ASes of all ISDs, which constructs core-path segments, and (2) within each ISD, which constructs up- and down-path segments. The path segment construction process is referred to as beaconing, where a Path-segment Construction Beacon (PCB) is initiated by core ASes to iteratively construct path segments. Up- and down-path segments are interchangeable, simply by reversing the order of ASes in a segment. The beaconing process in each AS is performed by its beacon server which is a part of its Control Service (CS), that performs control-plane-related tasks.</t>
 
-<t>Core beaconing is the process of constructing path segments between core ASes.
-During core beaconing, a core AS either initiates PCBs or propagates PCBs received from
-neighboring core ASes to all other neighboring core ASes.</t>
+<t>Core beaconing is the process of constructing path segments between core ASes. During core beaconing, a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to all other neighboring core ASes.</t>
 
-<t>Intra-ISD beaconing is the second level of the beaconing hierarchy,
-which creates path segments from
-core ASes to non-core ASes. For this, core ASes create PCBs and
-send them to their non-core neighbors (typically customer ASes).
-Each non-core AS propagates the received PCBs to its respective
-customers. This procedure continues until the PCB reaches an AS
-without any customer (leaf AS) and as a result, all ASes receive
-path segments to reach the core ASes of their ISD.
-Non-core ASes can include their peering links in the PCBs, enabling
-valley-free forwarding if both up- and down-path segments
-contain the same peering link.</t>
+<t>Intra-ISD beaconing is the second level of the beaconing hierarchy, which creates path segments from core ASes to non-core ASes. For this, core ASes create PCBs and send them to their non-core neighbors (typically customer ASes). Each non-core AS propagates the received PCBs to its respective customers. This procedure continues until the PCB reaches an AS without any customer (leaf AS) and as a result, all ASes receive path segments to reach the core ASes of their ISD. Non-core ASes can include their peering links in the PCBs, enabling valley-free forwarding if both up- and down-path segments contain the same peering link.</t>
 
-<t>A global path server infrastructure
-is used to disseminate path segments. Each AS contains a path
-server as a part of the control service. The infrastructure bears
-similarities to DNS, where information is fetched on-demand only.
-A core AS’s path server stores all the intra-ISD path segments that
-were registered by leaf ASes of its own ISD, and core-path segments
-to reach other core ASes.</t>
+<t>A global path server infrastructure is used to disseminate path segments. Each AS contains a path server as a part of the control service. The infrastructure bears similarities to DNS, where information is fetched on-demand only. A core AS’s path server stores all the intra-ISD path segments that were registered by leaf ASes of its own ISD, and core-path segments to reach other core ASes.</t>
 
 </section>
 <section anchor="data-plane"><name>Data Plane</name>
 
-<t>Name resolution in SCION returns the &lt;ISD, AS, local address&gt; 3-tuple.
-Core- and down-path segments are fetched based on the &lt;ISD, AS&gt; tuple.
-Hosts can then combine one of their up-path segments
-with the received core- and down-path segments.</t>
+<t>Name resolution in SCION returns the &lt;ISD, AS, local address&gt; 3-tuple. Core- and down-path segments are fetched based on the &lt;ISD, AS&gt; tuple. Hosts can then combine one of their up-path segments with the received core- and down-path segments.</t>
 
-<t>Shortcut paths that avoid a core AS are possible, if the up- and down-path contain
-the same AS, or if a peering link is available between an AS in the
-up-path and an AS in the down-path segment. Cryptographic protections
-ensure authentic path segments and prevent unauthorized path combinations.</t>
+<t>Shortcut paths that avoid a core AS are possible, if the up- and down-path contain the same AS, or if a peering link is available between an AS in the up-path and an AS in the down-path segment. Cryptographic protections ensure authentic path segments and prevent unauthorized path combinations.</t>
 
-<t>The path segments contain compact hop-fields, that encode
-information about which interfaces may be used to enter and leave
-an AS. The hop-fields are cryptographically protected, preventing
-path alteration. This so-called Packet-Carried Forwarding State
-(PCFS) replaces signaling to use a path, ensuring that routers do
-not need any local state on either paths or flows.</t>
+<t>The path segments contain compact hop-fields, that encode information about which interfaces may be used to enter and leave an AS. The hop-fields are cryptographically protected, preventing path alteration. This so-called Packet-Carried Forwarding State (PCFS) replaces signaling to use a path, ensuring that routers do not need any local state on either paths or flows.</t>
 
 </section>
 </section>
@@ -694,153 +669,190 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.</t>
   </back>
 
 <!-- ##markdown-source:
-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
+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
+gdxKG/f+D9xFtMDcVQAA
 
 -->
 
 </rfc>
+
