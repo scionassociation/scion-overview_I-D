@@ -44,7 +44,8 @@ informative:
   COOPER2013: DOI.10.1145/2535771.2535787
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
   MORILLO2021: DOI.10.14722/ndss.2021.24438
-  SCIONnetwork: SCIONnetwork.svg
+
+
 
 --- abstract
 
@@ -144,15 +145,13 @@ ISDs provide natural isolation of routing failures and misconfigurations, give e
 **Links**  
 There are three types of links in SCION: core links, parent-child links, and peering links.
 
-- A *core link* can only exist between two core ASes.  
-- A *parent-child link* requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
-- A *peering link* also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
+- A **core link** can only exist between two core ASes.  
+- A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
+- A **peering link** also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
 
 Figure 1 shows a high-level overview of the SCION network structure:
 
-!{{SCIONnetwork}}
-
-!(SCIONnetwork.pdf)
+!(SCIONnetwork.svg)
 
 
 |  

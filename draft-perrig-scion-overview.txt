@@ -326,7 +326,7 @@ Internet-Draft                  SCION I-D                     April 2022
    There are three types of links in SCION: core links, parent-child
    links, and peering links.
 
-   *  A _core link_ can only exist between two core ASes.
+   *  A *core link* can only exist between two core ASes.
 
 
 
@@ -338,19 +338,17 @@ Perrig                   Expires 9 October 2022                 [Page 6]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   *  A _parent-child link_ requires that at least one of the two
+   *  A *parent-child link* requires that at least one of the two
       connected ASes is a non-core AS.  ASes with a parent-child link
       usually belong to the same entity or have a provider-customer
       relationship.
 
-   *  A _peering link_ also includes at least non-core AS.  A peering
+   *  A *peering link* also includes at least non-core AS.  A peering
       link exists between ASes with a (standard or paid) relationship.
 
    Figure 1 shows a high-level overview of the SCION network structure:
 
    !(SCIONnetwork.svg)
-
-   !(SCIONnetwork.pdf)
 
    |
    |
@@ -384,6 +382,8 @@ Internet-Draft                  SCION I-D                     April 2022
    "OPTIONAL" in this document are to be interpreted as described in
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
+
+
 
 
 
