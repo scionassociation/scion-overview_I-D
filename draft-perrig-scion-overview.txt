@@ -352,9 +352,6 @@ Internet-Draft                  SCION I-D                     April 2022
 
    Figure 1: SCION network structure
 
-  ...............................                                                           .                                  .                                                        .       [TCR]                         .                                                      .            (::::::::::::::)           .              ...........................         .          (::::: ISD core :::::)         .            .                           .        .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .       .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .      .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .     .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .     .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .     .       /            |             o      .         .        /(::::::::::::::)\       .     .      o             |           +---+    .         .       /                  \      .     .    +---+           |          /|ASb|    .         .      /                    o     .     .    |ASa|           |         / +---+    .         .     o                   +---+   .     .    +---+           |        /    |      .         .   +---+                 |ASy|   .     .      |             |       /     |      .         .   |ASx| --------------- +---+   .     .      |             |      /      o      .         .   +---+                         .     .      o             o     /     +---+    .         .     |                           .     .    +---+         +---+  /      |ASe|    .         .     o                           .     .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .      .   +---+         +---+                 .           .  |ASz|           ISD 2        .        .                                     .             . +---+                       .          .             ISD 1                 .                .                          .
- ................................                    ..........................
-
    |
    |
    o Parent AS - child AS ---- Peering link === Core link
@@ -389,6 +386,9 @@ Internet-Draft                  SCION I-D                     April 2022
 
 
 
+
+
+
 Perrig                   Expires 9 October 2022                 [Page 7]
 
 Internet-Draft                  SCION I-D                     April 2022
@@ -397,9 +397,9 @@ Internet-Draft                  SCION I-D                     April 2022
    3.  During the _path resolution_ process, the actual creation of an
        end-to-end forwarding path to the destination takes place.  For
        this, an end host performs
-       a. a _path lookup_ step, to obtain path segments, and b. a _path
-       combination_ step, to combine the forwarding path from the
-       segments.
+       a. a _path lookup_ step, to obtain path segments, and
+       b. a _path combination_ step, to combine the forwarding path from
+       the segments.
 
    *ISD and AS numbering*
    Routing is based on the <ISD, AS> tuple, agnostic of local

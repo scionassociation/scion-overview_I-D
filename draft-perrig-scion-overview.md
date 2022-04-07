@@ -152,33 +152,7 @@ Figure 1 shows a high-level overview of the SCION network structure:
 
 Figure: !(SCIONnetwork)
 
-Figure 1: SCION network structure
-
-
-      ...............................                                                       
-   .                                  .                                                     
-  .       [TCR]                         .                                                    
- .            (::::::::::::::)           .              ...........................        
-.          (::::: ISD core :::::)         .            .                           .       
-.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .      
-.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .     
-.      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .    
-.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .    
-.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .    
-.       /            |             o      .         .        /(::::::::::::::)\       .    
-.      o             |           +---+    .         .       /                  \      .    
-.    +---+           |          /|ASb|    .         .      /                    o     .    
-.    |ASa|           |         / +---+    .         .     o                   +---+   .    
-.    +---+           |        /    |      .         .   +---+                 |ASy|   .    
-.      |             |       /     |      .         .   |ASx| --------------- +---+   .    
-.      |             |      /      o      .         .   +---+                         .    
-.      o             o     /     +---+    .         .     |                           .    
-.    +---+         +---+  /      |ASe|    .         .     o                           .    
-.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .    
- .   +---+         +---+                 .           .  |ASz|           ISD 2        .     
-  .                                     .             . +---+                       .      
-   .             ISD 1                 .                .                          .       
-     ................................                    ..........................        
+Figure 1: SCION network structure  
 
 |  
 |  
@@ -192,10 +166,10 @@ SCION operates on two routing levels: intra-ISD and inter-ISD. As a path-based a
 
 The process of creating a end-to-end forwarding path contains the following steps:
 
-1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.
-2. The AS then selects a few PCBs according to defined selection criteria, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.
+1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.  
+2. The AS then selects a few PCBs according to defined selection criteria, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.  
 3. During the *path resolution* process, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs  
-      a. a *path lookup* step, to obtain path segments, and
+      a. a *path lookup* step, to obtain path segments, and  
       b. a *path combination* step, to combine the forwarding path from the segments.  
 
 **ISD and AS numbering**  
