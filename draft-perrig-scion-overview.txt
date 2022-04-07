@@ -348,11 +348,9 @@ Internet-Draft                  SCION I-D                     April 2022
 
    Figure 1 shows a high-level overview of the SCION network structure:
 
- .............................                                                         .                               .                                                      .       [TCR]                      .                                                    .            (::::::::::::::)          .                ...........................       .          (::::: ISD core :::::)         .            .                           .      .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .     .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .    .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .   .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .   .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .   .       /            |             o      .         .        /(::::::::::::::)\       .   .      o             |           +---+    .         .       /                  \      .   .    +---+           |          /|ASb|    .         .      /                    o     .   .    |ASa|           |         / +---+    .         .     o                   +---+   .   .    +---+           |        /    |      .         .   +---+                 |ASy|   .   .      |             |       /     |      .         .   |ASx| --------------- +---+   .   .      |             |      /      o      .         .   +---+                         .   .      o             o     /     +---+    .         .     |                           .   .    +---+         +---+  /      |ASe|    .         .     o                           .   .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .    .   +---+         +---+                 .           .  |ASz|           ISD 2         .      .                                     .             . +---+                        .        .             ISD 1                 .                .                           .
-...................................                   ..........................
+   figure: !(SCIONnetwork)
 
-
-                              Figure 1: SCION network structure
+                                 Figure 1: SCION network structure
 
    |
    |
@@ -385,6 +383,8 @@ Internet-Draft                  SCION I-D                     April 2022
        registers these segments with a path infrastructure, thus making
        them available to other ASes.  This happens during the _path
        registration_ phase.
+
+
 
 
 
