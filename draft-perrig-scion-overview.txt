@@ -101,7 +101,7 @@ Table of Contents
        1.2.2.  Routing . . . . . . . . . . . . . . . . . . . . . . .   7
        1.2.3.   Infrastructure Components  . . . . . . . . . . . . .   7
      1.3.  Conventions and Definitions . . . . . . . . . . . . . . .   7
-   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .   8
+   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .   7
      2.1.  Authentication  . . . . . . . . . . . . . . . . . . . . .   8
      2.2.  Control Plane . . . . . . . . . . . . . . . . . . . . . .   8
      2.3.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .   9
@@ -116,7 +116,7 @@ Internet-Draft                  SCION I-D                     April 2022
 
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
      6.2.  Informative References  . . . . . . . . . . . . . . . . .  10
    Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  12
@@ -348,11 +348,8 @@ Internet-Draft                  SCION I-D                     April 2022
 
    Figure 1 shows a high-level overview of the SCION network structure:
 
-   .............................
- .                               .                                                       .       [TCR]                      .                                                    .            (::::::::::::::)          .               ...........................       .          (::::: ISD core :::::)         .            .                           .      .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .     .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)         . .      (:: +---+ : |CAS|===+---+====)=====.=========.=====(====+---+ ::: +---+ ::)      . .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)     . .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)      . .       /            |             o      .         .        /(::::::::::::::)\         . .      o             |           +---+    .         .       /                  \        . .    +---+           |          /|ASb|    .         .      /                    o       . .    |ASa|           |         / +---+    .         .     o                   +---+     . .    +---+           |        /    |      .         .   +---+                 |ASy|     . .      |             |       /     |      .         .   |ASx| --------------- +---+     . .      |             |      /      o      .         .   +---+                           . .      o             o     /     +---+    .         .     |                             . .    +---+         +---+  /      |ASe|    .         .     o                             . .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                           .  .   +---+         +---+                 .           .  |ASz|           ISD 2          .   .                                     .             . +---+                         .      .             ISD 1                 .                .                            .
-...................................                  ............................
-
-   !(images/SCIONnetwork.png)
+   !(https://github.com/scionfoundation/scion-overview_I-
+   D/blob/main/images/SCIONnetwork.png)
 
    |
    |
@@ -387,14 +384,15 @@ Internet-Draft                  SCION I-D                     April 2022
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+2.  Key Concepts
+
+
 
 
 Perrig                   Expires 9 October 2022                 [Page 7]
 
 Internet-Draft                  SCION I-D                     April 2022
 
-
-2.  Key Concepts
 
 2.1.  Authentication
 
@@ -442,6 +440,8 @@ Internet-Draft                  SCION I-D                     April 2022
    which creates path segments from core ASes to non-core ASes.  For
    this, core ASes create PCBs and send them to their non-core neighbors
    (typically customer ASes).  Each non-core AS propagates the received
+   PCBs to its respective customers.  This procedure continues until the
+   PCB reaches an AS without any customer (leaf AS) and as a result, all
 
 
 
@@ -450,8 +450,6 @@ Perrig                   Expires 9 October 2022                 [Page 8]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   PCBs to its respective customers.  This procedure continues until the
-   PCB reaches an AS without any customer (leaf AS) and as a result, all
    ASes receive path segments to reach the core ASes of their ISD.  Non-
    core ASes can include their peering links in the PCBs, enabling
    valley-free forwarding if both up- and down-path segments contain the
@@ -499,14 +497,14 @@ Internet-Draft                  SCION I-D                     April 2022
    The SCION architecture introduces the following security
    considerations:
 
+6.  References
+
 
 
 Perrig                   Expires 9 October 2022                 [Page 9]
 
 Internet-Draft                  SCION I-D                     April 2022
 
-
-6.  References
 
 6.1.  Normative References
 
@@ -549,10 +547,12 @@ Internet-Draft                  SCION I-D                     April 2022
               Networking Technologies, DOI 10.14722/sent.2014.23001,
               2014, <https://doi.org/10.14722/sent.2014.23001>.
 
-
-
-
-
+   [LYCHEV2013]
+              Lychev, R., Goldberg, S., and M. Schapira, "BGP security
+              in partial deployment: is the juice worth the squeeze?",
+              ACM SIGCOMM Computer Communication Review Vol. 43, pp.
+              171-182, DOI 10.1145/2534169.2486010, September 2013,
+              <https://doi.org/10.1145/2534169.2486010>.
 
 
 
@@ -561,13 +561,6 @@ Perrig                   Expires 9 October 2022                [Page 10]
 
 Internet-Draft                  SCION I-D                     April 2022
 
-
-   [LYCHEV2013]
-              Lychev, R., Goldberg, S., and M. Schapira, "BGP security
-              in partial deployment: is the juice worth the squeeze?",
-              ACM SIGCOMM Computer Communication Review Vol. 43, pp.
-              171-182, DOI 10.1145/2534169.2486010, September 2013,
-              <https://doi.org/10.1145/2534169.2486010>.
 
    [MORILLO2021]
               Morillo, R., Furuness, J., Morris, C., Breslin, J.,
@@ -610,14 +603,6 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.17487/RFC8200, July 2017,
               <https://www.rfc-editor.org/info/rfc8200>.
 
-
-
-
-Perrig                   Expires 9 October 2022                [Page 11]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    [RFC8205]  Lepinski, M., Ed. and K. Sriram, Ed., "BGPsec Protocol
               Specification", RFC 8205, DOI 10.17487/RFC8205, September
               2017, <https://www.rfc-editor.org/info/rfc8205>.
@@ -625,6 +610,13 @@ Internet-Draft                  SCION I-D                     April 2022
    [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
+
+
+
+Perrig                   Expires 9 October 2022                [Page 11]
+
+Internet-Draft                  SCION I-D                     April 2022
+
 
    [ROTHENBERGER2017]
               Rothenberger, B., Asoni, D., Barrera, D., and A. Perrig,
@@ -659,6 +651,14 @@ Author's Address
    Adrian Perrig
    ETH Zuerich
    Email: adrian.perrig@inf.ethz.ch
+
+
+
+
+
+
+
+
 
 
 
