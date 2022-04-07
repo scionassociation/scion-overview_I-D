@@ -172,13 +172,14 @@ There are three types of links in SCION: core links, parent-child links, and pee
 <t>Figure 1 shows a high-level overview of the SCION network structure:</t>
 
 <t>!(SCIONnetwork.svg)</t>
+<t><artwork type="svg" src="SCIONnetwork.svg"></t>
 
 <t>|<br />
 |<br />
 o  Parent AS - child AS    ----  Peering link    ===  Core link</t>
 
 <figure><artwork><![CDATA[
-                              Figure 1: SCION network structure  
+                              Figure 1: SCION network structure
 ]]></artwork></figure>
 
 </section>
@@ -846,4 +847,3 @@ PVGCbPrdi1mcO/uCF2LAIxgKKxGw/h+O0u296D4AAA==
 -->
 
 </rfc>
-
