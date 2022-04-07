@@ -60,7 +60,7 @@ This document gives a high-level overview of the SCION architecture, including i
 
 # Introduction
 
-The Introduction section presents a very compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with an overview of SCION's main elements.
+The Introduction section presents a compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short description of SCION's main elements.
 
 The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
 
@@ -93,7 +93,7 @@ The bigger the Internet becomes, the higher the workload of BGP gets, making it 
 - **Convergence**  
 BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or converge only non-deterministically (see {{GRIFFIN1999}} and {{RFC4264}}. Convergence may also take too much time {{SAHOO2009}}.
 - **Single path**  
-BGP only allows the selection of a single path to a destination. But having a multi-path choice can be welcome in several situations, e.g., in case of a link failure, or when a packet is routed over a too small and thus inefficient path.
+BGP only allows the selection of a single path to a destination. But having a multi-path choice can be welcome in several situations, e.g., in the case of a link failure, or when a packet is routed over a too small and thus inefficient path.
 - **Lack of security**  
 BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see [Attacks](#attack).
 
@@ -161,13 +161,13 @@ o  Parent AS - child AS    ----  Peering link    ===  Core link
 
 ### Routing
 
-SCION operates on two routing levels: intra-ISD and inter-ISD. As a path-based architecture, SCION end hosts learn about available network path segments through **path-segment construction beacons (PCBs)**. A PCB is initiated by a core AS and then disseminated either within an ISD (to explore intra-ISD paths) oder among core ASes (to explore core paths across different ISDs). The PCBs accumulate cryptographically protected path- and forwarding information on AS-level, and store this information in the form of **hop fields (HFs)**. End hosts use the information from these PCBs/hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called **packet-carried forwarding state (PCFS)**. The concept also enables multi-path communication among end hosts.
+SCION operates on two routing levels: intra-ISD and inter-ISD. As a path-based architecture, SCION end hosts learn about available network path segments through **path-segment construction beacons (PCBs)**. A PCB is initiated by a core AS and then disseminated either within an ISD (to explore intra-ISD paths) oder among core ASes (to explore core paths across different ISDs). The PCBs accumulate cryptographically protected path- and forwarding information on AS-level, and store this information in the form of **hop fields (HFs)**. End hosts use the information from these PCBs/hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called **packet-carried forwarding state (PCFS)**. The concept also supports multi-path communication among end hosts.
 
-The process of creating a end-to-end forwarding path contains the following steps:
+The process of creating an end-to-end forwarding path consists of the following steps:
 
 1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.  
 2. The AS then selects a few PCBs according to defined selection criteria, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.  
-3. During the *path resolution* process, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs  
+3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs  
       a. a *path lookup* step, to obtain path segments, and  
       b. a *path combination* step, to combine the forwarding path from the segments.  
 
@@ -176,7 +176,7 @@ Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing 
 
 ### Infrastructure Components
 
-The **beacon service**, the **path service**, and the **certificate service** are the main infrastructure components of the SCION network architecture. Each AS can have one or more servers per service, depending on the AS's size and type. It is also possible to combine the services into one or more *control services*. *internal routers* forward packets inside the AS, while *border routers* provide interconnectivity between ASes.
+The **beacon service**, the **path service**, and the **certificate service** are the main infrastructure components of the SCION network architecture. Each AS can have one or more servers per service, depending on the AS's size and type. It is also possible to combine the services into one or more *control services*. *Internal routers* forward packets inside the AS, while *border routers* provide interconnectivity between ASes.
 
 - The beacon service discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which it forwards to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.  
 - The path service stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they upload them to the path service in the ISD core.  

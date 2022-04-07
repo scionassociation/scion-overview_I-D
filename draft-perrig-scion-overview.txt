@@ -124,12 +124,12 @@ Internet-Draft                  SCION I-D                     April 2022
 
 1.  Introduction
 
-   The Introduction section presents a very compact overview of the
-   current Internet's most salient problems and shortcomings, which
-   together are the reason for developing SCION: To address these issues
-   in order to make the Internet more secure, reliable, transparent, and
-   efficient.  The Introduction section then continues with an overview
-   of SCION's main elements.
+   The Introduction section presents a compact overview of the current
+   Internet's most salient problems and shortcomings, which together are
+   the reason for developing SCION: To address these issues in order to
+   make the Internet more secure, reliable, transparent, and efficient.
+   The Introduction section then continues with a short description of
+   SCION's main elements.
 
    The sections after the Introduction provide further insight into
    SCION's main concepts and features.  The document concludes with some
@@ -197,8 +197,8 @@ Internet-Draft                  SCION I-D                     April 2022
    *  *Single path*
       BGP only allows the selection of a single path to a destination.
       But having a multi-path choice can be welcome in several
-      situations, e.g., in case of a link failure, or when a packet is
-      routed over a too small and thus inefficient path.
+      situations, e.g., in the case of a link failure, or when a packet
+      is routed over a too small and thus inefficient path.
 
    *  *Lack of security*
       BGP has no built-in security mechanisms and does not provide any
@@ -349,7 +349,7 @@ Internet-Draft                  SCION I-D                     April 2022
    Figure 1 shows a high-level overview of the SCION network structure:
 
    Figure: !(SCIONnetwork)
-   
+
    Figure 1: SCION network structure
 
    |
@@ -369,10 +369,10 @@ Internet-Draft                  SCION I-D                     April 2022
    End hosts use the information from these PCBs/hop fields to create
    end-to-end forwarding paths for data packets, who carry this
    information in their packet headers.  This concept is called *packet-
-   carried forwarding state (PCFS)*. The concept also enables multi-path
-   communication among end hosts.
+   carried forwarding state (PCFS)*. The concept also supports multi-
+   path communication among end hosts.
 
-   The process of creating a end-to-end forwarding path contains the
+   The process of creating an end-to-end forwarding path consists of the
    following steps:
 
    1.  First, an AS discovers paths to other ASes, during the _path
@@ -394,7 +394,7 @@ Perrig                   Expires 9 October 2022                 [Page 7]
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   3.  During the _path resolution_ process, the actual creation of an
+   3.  During the _path resolution_ phase, the actual creation of an
        end-to-end forwarding path to the destination takes place.  For
        this, an end host performs
        a. a _path lookup_ step, to obtain path segments, and
@@ -417,7 +417,7 @@ Internet-Draft                  SCION I-D                     April 2022
    service* are the main infrastructure components of the SCION network
    architecture.  Each AS can have one or more servers per service,
    depending on the AS's size and type.  It is also possible to combine
-   the services into one or more _control services_. _internal routers_
+   the services into one or more _control services_. _Internal routers_
    forward packets inside the AS, while _border routers_ provide
    interconnectivity between ASes.
 
