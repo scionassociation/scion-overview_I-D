@@ -49,47 +49,49 @@ informative:
 
 --- abstract
 
-The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of malicious actors, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
+The Internet has been incredibly successful as it grew to a planet-scale networks with billions of devices. Today's IP-based routing system provides global reachability, however it falls short of providing other properties that are in demand today, as the Internet is intertwined with many aspects of our society. Specifically, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of adversaries, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
 
 The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, this draft concludes with an overview of SCION deployments.
+This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, this document concludes with an overview of SCION deployments.
 
 
 --- middle
 
 # Introduction
 
-The Introduction section presents a compact overview of the current Internet's most salient problems and shortcomings, which together are the reason for developing SCION: To address these issues in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short description of SCION's main elements.
+The Introduction section presents a compact overview of challenges with the current Internet's, which together are the reason for developing SCION: To address these challenges in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short description of SCION's main elements.
 
 The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
 
 
-## Why SCION - Internet's Issues {#why}
+## Why SCION - Motivation  {#why}
 
-### Issues with IP and BGP
+### Challenges with IP routing
 
-IP and BGP, the two protocols that define today’s Internet architecture, have remained virtually unchanged since the standardization of IPv6 {{RFC8200}} and BGP-4 {{RFC4271}}. But the Internet has never stopped to expand and continually needs to accommodate new uses. This has brought numerous issues to light. The following sections list these issues.
+Today's IP routing suffers from significant limitations that are a result of original design decisions. The Internet has never stopped to expand and continually needs to accommodate new use cases that were not originally taken into account. This has brought numerous issues to light, listed in the following sections.
 
 #### Internet Protocol
 
 IP comes with the following drawbacks:
 
-- **Lack of transparency and control**
-Today's Internet does not allow end hosts to select and verify paths. It is also not possible to simultaneously use multiple distinct paths towards the same destination.
-- **Stateful routers**
-The use of forwarding tables by IP routers is time-consuming, expensive, and energy-intensive. Also, the constantly growing size of forwarding tables causes storage problems. Additionally, routers that keep state for network information can suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
+- **Lack of programmable paths**
+IP addressing is tightly coupled with routing, therefore packets follow the path established by the routing protocol. End hosts are not able to select paths based on application requirements or path conditions. In addition, it is also not possible to simultaneously use multiple distinct paths towards the same destination.
+- **Lack of security and transparency**
+IP end hosts are oblivious to the path taken by their packets. This means that end hosts have no visibility nor guarantees on where their traffic is forwarded. This may cause traffic to be redirected through adversary points, breaching the payload's security.
+- **Scalability**
+The use of forwarding tables in IP routers is time-consuming, expensive, and energy-intensive. Also, the constantly growing size of forwarding tables causes storage problems. Additionally, routers that keep state for network information can suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
 
 #### BGP
 
 Just as IP, also BGP suffers from a number of shortcomings:
 
-- **Outages**
+- **Convergence time and outages**
 The unclear separation of control plane and the data plane as well as convergence problems can lead to severe outages problems of up to ten minutes or more {{LABOVITZ2000}}.
 - **Lack of fault isolation**
 Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.
 - **Poor scalability**
-The bigger the Internet becomes, the higher the workload of BGP gets, making it scale poorly.
+The bigger the Internet becomes, the higher the workload of BGP gets, making it scale poorly. Scalability challenges are particularly evident in BGPSec (TODO: reference)
 - **Convergence**
 BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or converge only non-deterministically (see {{GRIFFIN1999}} and {{RFC4264}}. Convergence may also take too much time {{SAHOO2009}}.
 - **Single path**
@@ -99,24 +101,24 @@ BGP has no built-in security mechanisms and does not provide any tools for ASes 
 
 ### Issues with RPKI and BGPsec
 
- RPKI and BGPsec try to address Internet's above-mentioned security shortcomings, see also {{RFC6480}} and {{RFC8205}}. However, RPKI and BGPsec have issues of their own, as shortly described below.
+ RPKI and BGPsec try to address Internet's above-mentioned security shortcomings, see also {{RFC6480}} and {{RFC8205}}. However, RPKI and BGPsec introduce additional challenges, as shortly described below.
 
 - **RPKI and Route Origin Authorizations**
 Unfortunately, the Route Origin Authorizations (ROAs) provided by RPKI only prevent the simplest form of BGP hijacks, see [Attacks](#attack).
 - **Problems with BGPsec in partial deployment**
-BGPsec only provides full security when all ASes consistently use and enforce it. In the current situation, where BGP is only partially deployed, it is not very effective. It can even cause instabilities and is prone to downgrade attacks, see {{LYCHEV2013}}.
+BGPsec only provides full security when all ASes consistently use and enforce it. In the current situation, where BGP is only partially deployed, it has a limited effectiveness. It can even cause instabilities and is prone to downgrade attacks, see {{LYCHEV2013}}.
 - **Problems with BGPsec in full deployment**
-Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec together also cause issues for network sovereignty {{ROTHENBERGER2017}}. Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.
+Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec together also cause issues for network sovereignty {{ROTHENBERGER2017}}. Additionally, BGPsec further exacerbates BGP’s scalability issues (i.e., due to the additional overhead, and due to lack of prefix aggregation).
 
 ### Other Internet Issues
 
 #### Lack of Authentication
 
-Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. However, implementation of authentication is not strong in today's Internet:
+Authenticating digital data is becoming increasingly prevalent, as adversaries exploit the absence of authentication to inject malicious information. However, many network protocols lack authentication features:
 
-- Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.
+- Internet does not support sharing a secret key between two end hosts for secure end-to-end communication, unless resorting to a trust-on-first-use (TOFU) approach. TODO: elaborate
 - Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, are all sensitive to the compromise of a single entity.
-- The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, see {{RFC4443}} and {{RFC0791}}.
+- The Internet Control Message Protocol (ICMP) lacks an authenticated counterpart, see {{RFC4443}} and {{RFC0791}}. TODO: Why is this relevant?
 
 
 #### Attacks {#attack}
