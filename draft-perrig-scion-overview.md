@@ -22,7 +22,7 @@ author:
      org: ETH Zuerich
      email: adrian.perrig@inf.ethz.ch
 
-normative:   
+normative:
 
 
 informative:
@@ -53,7 +53,7 @@ The Internet has been successful beyond even the most optimistic expectations an
 
 The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, this draft concludes with an overview of SCION deployments.    
+This document gives a high-level overview of the SCION architecture, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, this draft concludes with an overview of SCION deployments.
 
 
 --- middle
@@ -75,37 +75,37 @@ IP and BGP, the two protocols that define today’s Internet architecture, have 
 
 IP comes with the following drawbacks:
 
-- **Lack of transparency and control**  
+- **Lack of transparency and control**
 Today's Internet does not allow end hosts to select and verify paths. It is also not possible to simultaneously use multiple distinct paths towards the same destination.
-- **Stateful routers**  
+- **Stateful routers**
 The use of forwarding tables by IP routers is time-consuming, expensive, and energy-intensive. Also, the constantly growing size of forwarding tables causes storage problems. Additionally, routers that keep state for network information can suffer from denial-of-service (DoS) attacks exhausting the router’s state {{SCHUCHARD2011}}.
 
 #### BGP
 
 Just as IP, also BGP suffers from a number of shortcomings:
 
-- **Outages**    
+- **Outages**
 The unclear separation of control plane and the data plane as well as convergence problems can lead to severe outages problems of up to ten minutes or more {{LABOVITZ2000}}.
-- **Lack of fault isolation**   
+- **Lack of fault isolation**
 Due to the lack of any routing hierarchy or isolation between different areas, a single faulty BGP speaker can affect routing in the entire world.
-- **Poor scalability**  
+- **Poor scalability**
 The bigger the Internet becomes, the higher the workload of BGP gets, making it scale poorly.
-- **Convergence**  
+- **Convergence**
 BGP convergence can be problematic, too. In certain situations, BGP will never converge to a stable state, or converge only non-deterministically (see {{GRIFFIN1999}} and {{RFC4264}}. Convergence may also take too much time {{SAHOO2009}}.
-- **Single path**  
+- **Single path**
 BGP only allows the selection of a single path to a destination. But having a multi-path choice can be welcome in several situations, e.g., in the case of a link failure, or when a packet is routed over a too small and thus inefficient path.
-- **Lack of security**  
+- **Lack of security**
 BGP has no built-in security mechanisms and does not provide any tools for ASes to authenticate the information they receive through BGP update messages. This opens up a multitude of attack opportunities--see [Attacks](#attack).
 
 ### Issues with RPKI and BGPsec
 
  RPKI and BGPsec try to address Internet's above-mentioned security shortcomings, see also {{RFC6480}} and {{RFC8205}}. However, RPKI and BGPsec have issues of their own, as shortly described below.
 
-- **RPKI and Route Origin Authorizations**  
+- **RPKI and Route Origin Authorizations**
 Unfortunately, the Route Origin Authorizations (ROAs) provided by RPKI only prevent the simplest form of BGP hijacks, see [Attacks](#attack).
-- **Problems with BGPsec in partial deployment**  
+- **Problems with BGPsec in partial deployment**
 BGPsec only provides full security when all ASes consistently use and enforce it. In the current situation, where BGP is only partially deployed, it is not very effective. It can even cause instabilities and is prone to downgrade attacks, see {{LYCHEV2013}}.
-- **Problems with BGPsec in full deployment**  
+- **Problems with BGPsec in full deployment**
 Also full deployment of BGPsec raises issues, such as the creation of wormholes and forwarding loops by attackers, or the introduction of circular dependencies, see {{LI2014}} and {{COOPER2013}}. RPKI and BGPsec together also cause issues for network sovereignty {{ROTHENBERGER2017}}. Additionally, BGPsec further exacerbates BGP’s scalability issues. Furthermore, prefix aggregation no longer works in BGPsec because the digital signatures are not aggregated.
 
 ### Other Internet Issues
@@ -114,14 +114,14 @@ Also full deployment of BGPsec raises issues, such as the creation of wormholes 
 
 Authenticating digital data is becoming increasingly important, as adversaries exploit the absence of authentication to inject malicious information. However, implementation of authentication is not strong in today's Internet:
 
-- Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.  
-- Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, are all sensitive to the compromise of a single entity.  
+- Internet does not support sharing a secret key between two end hosts for secure end-to-end communication.
+- Infrastructures added to provide authentication, such as RPKI/BGPsec, TLS {{RFC8446}}, and DNSSEC {{RFC4033}}, are all sensitive to the compromise of a single entity.
 - The Internet Control Message Protocol (ICMP) does not even have an authenticated counterpart, see {{RFC4443}} and {{RFC0791}}.
 
 
 #### Attacks {#attack}
 
-The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof. Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec. Additionally, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.  
+The current Internet architecture offers little to no protection against several attacks, such as prefix hijacking, spoofing, denial of service, DNS hijacking, and composed versions thereof. Unfortunately, BGP hijacks are still possible when RPKI is deployed and are only resolved in a full deployment of BGPsec. Additionally, in settings where route origin validation (ROV) is deployed, Morillo et al. recently point out several new attacks: hidden hijack, non-routed prefix hijack, and super-prefix hijack of non-routed prefixes {{MORILLO2021}}.
 
 
 ## SCION Overview
@@ -141,22 +141,22 @@ Isolation domains serve the following purposes:
 
 ISDs provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
 
-**Links**  
+**Links**
 There are three types of links in SCION: core links, parent-child links, and peering links.
 
-- A **core link** can only exist between two core ASes.  
+- A **core link** can only exist between two core ASes.
 - A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
 - A **peering link** also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
 
 Figure 1 shows a high-level overview of the SCION network structure:
 
-figure: !(SCIONnetwork)  
+figure: !(SCIONnetwork)
 
-                                  Figure 1: SCION network structure  
+                                  Figure 1: SCION network structure
 
-|  
-|  
-o  Parent AS - child AS    ----  Peering link    ===  Core link  
+|
+|
+o  Parent AS - child AS    ----  Peering link    ===  Core link
 
 
 ### Routing
@@ -165,24 +165,24 @@ SCION operates on two routing levels: intra-ISD and inter-ISD. As a path-based a
 
 The process of creating an end-to-end forwarding path consists of the following steps:
 
-1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.  
-2. The AS then selects a few PCBs according to defined selection criteria, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.  
-3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs  
-      a. a *path lookup* step, to obtain path segments, and  
-      b. a *path combination* step, to combine the forwarding path from the segments.  
+1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.
+2. The AS then selects a few PCBs according to defined selection criteria, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.
+3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs
+      a. a *path lookup* step, to obtain path segments, and
+      b. a *path combination* step, to combine the forwarding path from the segments.
 
-**ISD and AS numbering**  
+**ISD and AS numbering**
 Routing is based on the <ISD, AS> tuple, agnostic of local addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. Host addressing extends the network address with a local address, forming the <ISD, AS, local address> 3-tuple. The local address is not used in inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example.
 
 ### Infrastructure Components
 
 The **beacon service**, the **path service**, and the **certificate service** are the main infrastructure components of the SCION network architecture. Each AS can have one or more servers per service, depending on the AS's size and type. It is also possible to combine the services into one or more *control services*. *Internal routers* forward packets inside the AS, while *border routers* provide interconnectivity between ASes.
 
-- The beacon service discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which it forwards to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.  
-- The path service stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they upload them to the path service in the ISD core.  
-- The certificate service keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).  
+- The beacon service discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which it forwards to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.
+- The path service stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they upload them to the path service in the ISD core.
+- The certificate service keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).
 
-*Border routers* connect different ASes supporting SCION. The main task of border routers is to forward packets to the next border router or the destination host within the AS. Since SCION can operate using any intra-AS routing protocol (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS), the *internal routers* do not need to be changed to support SCION.  
+*Border routers* connect different ASes supporting SCION. The main task of border routers is to forward packets to the next border router or the destination host within the AS. Since SCION can operate using any intra-AS routing protocol (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS), the *internal routers* do not need to be changed to support SCION.
 
 
 
