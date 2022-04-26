@@ -54,23 +54,34 @@ informative:
 
 --- abstract
 
-The Internet has been incredibly successful as it grew to a planet-scale networks with billions of devices. Today's IP-based routing system provides global reachability, however it falls short of providing other properties that are in demand today, as the Internet is intertwined with many aspects of our society. Specifically, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of adversaries, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
+The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today’s Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of adversaries, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
 
 The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, this document concludes with an overview of SCION deployments.
+This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments.
 
 
 --- middle
 
 # Introduction
 
-The Introduction section presents a compact overview of challenges with the current Internet's, which together are the reason for developing SCION: To address these challenges in order to make the Internet more secure, reliable, transparent, and efficient. The Introduction section then continues with a short description of SCION's main elements.
+The Internet has been incredibly successful as it grew to a planet-scale network with billions of devices. But although this world-wide communication system guarantees global reachability, it falls short of providing other properties that are in demand today. These shortcomings of the current Internet are the reason for developing SCION: To make the Internet more secure, reliable, transparent, and scalable.
 
-The sections after the Introduction provide further insight into SCION's main concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
+The Introduction section further explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide deeper insight into SCION's key concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
 
 
 ## Why SCION - Motivation  {#why}
+
+Since its introduction back in the 1980s (1970s?), the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light. To name the most important: a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and (stateful) routing that becomes increasingly time- and energy-consuming. As the Internet has not been built with security in mind, the lack thereof is another major issue. The implementation of authentication leaves room for improvement, too. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of them.       
+
+Up until now, there have been numerous initiatives to address the above issues (see rfcs rpki, bgpsec). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see ). Also other requirements that users have of today's Internet, such as high availability and performance, end-host path selection, as well as multi-path communication, are not fulfilled yet (see among others draft-king-irtf-challenges-in-routing-08).
+
+SCION has been developed in order to bridge these gaps. SCION improves: availability in the presence of adversaries, offers path control and transparency, is efficiency and scalability, trustworthiness, security, extensibility, and easy deployment.
+SCION improves ....
+--> add more see paper Cyrill.
+
+
+
 
 ### Challenges with IP routing
 
@@ -134,7 +145,7 @@ The current Internet architecture offers little to no protection against several
 
 ## SCION Overview
 
-SCION has been designed to address the security issues of today's Internet depicted in the previous section [Why SCION - Internet's Issues](#why). This section gives a high-level description of SCION's main elements, providing a basic understanding of this next-generation inter-network architecture.
+SCION has been designed to address the security issues of today's Internet depicted in the previous section [Why SCION - Motivation](#why). This section gives a high-level description of SCION's main elements, providing a basic understanding of this next-generation inter-network architecture.
 
 ### Network Architecture and Naming
 
