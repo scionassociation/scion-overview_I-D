@@ -72,15 +72,15 @@ The Introduction section further explores the motivation to develop SCION, follo
 
 ## Why SCION - Motivation  {#why}
 
-Since its introduction back in the 1980s (1970s?), the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light. To name the most important: a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and (stateful) routing that becomes increasingly time- and energy-consuming. As the Internet has not been built with security in mind, the lack thereof is another major issue. The implementation of authentication leaves room for improvement, too. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of them.       
+Since its introduction back in the 1980s (1970s?), the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and (stateful) routing that becomes increasingly time- and energy-consuming. As the Internet has not been built with security in mind, the lack thereof is another problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these.       
 
-Up until now, there have been numerous initiatives to address the above issues (see rfcs rpki, bgpsec). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see ). Also other requirements that users have of today's Internet, such as high availability and performance, end-host path selection, as well as multi-path communication, are not fulfilled yet (see among others draft-king-irtf-challenges-in-routing-08).
+Up until now, there have been numerous initiatives to address the above issues (see rfcs rpki, bgpsec). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see ). Also other requirements that users have of today's Internet are not fulfilled yet (see among others draft-king-irtf-challenges-in-routing-08). , such as high availability and performance, end-host path selection, as well as multi-path communication, .
 
-SCION has been developed in order to bridge these gaps. SCION improves: availability in the presence of adversaries, offers path control and transparency, is efficiency and scalability, trustworthiness, security, extensibility, and easy deployment.
+SCION has been developed in order to bridge the above-mentioned gaps. SCION improves: availability in the presence of adversaries, offers path control and transparency, is efficiency and scalability, trustworthiness, security, extensibility, and easy deployment.
 SCION improves ....
 --> add more see paper Cyrill.
 
-
+---
 
 
 ### Challenges with IP routing
