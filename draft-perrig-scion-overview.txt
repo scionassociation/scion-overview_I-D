@@ -5,7 +5,7 @@
 panrg                                                        C. de Kater
 Internet-Draft                                                 A. Perrig
 Intended status: Informational                               ETH Zuerich
-Expires: 28 October 2022                                   26 April 2022
+Expires: 30 October 2022                                   28 April 2022
 
 
                              SCION Overview
@@ -53,7 +53,7 @@ About This Document
 
 
 
-de Kater & Perrig        Expires 28 October 2022                [Page 1]
+de Kater & Perrig        Expires 30 October 2022                [Page 1]
 
 Internet-Draft                  SCION I-D                     April 2022
 
@@ -76,7 +76,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 October 2022.
+   This Internet-Draft will expire on 30 October 2022.
 
 Copyright Notice
 
@@ -96,34 +96,33 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Why SCION - Motivation  . . . . . . . . . . . . . . . . .   3
-       1.1.1.  Challenges with IP routing  . . . . . . . . . . . . .   4
-       1.1.2.  Issues with RPKI and BGPsec . . . . . . . . . . . . .   5
-       1.1.3.  Other Internet Issues . . . . . . . . . . . . . . . .   6
-     1.2.  SCION Overview  . . . . . . . . . . . . . . . . . . . . .   7
-       1.2.1.  Network Architecture and Naming . . . . . . . . . . .   7
-       1.2.2.  Routing . . . . . . . . . . . . . . . . . . . . . . .   8
-       1.2.3.   Infrastructure Components  . . . . . . . . . . . . .   9
-     1.3.  Conventions and Definitions . . . . . . . . . . . . . . .  10
-   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .  10
-     2.1.  Authentication  . . . . . . . . . . . . . . . . . . . . .  10
+       1.1.1.  Avoiding Pitfalls . . . . . . . . . . . . . . . . . .   4
+       1.1.2.  Formal Verification . . . . . . . . . . . . . . . . .   5
+     1.2.  SCION Overview  . . . . . . . . . . . . . . . . . . . . .   5
+       1.2.1.  Network Architecture and Naming . . . . . . . . . . .   5
+       1.2.2.  Routing . . . . . . . . . . . . . . . . . . . . . . .   6
+       1.2.3.   Infrastructure Components  . . . . . . . . . . . . .   7
+     1.3.  Conventions and Definitions . . . . . . . . . . . . . . .   8
+   2.  Key Concepts  . . . . . . . . . . . . . . . . . . . . . . . .   8
+     2.1.  Authentication  . . . . . . . . . . . . . . . . . . . . .   8
+     2.2.  Control Plane . . . . . . . . . . . . . . . . . . . . . .   9
 
 
 
-de Kater & Perrig        Expires 28 October 2022                [Page 2]
+de Kater & Perrig        Expires 30 October 2022                [Page 2]
 
 Internet-Draft                  SCION I-D                     April 2022
 
 
-     2.2.  Control Plane . . . . . . . . . . . . . . . . . . . . . .  10
-     2.3.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .  12
-   3.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .  12
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  12
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  13
-   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+     2.3.  Data Plane  . . . . . . . . . . . . . . . . . . . . . . .  10
+   3.  Deployments . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+   Acknowledgments . . . . . . . . . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -135,8 +134,8 @@ Internet-Draft                  SCION I-D                     April 2022
    SCION: To make the Internet more secure, reliable, transparent, and
    scalable.
 
-   The Introduction section further explores the motivation to develop
-   SCION, followed by a short description of SCION's main elements.  The
+   The Introduction section explores the motivation to develop SCION,
+   followed by a short description of SCION's main elements.  The
    sections after the Introduction provide deeper insight into SCION's
    key concepts and features.  The document concludes with some concrete
    case studies where SCION has been applied successfully.
@@ -146,209 +145,109 @@ Internet-Draft                  SCION I-D                     April 2022
    Since its introduction back in the 1980s (1970s?), the Internet has
    never stopped to expand.  As a consequence, the global network
    continually needs to accommodate new uses.  This has brought many
-   issues to light.  To name the most important: a lack of transparency
-   and control, poor scalability, occurrences of severe outages, weak
-   fault isolation, and (stateful) routing that becomes increasingly
-   time- and energy-consuming.  As the Internet has not been built with
-   security in mind, the lack thereof is another major issue.  The
-   implementation of authentication leaves room for improvement, too.
-   Because of this, the current Internet offers little protection
-   against attacks such as spoofing, prefix- and DNS-hijacking, denial-
-   of-service, and combinations of them.
-
-
-
-
-
-
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 3]
-
-Internet-Draft                  SCION I-D                     April 2022
-
+   issues to light, including a lack of transparency and control, poor
+   scalability, occurrences of severe outages, weak fault isolation, and
+   (stateful) routing that becomes increasingly time- and energy-
+   consuming.  As the Internet has not been built with security in mind,
+   the lack thereof is another major problem.  Because of this, the
+   current Internet offers little protection against attacks such as
+   spoofing, prefix- and DNS-hijacking, denial-of-service, and
+   combinations of these.  For more background information, see
+   [SCHUCHARD2011], [LABOVITZ2000], [GRIFFIN1999], [SAHOO2009], and
+   [RFC4264].
 
    Up until now, there have been numerous initiatives to address the
-   above issues (see rfcs rpki, bgpsec).  Although these initiatives
-   have brought many improvements, concerns regarding security and
-   scalability still remain (see ).  Also other requirements that users
-   have of today's Internet, such as high availability and performance,
-   end-host path selection, as well as multi-path communication, are not
-   fulfilled yet (see among others draft-king-irtf-challenges-in-
-   routing-08).
-
-   SCION has been developed in order to bridge these gaps.  SCION
-   improves: availability in the presence of adversaries, offers path
-   control and transparency, is efficiency and scalability,
-   trustworthiness, security, extensibility, and easy deployment.  SCION
-   improves .... --> add more see paper Cyrill.
-
-1.1.1.  Challenges with IP routing
-
-   Today's IP routing suffers from significant limitations that are a
-   result of original design decisions.  The Internet has never stopped
-   to expand and continually needs to accommodate new use cases that
-   were not originally taken into account.  This has brought numerous
-   issues to light, listed in the following sections.
-
-1.1.1.1.   Internet Protocol
-
-   IP comes with the following drawbacks:
-
-   *  *Lack of programmable paths* IP addressing is tightly coupled with
-      routing, therefore packets follow the path established by the
-      routing protocol.  End hosts are not able to select paths based on
-      application requirements or path conditions.  In addition, it is
-      also not possible to simultaneously use multiple distinct paths
-      towards the same destination.
-
-   *  *Lack of security and transparency* IP end hosts are oblivious to
-      the path taken by their packets.  This means that end hosts have
-      no visibility nor guarantees on where their traffic is forwarded.
-      This may cause traffic to be redirected through adversary points,
-      breaching the payload's security.
-
-   *  *Scalability* The use of forwarding tables in IP routers is time-
-      consuming, expensive, and energy-intensive.  Also, the constantly
-      growing size of forwarding tables causes storage problems.
-      Additionally, routers that keep state for network information can
-      suffer from denial-of-service (DoS) attacks exhausting the
-      router's state [SCHUCHARD2011].
+   above issues (e.g., [RFC4033], [RFC6480], [RFC8205], and [RFC8446]).
+   Although these initiatives have brought many improvements, concerns
+   regarding security and scalability still remain (see, for example,
+   [LYCHEV2013], [LI2014], [COOPER2013], [ROTHENBERGER2017], and
+   [MORILLO2021]).  Also other requirements that users have of today's
 
 
 
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 4]
+de Kater & Perrig        Expires 30 October 2022                [Page 3]
 
 Internet-Draft                  SCION I-D                     April 2022
 
 
-1.1.1.2.   BGP
+   Internet are not fulfilled yet (see, among others, draft-king-irtf-
+   challenges-in-routing (https://datatracker.ietf.org/doc/draft-king-
+   irtf-challenges-in-routing/).  This especially pertains to the
+   demands of organizational users that exchange sensitive information
+   and/or operate internationally, such as banks, insurances, health
+   institutions, universities, governments, and all big international
+   companies and NGOs.
 
-   Just as IP, also BGP suffers from a number of shortcomings:
+   These users require the Internet to be highly available at all times
+   and constantly perform on a high level.  They expect reliable
+   operation of the global network also in case of failures, by the use
+   of multi-path routing.  They want to send their vulnerable data
+   packets over the most secure and trustworthy networking routes, and
+   therefore prefer to select themselves the path their data will take.
+   They also need to be sure with whom they communicate over the net and
+   must be able to trust the content of the messages.  And they want to
+   be protected against all kinds of attacks.  In short, today's users
+   of the Internet seek performance, control, reliability, and security.
 
-   *  *Convergence time in case of outages* The distributed nature of
-      BGP control plane results in convergence times up to ten minutes
-      or more [LABOVITZ2000], resulting in slow failover and
-      intermittent transient connectivity.
+   SCION has been developed in order to meet the above-mentioned
+   requirements.  SCION aims to reach the following goals:
 
-   *  *Lack of fault isolation* Due to the lack of any routing hierarchy
-      or isolation between different areas, a single faulty BGP speaker
-      can affect routing in the entire world.
+   *  Address the Internet's fundamental issues by offering
 
-   *  *Poor scalability* As the number of connected devices grows, so
-      does the number of prefixes, posing additional strain on the
-      protocol.  Scalability challenges are particularly evident when
-      considering BGPSec [RFC8205].
+      -  high availability also in the presence of adversaries,
 
-   *  *Convergence* BGP convergence can be problematic, too.  In certain
-      situations, BGP will never converge to a stable state, or converge
-      only non-deterministically (see [GRIFFIN1999] and [RFC4264].
-      Convergence may also take too much time [SAHOO2009].
+      -  fast failover in the case of faulty connections, and
 
-   *  *Single path* BGP only allows the selection of a single path to a
-      destination.  But having a multi-path choice can be welcome in
-      several situations, e.g., in the case of a link failure, for load
-      balancing, or when traffic is routed based on different policies.
+      -  prevention from hijacking, DoS, and other attacks.
 
-   *  *Lack of security* BGP has no built-in security mechanisms and
-      does not provide any tools for ASes to authenticate the
-      information they receive through BGP update messages.  This opens
-      up a multitude of attack opportunities--see Attacks
-      (Section 1.1.3.2).
+   *  Make the Internet more transparent and efficient.
 
-1.1.2.  Issues with RPKI and BGPsec
+   *  Improve the Internet's scalability.
 
-   RPKI and BGPsec try to address Internet's above-mentioned security
-   shortcomings, see also [RFC6480] and [RFC8205].  However, RPKI and
-   BGPsec introduce additional challenges, as shortly described below.
+   *  Prepare the Internet for tomorrow's applications, such as virtual
+      reality, Internet of Things (IoT), and Distributed Ledger
+      Technology (DLT).
 
-   *  *RPKI and Route Origin Authorizations* Unfortunately, the Route
-      Origin Authorizations (ROAs) provided by RPKI only prevent the
-      simplest form of BGP hijacks, see Attacks (Section 1.1.3.2).
+1.1.1.  Avoiding Pitfalls
 
+   Of course SCION is not the first concept that addresses the
+   Internet's networking issues.  But unfortunately many other promising
+   solutions for the Internet's problems have never managed to succeed,
+   for reasons described in [RFC9049].  SCION, however, seems to
+   successfully avoid the pitfalls mentioned in this document.  For
+   example, SCION does not have to be implemented by the entire Internet
+   to be effective: The routing architecture provides benefits already
+   to early adapters.  Even if only a small part of the global network
 
 
 
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 5]
+de Kater & Perrig        Expires 30 October 2022                [Page 4]
 
 Internet-Draft                  SCION I-D                     April 2022
 
 
-   *  *Problems with BGPsec in partial deployment* BGPsec only provides
-      full security when all ASes consistently use and enforce it.  In
-      case of partial deployment, it has a limited effectiveness.  It
-      can even cause instabilities and is prone to downgrade attacks,
-      see [LYCHEV2013].
+   works with SCION, adapters will still take advantage of using the
+   SCION routing technology.  Moreover, not only users of SCION profit
+   from it, also ISPs and operators benefit from deploying SCION:
+   Providers can charge the use of SCION, and users are willing to pay
+   for it.  Furthermore, SCION can be installed on top of and function
+   alongside the existing routing infrastructure and protocols--there is
+   no need for bigger changes in an operational network.
+   The above points facilitate the deployment of SCION and increase its
+   acceptance.  The several cases where SCION is already successfully
+   implemented today illustrate this (see the section Deployments
+   (Section 3)).
 
-   *  *Problems with BGPsec in full deployment* Also full deployment of
-      BGPsec raises issues, such as the creation of wormholes and
-      forwarding loops by attackers, or the introduction of circular
-      dependencies, see [LI2014] and [COOPER2013].  RPKI and BGPsec
-      together also cause issues for network sovereignty
-      [ROTHENBERGER2017].
+1.1.2.  Formal Verification
 
-   *  *Scalability* BGPsec further exacerbates BGP's scalability issues
-      (i.e., due to the additional overhead, and due to lack of prefix
-      aggregation).  Lack of scalable implementations represent still
-      today a large obstacle to adoption.
-
-1.1.3.  Other Internet Issues
-
-1.1.3.1.  Lack of Authentication
-
-   Authenticating digital data is becoming increasingly prevalent, as
-   adversaries exploit the absence of authentication to inject malicious
-   information.  Specifically, many network protocols do not use
-   authentication at all, leaving them exposed to multiple attacks:
-
-   *  Today's Internet lacks a fundamental mechanism to share a secret
-      key between two end hosts for secure end-to-end communication.
-      Existing approaches (i.e., SSH) resort to trust-on-first-use
-      (TOFU) approach, where an host's initial public key is accepted
-      without verification.
-
-   *  Infrastructures were added over time to provide authentication,
-      such as RPKI/BGPsec, TLS [RFC8446], and DNSSEC [RFC4033].
-      However, they are all sensitive to the compromise of a single
-      entity.
-
-   *  The Internet Control Message Protocol (ICMP) lacks an
-      authenticated counterpart, see [RFC4443] and [RFC0791].
-      Unauthenticated ICMP messages can potentially be used to affect or
-      even prevent traffic forwarding.  TODO: complete
-
-
-
-
-
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 6]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
-1.1.3.2.   Attacks
-
-   The current Internet architecture offers little to no protection
-   against several attacks, such as prefix hijacking, spoofing, denial
-   of service, DNS hijacking, and composed versions thereof.
-   Unfortunately, BGP hijacks are still possible when RPKI is deployed
-   and are only resolved in a full deployment of BGPsec.  Additionally,
-   in settings where route origin validation (ROV) is deployed, Morillo
-   et al. recently point out several new attacks: hidden hijack, non-
-   routed prefix hijack, and super-prefix hijack of non-routed prefixes
-   [MORILLO2021].
+   An additional feature of SCION is its formal verification.  The SCION
+   network system consists of a variety of different components such as
+   routers, servers, and edge devices.  Such a complex system eludes the
+   mental capacities of human beings for considering all possible states
+   and interactions.  That is why SCION has been formally verified by
+   the Department of Computer Science of the ETH Zurich.  This
+   guarantees that SCION's code is correct and consistent, does not
+   include any overlooked errors, and will function without faults.
 
 1.2.  SCION Overview
 
@@ -374,6 +273,15 @@ Internet-Draft                  SCION I-D                     April 2022
 
    Isolation domains serve the following purposes:
 
+
+
+
+
+de Kater & Perrig        Expires 30 October 2022                [Page 5]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    *  They allow SCION to support trust heterogeneity, as each ISD can
       independently define its roots of trust;
 
@@ -384,15 +292,6 @@ Internet-Draft                  SCION I-D                     April 2022
 
    *  They improve the scalability of the routing protocol by separating
       it into a process within and one between ISDs.
-
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 7]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
    ISDs provide natural isolation of routing failures and
    misconfigurations, give endpoints strong control over both inbound
@@ -431,6 +330,14 @@ Internet-Draft                  SCION I-D                     April 2022
    cryptographically protected path- and forwarding information on AS-
    level, and store this information in the form of *hop fields (HFs)*.
    End hosts use the information from these PCBs/hop fields to create
+
+
+
+de Kater & Perrig        Expires 30 October 2022                [Page 6]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    end-to-end forwarding paths for data packets, who carry this
    information in their packet headers.  This concept is called *packet-
    carried forwarding state (PCFS)*. The concept also supports multi-
@@ -441,14 +348,6 @@ Internet-Draft                  SCION I-D                     April 2022
 
    1.  First, an AS discovers paths to other ASes, during the _path
        exploration_ (or beaconing) phase.
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 8]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
    2.  The AS then selects a few PCBs according to defined policies,
        transforms the selected PCBs into path segments, and registers
@@ -482,6 +381,19 @@ Internet-Draft                  SCION I-D                     April 2022
    the AS, while _border routers_ provide interconnectivity between
    ASes.
 
+
+
+
+
+
+
+
+
+de Kater & Perrig        Expires 30 October 2022                [Page 7]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    *  The beacon service discovers path information.  It is responsible
       for generating, receiving, and propagating PCBs.  Periodically,
       the beacon service generates a set of PCBs, which are forwarded to
@@ -495,16 +407,6 @@ Internet-Draft                  SCION I-D                     April 2022
       beacon service, ASes select the set of path segments through which
       they want to be reached, and they register them to the path
       service in the ISD core.
-
-
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022                [Page 9]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
    *  The certificate service keeps cached copies of certificates and
       manages keys and certificates for securing inter-AS communication.
@@ -540,6 +442,14 @@ Internet-Draft                  SCION I-D                     April 2022
    signatures an updated TRC should contain to be valid.  Each SCION AS
    must hold a private key (to sign PCBs) and a certificate attesting
    that it is the rightful owner of the corresponding public key.  One
+
+
+
+de Kater & Perrig        Expires 30 October 2022                [Page 8]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    of the main roles of the TRC is thus enabling the verification of *AS
    certificates* and PCBs.
 
@@ -549,18 +459,6 @@ Internet-Draft                  SCION I-D                     April 2022
    segments.  A path segment encodes a network path at the granularity
    of inter-domain interfaces on either end of an inter-domain link
    connecting two consecutive ASes on a path.
-
-
-
-
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022               [Page 10]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
    Each end-to-end path consists of up to three path segments: core
    path, up-path, and down-path segments.  Core-path segments refer to
@@ -592,6 +490,22 @@ Internet-Draft                  SCION I-D                     April 2022
    propagates PCBs received from neighboring core ASes to all other
    neighboring core ASes.
 
+
+
+
+
+
+
+
+
+
+
+
+de Kater & Perrig        Expires 30 October 2022                [Page 9]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    Intra-ISD beaconing is the second level of the beaconing hierarchy,
    which creates path segments from core ASes to non-core ASes.  For
    this, core ASes create PCBs and send them to their non-core neighbors
@@ -609,14 +523,6 @@ Internet-Draft                  SCION I-D                     April 2022
    information is fetched on-demand only.  A core AS's path server
    stores all the intra-ISD path segments that were registered by leaf
    ASes of its own ISD, and core-path segments to reach other core ASes.
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022               [Page 11]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 2.3.  Data Plane
 
@@ -648,6 +554,14 @@ Internet-Draft                  SCION I-D                     April 2022
    This document has no IANA actions.  TODO: It does have IANA actions,
    specially regarding ISD and AS numbering.
 
+
+
+
+de Kater & Perrig        Expires 30 October 2022               [Page 10]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
 5.  Security Considerations
 
    The SCION architecture introduces the following security
@@ -665,14 +579,6 @@ Internet-Draft                  SCION I-D                     April 2022
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022               [Page 12]
-
-Internet-Draft                  SCION I-D                     April 2022
-
 
 6.2.  Informative References
 
@@ -704,6 +610,14 @@ Internet-Draft                  SCION I-D                     April 2022
               Networking Technologies, DOI 10.14722/sent.2014.23001,
               2014, <https://doi.org/10.14722/sent.2014.23001>.
 
+
+
+
+de Kater & Perrig        Expires 30 October 2022               [Page 11]
+
+Internet-Draft                  SCION I-D                     April 2022
+
+
    [LYCHEV2013]
               Lychev, R., Goldberg, S., and M. Schapira, "BGP security
               in partial deployment: is the juice worth the squeeze?",
@@ -719,17 +633,6 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.14722/ndss.2021.24438, 2021,
               <https://doi.org/10.14722/ndss.2021.24438>.
 
-   [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
-              DOI 10.17487/RFC0791, September 1981,
-              <https://www.rfc-editor.org/info/rfc791>.
-
-
-
-de Kater & Perrig        Expires 28 October 2022               [Page 13]
-
-Internet-Draft                  SCION I-D                     April 2022
-
-
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
               RFC 4033, DOI 10.17487/RFC4033, March 2005,
@@ -739,25 +642,9 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.17487/RFC4264, November 2005,
               <https://www.rfc-editor.org/info/rfc4264>.
 
-   [RFC4271]  Rekhter, Y., Ed., Li, T., Ed., and S. Hares, Ed., "A
-              Border Gateway Protocol 4 (BGP-4)", RFC 4271,
-              DOI 10.17487/RFC4271, January 2006,
-              <https://www.rfc-editor.org/info/rfc4271>.
-
-   [RFC4443]  Conta, A., Deering, S., and M. Gupta, Ed., "Internet
-              Control Message Protocol (ICMPv6) for the Internet
-              Protocol Version 6 (IPv6) Specification", STD 89,
-              RFC 4443, DOI 10.17487/RFC4443, March 2006,
-              <https://www.rfc-editor.org/info/rfc4443>.
-
    [RFC6480]  Lepinski, M. and S. Kent, "An Infrastructure to Support
               Secure Internet Routing", RFC 6480, DOI 10.17487/RFC6480,
               February 2012, <https://www.rfc-editor.org/info/rfc6480>.
-
-   [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
-              (IPv6) Specification", STD 86, RFC 8200,
-              DOI 10.17487/RFC8200, July 2017,
-              <https://www.rfc-editor.org/info/rfc8200>.
 
    [RFC8205]  Lepinski, M., Ed. and K. Sriram, Ed., "BGPsec Protocol
               Specification", RFC 8205, DOI 10.17487/RFC8205, September
@@ -767,6 +654,11 @@ Internet-Draft                  SCION I-D                     April 2022
               Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
               <https://www.rfc-editor.org/info/rfc8446>.
 
+   [RFC9049]  Dawkins, S., Ed., "Path Aware Networking: Obstacles to
+              Deployment (A Bestiary of Roads Not Taken)", RFC 9049,
+              DOI 10.17487/RFC9049, June 2021,
+              <https://www.rfc-editor.org/info/rfc9049>.
+
    [ROTHENBERGER2017]
               Rothenberger, B., Asoni, D., Barrera, D., and A. Perrig,
               "Internet Kill Switches Demystified", Proceedings of the
@@ -774,18 +666,18 @@ Internet-Draft                  SCION I-D                     April 2022
               DOI 10.1145/3065913.3065922, April 2017,
               <https://doi.org/10.1145/3065913.3065922>.
 
-   [SAHOO2009]
-              Sahoo, A., Kant, K., and P. Mohapatra, "BGP convergence
-              delay after multiple simultaneous router failures:
-              Characterization and solutions", Computer
 
 
 
-de Kater & Perrig        Expires 28 October 2022               [Page 14]
+de Kater & Perrig        Expires 30 October 2022               [Page 12]
 
 Internet-Draft                  SCION I-D                     April 2022
 
 
+   [SAHOO2009]
+              Sahoo, A., Kant, K., and P. Mohapatra, "BGP convergence
+              delay after multiple simultaneous router failures:
+              Characterization and solutions", Computer
               Communications Vol. 32, pp. 1207-1218,
               DOI 10.1016/j.comcom.2009.03.009, May 2009,
               <https://doi.org/10.1016/j.comcom.2009.03.009>.
@@ -833,8 +725,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-de Kater & Perrig        Expires 28 October 2022               [Page 15]
+de Kater & Perrig        Expires 30 October 2022               [Page 13]

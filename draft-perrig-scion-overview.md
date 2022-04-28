@@ -32,14 +32,11 @@ normative:
 
 informative:
   RFC4264:
-  RFC0791:
   RFC4033:
-  RFC4271:
-  RFC4443:
   RFC6480:
-  RFC8200:
   RFC8205:
   RFC8446:
+  RFC9049:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
   GRIFFIN1999: DOI.10.1145/316194.316231
@@ -67,18 +64,36 @@ This document discusses the motivations behind the SCION architecture and gives 
 
 The Internet has been incredibly successful as it grew to a planet-scale network with billions of devices. But although this world-wide communication system guarantees global reachability, it falls short of providing other properties that are in demand today. These shortcomings of the current Internet are the reason for developing SCION: To make the Internet more secure, reliable, transparent, and scalable.
 
-The Introduction section further explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide deeper insight into SCION's key concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
+The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide deeper insight into SCION's key concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.
 
 
-## Why SCION - Motivation  {#why}
+## Why SCION - Motivation {#why}
 
-Since its introduction back in the 1980s (1970s?), the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and (stateful) routing that becomes increasingly time- and energy-consuming. As the Internet has not been built with security in mind, the lack thereof is another problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these.       
+Since its introduction back in the 1980s (1970s?), the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and (stateful) routing that becomes increasingly time- and energy-consuming. As the Internet has not been built with security in mind, the lack thereof is another major problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.         
 
-Up until now, there have been numerous initiatives to address the above issues (see rfcs rpki, bgpsec). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see ). Also other requirements that users have of today's Internet are not fulfilled yet (see among others draft-king-irtf-challenges-in-routing-08). , such as high availability and performance, end-host path selection, as well as multi-path communication, .
+Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/). This especially pertains to the demands of organizational users that exchange sensitive information and/or operate internationally, such as banks, insurances, health institutions, universities, governments, and all big international companies and NGOs.
 
-SCION has been developed in order to bridge the above-mentioned gaps. SCION improves: availability in the presence of adversaries, offers path control and transparency, is efficiency and scalability, trustworthiness, security, extensibility, and easy deployment.
-SCION improves ....
---> add more see paper Cyrill.
+These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their vulnerable data packets over the most secure and trustworthy networking routes, and therefore prefer to select themselves the path their data will take. They also need to be sure with whom they communicate over the net and must be able to trust the content of the messages. And they want to be protected against all kinds of attacks. In short, today's users of the Internet seek performance, control, reliability, and security.
+
+SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:
+
+- Address the Internet's fundamental issues by offering
+  - high availability also in the presence of adversaries,
+  - fast failover in the case of faulty connections, and
+  - prevention from hijacking, DoS, and other attacks.
+- Make the Internet more transparent and efficient.
+- Improve the Internet's scalability.
+- Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and Distributed Ledger Technology (DLT).
+
+### Avoiding Pitfalls
+
+Of course SCION is not the first concept that addresses the Internet's networking issues. But unfortunately many other promising solutions for the Internet's problems have never managed to succeed, for reasons described in {{RFC9049}}. SCION, however, seems to successfully avoid the pitfalls mentioned in this document. For example, SCION does not have to be implemented by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION profit from it, also ISPs and operators benefit from deploying SCION: Providers can charge the use of SCION, and users are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for bigger changes in an operational network.  
+The above points facilitate the deployment of SCION and increase its acceptance. The several cases where SCION is already successfully implemented today illustrate this (see the section [Deployments](#deploy)).
+
+
+### Formal Verification
+
+An additional feature of SCION is its formal verification. The SCION network system consists of a variety of different components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION has been formally verified by the Department of Computer Science of the ETH Zurich. This guarantees that SCION's code is correct and consistent, does not include any overlooked errors, and will function without faults.
 
 
 ## SCION Overview
@@ -185,7 +200,7 @@ Shortcut paths that avoid a core AS are possible, if the up- and down-path conta
 The path segments contain compact hop-fields, that encode information about which interfaces may be used to enter and leave an AS. The hop-fields are cryptographically protected, preventing path alteration. This so-called Packet-Carried Forwarding State (PCFS) replaces signaling to use a path, ensuring that routers do not need any local state on either paths or flows.
 
 
-# Deployments
+# Deployments {#deploy}
 
 SCI-ED, SSFC, SCIONLab
 From the book v2, use:
