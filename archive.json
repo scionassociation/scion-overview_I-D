@@ -1,0 +1,157 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2022-05-01T02:03:44.270271+00:00",
+  "repo": "scionfoundation/scion-overview_I-D",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOHF5N3M42rrtN",
+      "title": "Initial review",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/pull/1",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "I went through the draft, some general feedback: \r\n\r\n- Introduction: perhaps we can  create a  new short introduction paragraph, where we briefly discuss the problem and our solution. I guess we can move the more detailed  problem statement in a separate paragraph\r\n-  Lots of the challenges with today's routing are described quite well in this draft: https://www.ietf.org/archive/id/draft-king-irtf-challenges-in-routing-07.html \r\n- When we describe drawbacks, I'm not sure if we also want to mention why attepmts to fix the existing are not enough (i.e. routing with colours, SR, ...)\r\n- Do we want to move the motivation/gap analysis into a different draft?\r\n- Lots of people will ask themselves: what do I need to deploy this. I can eventually help with the deployment section\r\n- I noticed that a lot of times we use \"we\". I see that some IETF drafts also use it, but not so often. I feel that using it a lot creates a bit of a \"divide\" between what our vision is, and what others might perceive... I think this is good when writing a paper/book (because authors want to stress that they are presenting their vision), but perhaps a more neutral language is more appropriate here, as our goal is to get consensus and to have our solution as widely accepted as possible. Not something super important, but had these thoughts in mind.  ",
+      "createdAt": "2022-04-24T11:50:52Z",
+      "updatedAt": "2022-04-26T12:08:16Z",
+      "baseRepository": "scionfoundation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "30ce630abe9571ef36e19d6b51c0ce9e89e8b5c0",
+      "headRepository": "scionfoundation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "5a37f2b5ed07f66b44e530fd8036bb04216fb101",
+      "closedAt": "2022-04-26T12:08:16Z",
+      "mergedAt": "2022-04-26T12:08:16Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "7a6bb7bd6e41ee77349fe5daca1ac61ee8c0e347"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M44shTe",
+          "commit": {
+            "abbreviatedOid": "9b2f144"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-04-24T11:55:38Z",
+          "updatedAt": "2022-04-24T11:55:38Z",
+          "comments": [
+            {
+              "originalPosition": 106,
+              "body": "I hope this justifies why this is relevant.. ? Maybe we should mention some more ICMP attacks?\r\n\r\nI'm not very familiar with them, I'm thinking about spoofed redirects, or destination unreachable, which could potentially have the impact of blocking certain kind of traffic. Maybe there is something else? ",
+              "createdAt": "2022-04-24T11:55:38Z",
+              "updatedAt": "2022-04-24T11:55:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M44siRb",
+          "commit": {
+            "abbreviatedOid": "9b2f144"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-04-24T12:29:40Z",
+          "updatedAt": "2022-04-24T12:29:40Z",
+          "comments": [
+            {
+              "originalPosition": 170,
+              "body": "> It is also possible to combine the services into one or more *control services*. \r\n\r\nWhat do you mean? Those services are already control services, so I'm a bit confused by this sentence. Perhaps you mean that they can be deployed on the same machine?",
+              "createdAt": "2022-04-24T12:29:40Z",
+              "updatedAt": "2022-04-24T12:29:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M44sia8",
+          "commit": {
+            "abbreviatedOid": "9b2f144"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-04-24T12:34:55Z",
+          "updatedAt": "2022-04-24T12:34:55Z",
+          "comments": [
+            {
+              "originalPosition": 180,
+              "body": "> Since SCION can operate using any intra-AS routing protocol \r\n\r\nMaybe we can make it a bit more clear somewhere... I think the first time we mention this is here, and I guess this might not be so obvious for the reader. Just an idea. ",
+              "createdAt": "2022-04-24T12:34:55Z",
+              "updatedAt": "2022-04-24T12:34:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M440amP",
+          "commit": {
+            "abbreviatedOid": "5a37f2b"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Hi Nicola,\r\n\r\nThanks again for your review and feedback. Very helpful!",
+          "createdAt": "2022-04-26T12:07:56Z",
+          "updatedAt": "2022-04-26T12:07:56Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
