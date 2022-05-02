@@ -1016,11 +1016,11 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">SCION I-D</td>
-<td class="right">April 2022</td>
+<td class="right">May 2022</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">de Kater &amp; Perrig</td>
-<td class="center">Expires 30 October 2022</td>
+<td class="center">Expires 3 November 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1033,12 +1033,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <dd class="internet-draft">draft-perrig-scion-overview-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-04-28" class="published">28 April 2022</time>
+<time datetime="2022-05-02" class="published">2 May 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-10-30">30 October 2022</time></dd>
+<dd class="expires"><time datetime="2022-11-03">3 November 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1072,7 +1072,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         WG Working Group mailing list (<span><a href="mailto:WG@example.com">mailto:WG@example.com</a></span>),
         which is archived at <span><a href="https://example.com/WG">https://example.com/WG</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
 <p id="section-note.1-4">Source for this draft and an issue tracker can be found at
-        <span><a href="https://github.com/USER/REPO">https://github.com/USER/REPO</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+        <span><a href="https://github.com/scionfoundation/scion-overview_I-D">https://github.com/scionfoundation/scion-overview_I-D</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -1093,7 +1093,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 October 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1205,15 +1205,15 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">The Internet has been incredibly successful as it grew to a planet-scale network with billions of devices. But although this world-wide communication system guarantees global reachability, it falls short of providing other properties that are in demand today. These shortcomings of the current Internet are the reason for developing SCION: To make the Internet more secure, reliable, transparent, and scalable.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide deeper insight into SCION's key concepts and features. The document concludes with some concrete case studies where SCION has been applied successfully.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-2">The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide deeper insight into SCION's key concepts, features and deployment scenarios. The document concludes with some concrete case studies where SCION has been successfully deployed in production.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <div id="why">
 <section id="section-1.1">
         <h3 id="name-why-scion-motivation">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-why-scion-motivation" class="section-name selfRef">Why SCION - Motivation</a>
         </h3>
-<p id="section-1.1-1">Since its introduction back in the 1980s (1970s?), the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and (stateful) routing that becomes increasingly time- and energy-consuming. As the Internet has not been built with security in mind, the lack thereof is another major problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these. For more background information, see <span>[<a href="#SCHUCHARD2011" class="xref">SCHUCHARD2011</a>]</span>, <span>[<a href="#LABOVITZ2000" class="xref">LABOVITZ2000</a>]</span>, <span>[<a href="#GRIFFIN1999" class="xref">GRIFFIN1999</a>]</span>, <span>[<a href="#SAHOO2009" class="xref">SAHOO2009</a>]</span>, and <span>[<a href="#RFC4264" class="xref">RFC4264</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">Up until now, there have been numerous initiatives to address the above issues (e.g., <span>[<a href="#RFC4033" class="xref">RFC4033</a>]</span>, <span>[<a href="#RFC6480" class="xref">RFC6480</a>]</span>, <span>[<a href="#RFC8205" class="xref">RFC8205</a>]</span>, and <span>[<a href="#RFC8446" class="xref">RFC8446</a>]</span>). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, <span>[<a href="#LYCHEV2013" class="xref">LYCHEV2013</a>]</span>, <span>[<a href="#LI2014" class="xref">LI2014</a>]</span>, <span>[<a href="#COOPER2013" class="xref">COOPER2013</a>]</span>, <span>[<a href="#ROTHENBERGER2017" class="xref">ROTHENBERGER2017</a>]</span>, and <span>[<a href="#MORILLO2021" class="xref">MORILLO2021</a>]</span>). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, <a href="https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/">draft-king-irtf-challenges-in-routing</a>. This especially pertains to the demands of organizational users that exchange sensitive information and/or operate internationally, such as banks, insurances, health institutions, universities, governments, and all big international companies and NGOs.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
-<p id="section-1.1-3">These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their vulnerable data packets over the most secure and trustworthy networking routes, and therefore prefer to select themselves the path their data will take. They also need to be sure with whom they communicate over the net and must be able to trust the content of the messages. And they want to be protected against all kinds of attacks. In short, today's users of the Internet seek performance, control, reliability, and security.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, energy consumption. As the Internet has not been built with security in mind, the lack thereof is another major problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these. For more background information, see <span>[<a href="#SCHUCHARD2011" class="xref">SCHUCHARD2011</a>]</span>, <span>[<a href="#LABOVITZ2000" class="xref">LABOVITZ2000</a>]</span>, <span>[<a href="#GRIFFIN1999" class="xref">GRIFFIN1999</a>]</span>, <span>[<a href="#SAHOO2009" class="xref">SAHOO2009</a>]</span>, and <span>[<a href="#RFC4264" class="xref">RFC4264</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">Up until now, there have been numerous initiatives to address the above issues (e.g., <span>[<a href="#RFC4033" class="xref">RFC4033</a>]</span>, <span>[<a href="#RFC6480" class="xref">RFC6480</a>]</span>, <span>[<a href="#RFC8205" class="xref">RFC8205</a>]</span>, and <span>[<a href="#RFC8446" class="xref">RFC8446</a>]</span>). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, <span>[<a href="#LYCHEV2013" class="xref">LYCHEV2013</a>]</span>, <span>[<a href="#LI2014" class="xref">LI2014</a>]</span>, <span>[<a href="#COOPER2013" class="xref">COOPER2013</a>]</span>, <span>[<a href="#ROTHENBERGER2017" class="xref">ROTHENBERGER2017</a>]</span>, and <span>[<a href="#MORILLO2021" class="xref">MORILLO2021</a>]</span>). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, <a href="https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/">draft-king-irtf-challenges-in-routing</a>). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical  and transportation infrastructure operators.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-3">These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in presence of attacks. They also want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, today's users of the Internet seek performance, control, reliability, security and trust.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-5.1">
@@ -1239,7 +1239,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
           <h4 id="name-avoiding-pitfalls">
 <a href="#section-1.1.1" class="section-number selfRef">1.1.1. </a><a href="#name-avoiding-pitfalls" class="section-name selfRef">Avoiding Pitfalls</a>
           </h4>
-<p id="section-1.1.1-1">Of course SCION is not the first concept that addresses the Internet's networking issues. But unfortunately many other promising solutions for the Internet's problems have never managed to succeed, for reasons described in <span>[<a href="#RFC9049" class="xref">RFC9049</a>]</span>. SCION, however, seems to successfully avoid the pitfalls mentioned in this document. For example, SCION does not have to be implemented by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION profit from it, also ISPs and operators benefit from deploying SCION: Providers can charge the use of SCION, and users are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for bigger changes in an operational network.<br>
+<p id="section-1.1.1-1">Of course SCION is not the first concept that addresses the Internet's networking issues. But unfortunately many other promising solutions for the Internet's problems have never managed to succeed, for reasons described in <span>[<a href="#RFC9049" class="xref">RFC9049</a>]</span>. SCION, however, avoids the pitfalls mentioned in this document. For example, SCION does not have to be adopted by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION benefit from it, also ISPs and operators benefit from deploying SCION: early deployments showed that providers can charge the use of SCION as premium connectivity, with users are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for bigger changes in an operational network.
 The above points facilitate the deployment of SCION and increase its acceptance. The several cases where SCION is already successfully implemented today illustrate this (see the section <span><a href="#deploy" class="xref">Deployments</a> (<a href="#deploy" class="xref">Section 3</a>)</span>).<a href="#section-1.1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1248,7 +1248,7 @@ The above points facilitate the deployment of SCION and increase its acceptance.
           <h4 id="name-formal-verification">
 <a href="#section-1.1.2" class="section-number selfRef">1.1.2. </a><a href="#name-formal-verification" class="section-name selfRef">Formal Verification</a>
           </h4>
-<p id="section-1.1.2-1">An additional feature of SCION is its formal verification. The SCION network system consists of a variety of different components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION has been formally verified by the Department of Computer Science of the ETH Zurich. This guarantees that SCION's code is correct and consistent, does not include any overlooked errors, and will function without faults.<a href="#section-1.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.1.2-1">An additional feature of SCION is its formal verification. The SCION network system consists of a variety of  components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich <span>[<a href="#KLENZE2021" class="xref">KLENZE2021</a>]</span>. This guarantees that packet forwarding and SCION's authentication mechanisms are correct and consistent.<a href="#section-1.1.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1434,11 +1434,11 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1454,6 +1454,10 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
 <dt id="GRIFFIN1999">[GRIFFIN1999]</dt>
         <dd>
 <span class="refAuthor">Griffin, T.</span> and <span class="refAuthor">G. Wilfong</span>, <span class="refTitle">"An analysis of BGP convergence properties"</span>, <span class="seriesInfo">ACM SIGCOMM Computer Communication Review Vol. 29, pp. 277-288</span>, <span class="seriesInfo">DOI 10.1145/316194.316231</span>, <time datetime="1999-10" class="refDate">October 1999</time>, <span>&lt;<a href="https://doi.org/10.1145/316194.316231">https://doi.org/10.1145/316194.316231</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="KLENZE2021">[KLENZE2021]</dt>
+        <dd>
+<span class="refAuthor">Klenze, T.</span>, <span class="refAuthor">Sprenger, C.</span>, and <span class="refAuthor">D. Basin</span>, <span class="refTitle">"Formal Verification of Secure Forwarding Protocols"</span>, <span class="seriesInfo">2021 IEEE 34th Computer Security Foundations Symposium (CSF)</span>, <span class="seriesInfo">DOI 10.1109/csf51468.2021.00018</span>, <time datetime="2021-06" class="refDate">June 2021</time>, <span>&lt;<a href="https://doi.org/10.1109/csf51468.2021.00018">https://doi.org/10.1109/csf51468.2021.00018</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LABOVITZ2000">[LABOVITZ2000]</dt>
         <dd>
@@ -1473,27 +1477,27 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
 <dd class="break"></dd>
 <dt id="RFC4033">[RFC4033]</dt>
         <dd>
-<span class="refAuthor">Arends, R.</span>, <span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Larson, M.</span>, <span class="refAuthor">Massey, D.</span>, and <span class="refAuthor">S. Rose</span>, <span class="refTitle">"DNS Security Introduction and Requirements"</span>, <span class="seriesInfo">RFC 4033</span>, <span class="seriesInfo">DOI 10.17487/RFC4033</span>, <time datetime="2005-03" class="refDate">March 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4033">https://www.rfc-editor.org/info/rfc4033</a>&gt;</span>. </dd>
+<span class="refAuthor">Arends, R.</span>, <span class="refAuthor">Austein, R.</span>, <span class="refAuthor">Larson, M.</span>, <span class="refAuthor">Massey, D.</span>, and <span class="refAuthor">S. Rose</span>, <span class="refTitle">"DNS Security Introduction and Requirements"</span>, <span class="seriesInfo">RFC 4033</span>, <span class="seriesInfo">DOI 10.17487/RFC4033</span>, <time datetime="2005-03" class="refDate">March 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4033">https://www.rfc-editor.org/rfc/rfc4033</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC4264">[RFC4264]</dt>
         <dd>
-<span class="refAuthor">Griffin, T.</span> and <span class="refAuthor">G. Huston</span>, <span class="refTitle">"BGP Wedgies"</span>, <span class="seriesInfo">RFC 4264</span>, <span class="seriesInfo">DOI 10.17487/RFC4264</span>, <time datetime="2005-11" class="refDate">November 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4264">https://www.rfc-editor.org/info/rfc4264</a>&gt;</span>. </dd>
+<span class="refAuthor">Griffin, T.</span> and <span class="refAuthor">G. Huston</span>, <span class="refTitle">"BGP Wedgies"</span>, <span class="seriesInfo">RFC 4264</span>, <span class="seriesInfo">DOI 10.17487/RFC4264</span>, <time datetime="2005-11" class="refDate">November 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4264">https://www.rfc-editor.org/rfc/rfc4264</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC6480">[RFC6480]</dt>
         <dd>
-<span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6480">https://www.rfc-editor.org/info/rfc6480</a>&gt;</span>. </dd>
+<span class="refAuthor">Lepinski, M.</span> and <span class="refAuthor">S. Kent</span>, <span class="refTitle">"An Infrastructure to Support Secure Internet Routing"</span>, <span class="seriesInfo">RFC 6480</span>, <span class="seriesInfo">DOI 10.17487/RFC6480</span>, <time datetime="2012-02" class="refDate">February 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6480">https://www.rfc-editor.org/rfc/rfc6480</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8205">[RFC8205]</dt>
         <dd>
-<span class="refAuthor">Lepinski, M., Ed.</span> and <span class="refAuthor">K. Sriram, Ed.</span>, <span class="refTitle">"BGPsec Protocol Specification"</span>, <span class="seriesInfo">RFC 8205</span>, <span class="seriesInfo">DOI 10.17487/RFC8205</span>, <time datetime="2017-09" class="refDate">September 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8205">https://www.rfc-editor.org/info/rfc8205</a>&gt;</span>. </dd>
+<span class="refAuthor">Lepinski, M., Ed.</span> and <span class="refAuthor">K. Sriram, Ed.</span>, <span class="refTitle">"BGPsec Protocol Specification"</span>, <span class="seriesInfo">RFC 8205</span>, <span class="seriesInfo">DOI 10.17487/RFC8205</span>, <time datetime="2017-09" class="refDate">September 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8205">https://www.rfc-editor.org/rfc/rfc8205</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8446">[RFC8446]</dt>
         <dd>
-<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8446">https://www.rfc-editor.org/info/rfc8446</a>&gt;</span>. </dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9049">[RFC9049]</dt>
         <dd>
-<span class="refAuthor">Dawkins, S., Ed.</span>, <span class="refTitle">"Path Aware Networking: Obstacles to Deployment (A Bestiary of Roads Not Taken)"</span>, <span class="seriesInfo">RFC 9049</span>, <span class="seriesInfo">DOI 10.17487/RFC9049</span>, <time datetime="2021-06" class="refDate">June 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc9049">https://www.rfc-editor.org/info/rfc9049</a>&gt;</span>. </dd>
+<span class="refAuthor">Dawkins, S., Ed.</span>, <span class="refTitle">"Path Aware Networking: Obstacles to Deployment (A Bestiary of Roads Not Taken)"</span>, <span class="seriesInfo">RFC 9049</span>, <span class="seriesInfo">DOI 10.17487/RFC9049</span>, <time datetime="2021-06" class="refDate">June 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9049">https://www.rfc-editor.org/rfc/rfc9049</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="ROTHENBERGER2017">[ROTHENBERGER2017]</dt>
         <dd>
