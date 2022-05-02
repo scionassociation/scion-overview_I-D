@@ -198,7 +198,7 @@ Table of Contents
    technology.  Moreover, not only users of SCION benefit from it, also
    ISPs and operators benefit from deploying SCION: early deployments
    showed that providers can charge the use of SCION as premium
-   connectivity, with users are willing to pay for it.  Furthermore,
+   connectivity, with users who are willing to pay for it.  Furthermore,
    SCION can be installed on top of and function alongside the existing
    routing infrastructure and protocols--there is no need for bigger
    changes in an operational network.  The above points facilitate the
