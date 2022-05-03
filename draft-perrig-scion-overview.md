@@ -128,17 +128,18 @@ Isolation domains serve the following purposes:
 
 ISDs provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.
 
+
 **Links**
+<br>
 There are three types of links in SCION: core links, parent-child links, and peering links.
 
 - A **core link** can only exist between two core ASes.
 - A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
 - A **peering link** also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
 
-See {{fig-architecture}} for a high-level overview of the SCION network structure.
+See {{architecture}} for a high-level overview of the SCION network structure.
 
 ~~~~
-
        .............................
      .                               .
    .       [TCR]                      .
@@ -147,7 +148,7 @@ See {{fig-architecture}} for a high-level overview of the SCION network structur
 .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
 .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
 .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
-.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| === |CAS| :::)   .
 .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
 .       /            |             o      .         .        /(::::::::::::::)\       .
 .      o             |           +---+    .         .       /                  \      .
@@ -169,7 +170,7 @@ See {{fig-architecture}} for a high-level overview of the SCION network structur
                       |
                       o  Parent AS - child AS    ----  Peering link    ===  Core link
 ~~~~
-{: #fig-architecture title="SCION network structure"}
+{: #architecture title="SCION network structure"}
 
 
 
