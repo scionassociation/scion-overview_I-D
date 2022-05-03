@@ -17,15 +17,15 @@ venue:
   latest: https://example.com/LATEST
 
 author:
- -   ins: N. Rustignoli
-     name: Nicola Rustignoli
-     org: ETH Zuerich
-     email: nicola.rustignoli@inf.ethz.ch
-
  -   ins: C. de Kater
      name: Corine de Kater
      org: ETH Zuerich
      email: corine.dekatermuehlhaeuser@inf.ethz.ch
+
+ -   ins: N. Rustignoli
+     name: Nicola Rustignoli
+     org: ETH Zuerich
+     email: nicola.rustignoli@inf.ethz.ch
 
  -   ins: A. Perrig
      name: Adrian Perrig
@@ -139,38 +139,37 @@ See {{fig-architecture}} for a high-level overview of the SCION network structur
 
 ~~~~
 
-                              .............................
-                            .                               .
-                          .       [TCR]                      .
-                        .            (::::::::::::::)          .               ...........................
-                       .          (::::: ISD core :::::)         .            .                           .
-                       .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
-                       .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
-                       .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
-                       .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
-                       .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
-                       .       /            |             o      .         .        /(::::::::::::::)\       .
-                       .      o             |           +---+    .         .       /                  \      .
-                       .    +---+           |          /|ASb|    .         .      /                    o     .
-                       .    |ASa|           |         / +---+    .         .     o                   +---+   .
-                       .    +---+           |        /    |      .         .   +---+                 |ASy|   .
-                       .      |             |       /     |      .         .   |ASx| --------------- +---+   .
-                       .      |             |      /      o      .         .   +---+                         .
-                       .      o             o     /     +---+    .         .     |                           .
-                       .    +---+         +---+  /      |ASe|    .         .     o                           .
-                       .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
-                        .   +---+         +---+                 .           .  |ASz|           ISD 2        .
-                         .                                     .             . +---+                       .
-                          .             ISD 1                 .                .                          .
-                           ...................................                  ..........................
-
+       .............................
+     .                               .
+   .       [TCR]                      .
+ .            (::::::::::::::)          .               ...........................
+.          (::::: ISD core :::::)         .            .                           .
+.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
+.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
+.      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
+.       /            |             o      .         .        /(::::::::::::::)\       .
+.      o             |           +---+    .         .       /                  \      .
+.    +---+           |          /|ASb|    .         .      /                    o     .
+.    |ASa|           |         / +---+    .         .     o                   +---+   .
+.    +---+           |        /    |      .         .   +---+                 |ASy|   .
+.      |             |       /     |      .         .   |ASx| --------------- +---+   .
+.      |             |      /      o      .         .   +---+                         .
+.      o             o     /     +---+    .         .     |                           .
+.    +---+         +---+  /      |ASe|    .         .     o                           .
+.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
+ .   +---+         +---+                 .           .  |ASz|           ISD 2        .
+  .                                     .             . +---+                       .
+   .             ISD 1                 .                .                          .
+    ...................................                  ..........................
 
 
                       |
                       |
                       o  Parent AS - child AS    ----  Peering link    ===  Core link
 ~~~~
-{: #fig-architecture title="SCION network structure: high-level overview"}
+{: #fig-architecture title="SCION network structure"}
 
 
 
