@@ -3,9 +3,10 @@
 
 
 panrg                                                        C. de Kater
-Internet-Draft                                                 A. Perrig
-Intended status: Informational                               ETH Zuerich
-Expires: 3 November 2022                                      2 May 2022
+Internet-Draft                                             N. Rustignoli
+Intended status: Informational                                 A. Perrig
+Expires: 4 November 2022                                     ETH Zuerich
+                                                              3 May 2022
 
 
                              SCION Overview
@@ -67,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 November 2022.
+   This Internet-Draft will expire on 4 November 2022.
 
 Copyright Notice
 
@@ -88,7 +89,7 @@ Table of Contents
    1.  Introduction
      1.1.  Why SCION - Motivation
        1.1.1.  Avoiding Pitfalls
-       1.1.2.  Formal Verification
+       1.1.2.  Time to Standardize
      1.2.  SCION Overview
        1.2.1.  Network Architecture and Naming
        1.2.2.  Routing
@@ -130,7 +131,7 @@ Table of Contents
    stopped to expand.  As a consequence, the global network continually
    needs to accommodate new uses.  This has brought many issues to
    light, including a lack of transparency and control, poor
-   scalability, occurrences of severe outages, weak fault isolation,
+   scalability, occurrences of severe outages, weak fault isolation, and
    energy consumption.  As the Internet has not been built with security
    in mind, the lack thereof is another major problem.  Because of this,
    the current Internet offers little protection against attacks such as
@@ -160,9 +161,9 @@ Table of Contents
    packets over secure and trustworthy networking infrastructure, and
    therefore prefer to select themselves the path their data will take.
    They also need availability guarantees across multiple routing
-   domains, even in presence of attacks.  They also want to rely on an
-   Internet that can be multilaterally governed and is free from global
-   kill-switches.  In short, today's users of the Internet seek
+   domains, even in the presence of attacks.  They also want to rely on
+   an Internet that can be multilaterally governed and is free from
+   global kill-switches.  In short, today's users of the Internet seek
    performance, control, reliability, security and trust.
 
    SCION has been developed in order to meet the above-mentioned
@@ -184,6 +185,20 @@ Table of Contents
       reality, Internet of Things (IoT), and Distributed Ledger
       Technology (DLT).
 
+   A more detailed motivation for developing SCION will be described in
+   a separate gap analysis internet draft.
+
+   *Formal Verification*
+
+   An additional feature of SCION is its formal verification.  The SCION
+   network system consists of a variety of components such as routers,
+   servers, and edge devices.  Such a complex system eludes the mental
+   capacities of human beings for considering all possible states and
+   interactions.  That is why SCION includes a formal verification
+   framework developed by the Department of Computer Science of the ETH
+   Zurich [KLENZE2021].  This guarantees that packet forwarding and
+   SCION's authentication mechanisms are correct and consistent.
+
 1.1.1.  Avoiding Pitfalls
 
    Of course SCION is not the first concept that addresses the
@@ -198,24 +213,31 @@ Table of Contents
    technology.  Moreover, not only users of SCION benefit from it, also
    ISPs and operators benefit from deploying SCION: early deployments
    showed that providers can charge the use of SCION as premium
-   connectivity, with users are willing to pay for it.  Furthermore,
+   connectivity, with users who are willing to pay for it.  Furthermore,
    SCION can be installed on top of and function alongside the existing
    routing infrastructure and protocols--there is no need for bigger
-   changes in an operational network.  The above points facilitate the
-   deployment of SCION and increase its acceptance.  The several cases
-   where SCION is already successfully implemented today illustrate this
-   (see the section Deployments (Section 3)).
+   changes in an operational network.
 
-1.1.2.  Formal Verification
+   The above points facilitate the deployment of SCION and increase its
+   acceptance.  The several cases where SCION is already successfully
+   implemented today illustrate this (see the section Deployments
+   (Section 3)).
 
-   An additional feature of SCION is its formal verification.  The SCION
-   network system consists of a variety of components such as routers,
-   servers, and edge devices.  Such a complex system eludes the mental
-   capacities of human beings for considering all possible states and
-   interactions.  That is why SCION includes a formal verification
-   framework developed by the Department of Computer Science of the ETH
-   Zurich [KLENZE2021].  This guarantees that packet forwarding and
-   SCION's authentication mechanisms are correct and consistent.
+1.1.2.  Time to Standardize
+
+   Another RFC that must be mentioned in the context of this draft is
+   [RFC5218], "What Makes for a Successful Protocol?".  SCION fulfils
+   most factors that contribute to the success of a protocol, according
+   to section 2.1 of the RFC.  This includes such factors as offering a
+   positive net value (i.e., the benefits of deploying SCION outweigh
+   the costs), incremental deployability, and open source code
+   availability.  More importantly, SCION averts the failure criteria
+   mentioned in section 1.4 of the RFC: SCION is already deployed and in
+   use by many actors of the Swiss financial and academic ecosystems,
+   and mainstream implementation of SCION is possible, too.
+
+   To conclude: The time is ripe to make a first step towards
+   standardization and take SCION to the IETF.
 
 1.2.  SCION Overview
 
@@ -270,13 +292,40 @@ Table of Contents
    *  A *peering link* also includes at least non-core AS.  A peering
       link exists between ASes with a (standard or paid) relationship.
 
-   Figure 1 shows a high-level overview of the SCION network structure:
+   See Figure 1 for a high-level overview of the SCION network
+   structure.
 
-   figure: !(SCIONnetwork)
+       .............................
+     .                               .
+   .       [TCR]                      .
+ .            (::::::::::::::)          .               ...........................
+.          (::::: ISD core :::::)         .            .                           .
+.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
+.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
+.      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
+.       /            |             o      .         .        /(::::::::::::::)\       .
+.      o             |           +---+    .         .       /                  \      .
+.    +---+           |          /|ASb|    .         .      /                    o     .
+.    |ASa|           |         / +---+    .         .     o                   +---+   .
+.    +---+           |        /    |      .         .   +---+                 |ASy|   .
+.      |             |       /     |      .         .   |ASx| --------------- +---+   .
+.      |             |      /      o      .         .   +---+                         .
+.      o             o     /     +---+    .         .     |                           .
+.    +---+         +---+  /      |ASe|    .         .     o                           .
+.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
+ .   +---+         +---+                 .           .  |ASz|           ISD 2        .
+  .                                     .             . +---+                       .
+   .             ISD 1                 .                .                          .
+    ...................................                  ..........................
 
-                                 Figure 1: SCION network structure
 
-   | | o Parent AS - child AS ---- Peering link === Core link
+                      |
+                      |
+                      o  Parent AS - child AS    ----  Peering link    ===  Core link
+
+                  Figure 1: SCION network structure
 
 1.2.2.  Routing
 
@@ -547,6 +596,10 @@ Table of Contents
               DOI 10.17487/RFC4264, November 2005,
               <https://www.rfc-editor.org/rfc/rfc4264>.
 
+   [RFC5218]  Thaler, D. and B. Aboba, "What Makes for a Successful
+              Protocol?", RFC 5218, DOI 10.17487/RFC5218, July 2008,
+              <https://www.rfc-editor.org/rfc/rfc5218>.
+
    [RFC6480]  Lepinski, M. and S. Kent, "An Infrastructure to Support
               Secure Internet Routing", RFC 6480, DOI 10.17487/RFC6480,
               February 2012, <https://www.rfc-editor.org/rfc/rfc6480>.
@@ -597,6 +650,11 @@ Authors' Addresses
    Corine de Kater
    ETH Zuerich
    Email: corine.dekatermuehlhaeuser@inf.ethz.ch
+
+
+   Nicola Rustignoli
+   ETH Zuerich
+   Email: nicola.rustignoli@inf.ethz.ch
 
 
    Adrian Perrig
