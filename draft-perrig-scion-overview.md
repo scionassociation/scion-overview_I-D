@@ -91,7 +91,7 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
 - Improve the Internet's scalability.
 - Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and Distributed Ledger Technology (DLT).
 
-> A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
+A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
 **Formal Verification**
 
@@ -106,7 +106,7 @@ The above points facilitate the deployment of SCION and increase its acceptance.
 
 ### Time to Standardize
 
-Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source availability. More important maybe is that SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
+Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
 
 To conclude: The time is ripe to make a first step towards standardization and take SCION to the IETF.
 
