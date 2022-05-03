@@ -77,7 +77,7 @@ The Introduction section explores the motivation to develop SCION, followed by a
 
 Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and energy consumption. As the Internet has not been built with security in mind, the lack thereof is another major problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
 
-Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical  and transportation infrastructure operators.
+Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators.
 
 These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They also want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, today's users of the Internet seek performance, control, reliability, security and trust.
 
@@ -106,10 +106,9 @@ The above points facilitate the deployment of SCION and increase its acceptance.
 
 ### Time to Standardize
 
-Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfills most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source availability. More important maybe is that SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.   
+Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source availability. More important maybe is that SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.   
 
-To conclude: The time is ripe for SCION to be taken to the IETF as a first step towards standardization.  
-The time is ripe to make a first step towards standardization and take SCION to the IETF.
+To conclude: The time is ripe to make a first step towards standardization and take SCION to the IETF.
 
 
 ## SCION Overview
@@ -136,14 +135,42 @@ There are three types of links in SCION: core links, parent-child links, and pee
 - A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
 - A **peering link** also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
 
-Figure 1 shows a high-level overview of the SCION network structure:
+See {{#fig-1}} for a high-level overview of the SCION network structure.
 
+~~~~
 
+                              .............................
+                            .                               .
+                          .       [TCR]                      .
+                        .            (::::::::::::::)          .               ...........................
+                       .          (::::: ISD core :::::)         .            .                           .
+                       .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
+                       .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
+                       .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
+                       .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+                       .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
+                       .       /            |             o      .         .        /(::::::::::::::)\       .
+                       .      o             |           +---+    .         .       /                  \      .
+                       .    +---+           |          /|ASb|    .         .      /                    o     .
+                       .    |ASa|           |         / +---+    .         .     o                   +---+   .
+                       .    +---+           |        /    |      .         .   +---+                 |ASy|   .
+                       .      |             |       /     |      .         .   |ASx| --------------- +---+   .
+                       .      |             |      /      o      .         .   +---+                         .
+                       .      o             o     /     +---+    .         .     |                           .
+                       .    +---+         +---+  /      |ASe|    .         .     o                           .
+                       .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
+                        .   +---+         +---+                 .           .  |ASz|           ISD 2        .
+                         .                                     .             . +---+                       .
+                          .             ISD 1                 .                .                          .
+                           ...................................                  ..........................
 
+~~~~                                  
 
 |
 |
 o  Parent AS - child AS    ----  Peering link    ===  Core link
+
+{: #fig-1 title="SCION network structure: high-level overview"}
 
 
 ### Routing
