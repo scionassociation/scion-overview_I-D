@@ -5,8 +5,8 @@
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
 <title>SCION Overview</title>
-<meta content="Nicola Rustignoli" name="author">
 <meta content="Corine de Kater" name="author">
+<meta content="Nicola Rustignoli" name="author">
 <meta content="Adrian Perrig" name="author">
 <meta content="
        The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. Unfortunately, the security of today's Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of adversaries, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture. 
@@ -1020,7 +1020,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <td class="right">May 2022</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Rustignoli, et al.</td>
+<td class="left">de Kater, et al.</td>
 <td class="center">Expires 4 November 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
@@ -1043,11 +1043,11 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
-      <div class="author-name">N. Rustignoli</div>
+      <div class="author-name">C. de Kater</div>
 <div class="org">ETH Zuerich</div>
 </div>
 <div class="author">
-      <div class="author-name">C. de Kater</div>
+      <div class="author-name">N. Rustignoli</div>
 <div class="org">ETH Zuerich</div>
 </div>
 <div class="author">
@@ -1301,35 +1301,34 @@ There are three types of links in SCION: core links, parent-child links, and pee
 </li>
           </ul>
 <p id="section-1.2.1-7">See <a href="#fig-architecture" class="xref">Figure 1</a> for a high-level overview of the SCION network structure.<a href="#section-1.2.1-7" class="pilcrow">¶</a></p>
-<span id="name-scion-network-structure-hig"></span><div id="fig-architecture">
+<span id="name-scion-network-structure"></span><div id="fig-architecture">
 <figure id="figure-1">
             <div class="alignLeft art-text artwork" id="section-1.2.1-8.1">
 <pre>
-                              .............................
-                            .                               .
-                          .       [TCR]                      .
-                        .            (::::::::::::::)          .               ...........................
-                       .          (::::: ISD core :::::)         .            .                           .
-                       .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
-                       .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
-                       .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
-                       .         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
-                       .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
-                       .       /            |             o      .         .        /(::::::::::::::)\       .
-                       .      o             |           +---+    .         .       /                  \      .
-                       .    +---+           |          /|ASb|    .         .      /                    o     .
-                       .    |ASa|           |         / +---+    .         .     o                   +---+   .
-                       .    +---+           |        /    |      .         .   +---+                 |ASy|   .
-                       .      |             |       /     |      .         .   |ASx| --------------- +---+   .
-                       .      |             |      /      o      .         .   +---+                         .
-                       .      o             o     /     +---+    .         .     |                           .
-                       .    +---+         +---+  /      |ASe|    .         .     o                           .
-                       .    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
-                        .   +---+         +---+                 .           .  |ASz|           ISD 2        .
-                         .                                     .             . +---+                       .
-                          .             ISD 1                 .                .                          .
-                           ...................................                  ..........................
-
+       .............................
+     .                               .
+   .       [TCR]                      .
+ .            (::::::::::::::)          .               ...........................
+.          (::::: ISD core :::::)         .            .                           .
+.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
+.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
+.      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
+.       /            |             o      .         .        /(::::::::::::::)\       .
+.      o             |           +---+    .         .       /                  \      .
+.    +---+           |          /|ASb|    .         .      /                    o     .
+.    |ASa|           |         / +---+    .         .     o                   +---+   .
+.    +---+           |        /    |      .         .   +---+                 |ASy|   .
+.      |             |       /     |      .         .   |ASx| --------------- +---+   .
+.      |             |      /      o      .         .   +---+                         .
+.      o             o     /     +---+    .         .     |                           .
+.    +---+         +---+  /      |ASe|    .         .     o                           .
+.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
+ .   +---+         +---+                 .           .  |ASz|           ISD 2        .
+  .                                     .             . +---+                       .
+   .             ISD 1                 .                .                          .
+    ...................................                  ..........................
 
 
                       |
@@ -1338,7 +1337,7 @@ There are three types of links in SCION: core links, parent-child links, and pee
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-scion-network-structure-hig" class="selfRef">SCION network structure: high-level overview</a>
+<a href="#name-scion-network-structure" class="selfRef">SCION network structure</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1576,19 +1575,19 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
-        <div dir="auto" class="left"><span class="fn nameRole">Nicola Rustignoli</span></div>
-<div dir="auto" class="left"><span class="org">ETH Zuerich</span></div>
-<div class="email">
-<span>Email:</span>
-<a href="mailto:nicola.rustignoli@inf.ethz.ch" class="email">nicola.rustignoli@inf.ethz.ch</a>
-</div>
-</address>
-<address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">Corine de Kater</span></div>
 <div dir="auto" class="left"><span class="org">ETH Zuerich</span></div>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:corine.dekatermuehlhaeuser@inf.ethz.ch" class="email">corine.dekatermuehlhaeuser@inf.ethz.ch</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Nicola Rustignoli</span></div>
+<div dir="auto" class="left"><span class="org">ETH Zuerich</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:nicola.rustignoli@inf.ethz.ch" class="email">nicola.rustignoli@inf.ethz.ch</a>
 </div>
 </address>
 <address class="vcard">
