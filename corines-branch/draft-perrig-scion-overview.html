@@ -1287,6 +1287,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
           </ul>
 <p id="section-1.2.1-4">ISDs provide natural isolation of routing failures and misconfigurations, give endpoints strong control over both inbound and outbound traffic, provide meaningful and enforceable trust, and enable scalable routing updates with high path-freshness.<a href="#section-1.2.1-4" class="pilcrow">¶</a></p>
 <p id="section-1.2.1-5"><strong>Links</strong>
+            <br>
 There are three types of links in SCION: core links, parent-child links, and peering links.<a href="#section-1.2.1-5" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.2.1-6.1">A <strong>core link</strong> can only exist between two core ASes.<a href="#section-1.2.1-6.1" class="pilcrow">¶</a>
@@ -1296,8 +1297,8 @@ There are three types of links in SCION: core links, parent-child links, and pee
             <li class="normal" id="section-1.2.1-6.3">A <strong>peering link</strong> also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.<a href="#section-1.2.1-6.3" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-1.2.1-7">See <a href="#fig-architecture" class="xref">Figure 1</a> for a high-level overview of the SCION network structure.<a href="#section-1.2.1-7" class="pilcrow">¶</a></p>
-<span id="name-scion-network-structure"></span><div id="fig-architecture">
+<p id="section-1.2.1-7">See <a href="#architecture" class="xref">Figure 1</a> for a high-level overview of the SCION network structure.<a href="#section-1.2.1-7" class="pilcrow">¶</a></p>
+<span id="name-scion-network-structure"></span><div id="architecture">
 <figure id="figure-1">
             <div class="alignLeft art-text artwork" id="section-1.2.1-8.1">
 <pre>
@@ -1309,7 +1310,7 @@ There are three types of links in SCION: core links, parent-child links, and pee
 .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
 .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
 .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
-.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| === |CAS| :::)   .
 .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
 .       /            |             o      .         .        /(::::::::::::::)\       .
 .      o             |           +---+    .         .       /                  \      .
