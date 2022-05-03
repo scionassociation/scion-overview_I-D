@@ -22,6 +22,11 @@ author:
      org: ETH Zuerich
      email: corine.dekatermuehlhaeuser@inf.ethz.ch
 
+ -   ins: N. Rustignoli
+     name: Nicola Rustignoli
+     org: ETH Zuerich
+     email: nicola.rustignoli@inf.ethz.ch
+
  -   ins: A. Perrig
      name: Adrian Perrig
      org: ETH Zuerich
@@ -33,6 +38,7 @@ normative:
 informative:
   RFC4264:
   RFC4033:
+  RFC5218:
   RFC6480:
   RFC8205:
   RFC8446:
@@ -69,11 +75,11 @@ The Introduction section explores the motivation to develop SCION, followed by a
 
 ## Why SCION - Motivation {#why}
 
-Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, energy consumption. As the Internet has not been built with security in mind, the lack thereof is another major problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
+Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and energy consumption. As the Internet has not been built with security in mind, the lack thereof is another major problem. Because of this, the current Internet offers little protection against attacks such as spoofing, prefix- and DNS-hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
 
-Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical  and transportation infrastructure operators.
+Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators.
 
-These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in presence of attacks. They also want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, today's users of the Internet seek performance, control, reliability, security and trust.
+These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They also want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, today's users of the Internet seek performance, control, reliability, security and trust.
 
 SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:
 
@@ -85,15 +91,25 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
 - Improve the Internet's scalability.
 - Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and Distributed Ledger Technology (DLT).
 
+A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
+
+**Formal Verification**
+
+An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich {{KLENZE2021}}. This guarantees that packet forwarding and SCION's authentication mechanisms are correct and consistent.
+
+
 ### Avoiding Pitfalls
 
 Of course SCION is not the first concept that addresses the Internet's networking issues. But unfortunately many other promising solutions for the Internet's problems have never managed to succeed, for reasons described in {{RFC9049}}. SCION, however, avoids the pitfalls mentioned in this document. For example, SCION does not have to be adopted by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION benefit from it, also ISPs and operators benefit from deploying SCION: early deployments showed that providers can charge the use of SCION as premium connectivity, with users who are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for bigger changes in an operational network.
+
 The above points facilitate the deployment of SCION and increase its acceptance. The several cases where SCION is already successfully implemented today illustrate this (see the section [Deployments](#deploy)).
 
+### Time to Standardize
 
-### Formal Verification
+Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
 
-An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich {{KLENZE2021}}. This guarantees that packet forwarding and SCION's authentication mechanisms are correct and consistent.
+To conclude: The time is ripe to make a first step towards standardization and take SCION to the IETF.
+
 
 ## SCION Overview
 
@@ -119,15 +135,42 @@ There are three types of links in SCION: core links, parent-child links, and pee
 - A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
 - A **peering link** also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
 
-Figure 1 shows a high-level overview of the SCION network structure:
+See {{fig-architecture}} for a high-level overview of the SCION network structure.
 
-figure: !(SCIONnetwork)
+~~~~
 
-                                  Figure 1: SCION network structure
+       .............................
+     .                               .
+   .       [TCR]                      .
+ .            (::::::::::::::)          .               ...........................
+.          (::::: ISD core :::::)         .            .                           .
+.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
+.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
+.      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
+.       /            |             o      .         .        /(::::::::::::::)\       .
+.      o             |           +---+    .         .       /                  \      .
+.    +---+           |          /|ASb|    .         .      /                    o     .
+.    |ASa|           |         / +---+    .         .     o                   +---+   .
+.    +---+           |        /    |      .         .   +---+                 |ASy|   .
+.      |             |       /     |      .         .   |ASx| --------------- +---+   .
+.      |             |      /      o      .         .   +---+                         .
+.      o             o     /     +---+    .         .     |                           .
+.    +---+         +---+  /      |ASe|    .         .     o                           .
+.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
+ .   +---+         +---+                 .           .  |ASz|           ISD 2        .
+  .                                     .             . +---+                       .
+   .             ISD 1                 .                .                          .
+    ...................................                  ..........................
 
-|
-|
-o  Parent AS - child AS    ----  Peering link    ===  Core link
+
+                      |
+                      |
+                      o  Parent AS - child AS    ----  Peering link    ===  Core link
+~~~~
+{: #fig-architecture title="SCION network structure"}
+
 
 
 ### Routing
