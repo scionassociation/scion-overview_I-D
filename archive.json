@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-01T02:03:44.270271+00:00",
+  "timestamp": "2022-05-03T01:48:02.553318+00:00",
   "repo": "scionfoundation/scion-overview_I-D",
   "labels": [
     {
@@ -49,7 +49,24 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 3,
+      "id": "I_kwDOHF5N3M5I46FR",
+      "title": "Detailed gap analysis",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/issues/3",
+      "state": "OPEN",
+      "author": "nicorusti",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We decided to omit a detailed gap analysis in the initial overview. We had a list of current Internet issues in [this commit](https://github.com/scionfoundation/scion-overview_I-D/commit/8259808cbbd41e8c1d8e39eb7ffc63b8d516433c) that we then removed. This list  could be handy for a more detailed gap analysis (perhaps in a dedicated draft).\r\nI'm opening this so that we keep this in mind  \r\n\r\n\r\n ",
+      "createdAt": "2022-05-02T13:17:06Z",
+      "updatedAt": "2022-05-02T13:17:06Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -149,6 +166,68 @@
           "body": "Hi Nicola,\r\n\r\nThanks again for your review and feedback. Very helpful!",
           "createdAt": "2022-04-26T12:07:56Z",
           "updatedAt": "2022-04-26T12:07:56Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOHF5N3M43Jvsd",
+      "title": "introduction review",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/pull/2",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Please wait before merging\r\n\r\n- It might be good to mention [RFC5218](https://www.rfc-editor.org/rfc/rfc5218.html) and why SCION fulfils its criteria",
+      "createdAt": "2022-05-02T07:51:56Z",
+      "updatedAt": "2022-05-02T14:57:06Z",
+      "baseRepository": "scionfoundation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "2790ba19483ce9c3aac145d2e6ca523cfe2ae056",
+      "headRepository": "scionfoundation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "aba77817de6b5047245c0a7c0a387f18dd0e8435",
+      "closedAt": "2022-05-02T14:57:06Z",
+      "mergedAt": "2022-05-02T14:57:06Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "29db35ee21b28aab6044d1698a83cc627309ca39"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M45JpnV",
+          "commit": {
+            "abbreviatedOid": "2b6a0aa"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-02T08:28:47Z",
+          "updatedAt": "2022-05-02T08:28:47Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "Regarding my change to the  last sentence, I think there are two things that should be there: \r\n\r\n- Needs of enterprises that work like an ecosystem\r\n- Critical infrastructure / IoT (we cannot control critical infrastructure over an unstable Internet) ",
+              "createdAt": "2022-05-02T08:28:47Z",
+              "updatedAt": "2022-05-02T08:28:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M45K-Eo",
+          "commit": {
+            "abbreviatedOid": "aba7781"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-02T14:56:56Z",
+          "updatedAt": "2022-05-02T14:56:56Z",
           "comments": []
         }
       ]
