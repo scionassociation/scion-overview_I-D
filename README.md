@@ -89,3 +89,29 @@ Two examples of experimental RFCs are:
 Two relevant RFCs describing this:
 - [RFC2629](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc2629.html)
 - [RFC7749](https://datatracker.ietf.org/doc/html/rfc7749)
+
+_________________________________________________________________________________________________________
+
+# How to Handle Figures
+
+Currently, when writing in Markdown, you can only add ASCII Art figures to Internet Drafts and RFCs.
+This section shortly describes how to proceed.
+
+## Creating ASCII Art Figures
+
+- The easiest way to create an ASCII Art figure is to use an ASCII Art editor, such as Monodraw.
+- After drawing the figure in the editor, export it in text format (_.txt_).
+- Save the text file with the figure in the _images_ folder of the repository.
+
+## Inserting the Figure in the Markdown File
+
+- Copy the ASCII art figure out of the text file.
+- Paste it into the desired place in the Markdown file. 
+Note to put it in-between four tildes, like this: 
+
+~~~~
+  __
+<(o )___
+ ( ._> /
+  `---'
+~~~~
