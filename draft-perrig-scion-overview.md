@@ -17,20 +17,20 @@ venue:
   latest: https://example.com/LATEST
 
 author:
--   ins: N. Rustignoli
-    name: Nicola Rustignoli
-    org: ETH Zuerich
-    email: nicola.rustignoli@inf.ethz.ch
+ -   ins: N. Rustignoli
+     name: Nicola Rustignoli
+     org: ETH Zuerich
+     email: nicola.rustignoli@inf.ethz.ch
 
- -  ins: C. de Kater
-    name: Corine de Kater
-    org: ETH Zuerich
-    email: corine.dekatermuehlhaeuser@inf.ethz.ch
+ -   ins: C. de Kater
+     name: Corine de Kater
+     org: ETH Zuerich
+     email: corine.dekatermuehlhaeuser@inf.ethz.ch
 
- -  ins: A. Perrig
-    name: Adrian Perrig
-    org: ETH Zuerich
-    email: adrian.perrig@inf.ethz.ch
+ -   ins: A. Perrig
+     name: Adrian Perrig
+     org: ETH Zuerich
+     email: adrian.perrig@inf.ethz.ch
 
 normative:
 
@@ -106,7 +106,7 @@ The above points facilitate the deployment of SCION and increase its acceptance.
 
 ### Time to Standardize
 
-Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source availability. More important maybe is that SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.   
+Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source availability. More important maybe is that SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
 
 To conclude: The time is ripe to make a first step towards standardization and take SCION to the IETF.
 
@@ -135,7 +135,7 @@ There are three types of links in SCION: core links, parent-child links, and pee
 - A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
 - A **peering link** also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.
 
-See {{#fig-1}} for a high-level overview of the SCION network structure.
+See {{fig-architecture}} for a high-level overview of the SCION network structure.
 
 ~~~~
 
@@ -164,13 +164,14 @@ See {{#fig-1}} for a high-level overview of the SCION network structure.
                           .             ISD 1                 .                .                          .
                            ...................................                  ..........................
 
-~~~~                                  
 
-|
-|
-o  Parent AS - child AS    ----  Peering link    ===  Core link
 
-{: #fig-1 title="SCION network structure: high-level overview"}
+                      |
+                      |
+                      o  Parent AS - child AS    ----  Peering link    ===  Core link
+~~~~
+{: #fig-architecture title="SCION network structure: high-level overview"}
+
 
 
 ### Routing
