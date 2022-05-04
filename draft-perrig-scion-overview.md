@@ -93,7 +93,7 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
 
 A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
-**Formal Verification**
+### Formal Verification
 
 An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich {{KLENZE2021}}. This guarantees that packet forwarding and SCION's authentication mechanisms are correct and consistent.
 
@@ -104,7 +104,7 @@ Of course SCION is not the first concept that addresses the Internet's networkin
 
 The above points facilitate the deployment of SCION and increase its acceptance. The several cases where SCION is already successfully implemented today illustrate this (see the section [Deployments](#deploy)).
 
-### Time to Standardize
+### Why Now?
 
 Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, according to section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
 
@@ -130,7 +130,7 @@ ISDs provide natural isolation of routing failures and misconfigurations, give e
 
 
 **Links**
-<br>
+
 There are three types of links in SCION: core links, parent-child links, and peering links.
 
 - A **core link** can only exist between two core ASes.
@@ -187,6 +187,7 @@ The process of creating an end-to-end forwarding path consists of the following 
       b. a *path combination* step, to combine the forwarding path from the segments.
 
 **ISD and AS numbering**
+
 SCION decouples end-host addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
 
 ### Infrastructure Components
@@ -211,7 +212,32 @@ The **beacon service**, the **path service**, and the **certificate service** ar
 ## Authentication
 
 SCION’s control plane relies on a public-key infrastructure we call the **control-plane PKI (CP-PKI)**, in which each ISD defines its own roots of trust and policies in a file called trust root configuration (TRC). A TRC is a signed collection of certificates, which also contains ISD-specific policies, for example, specifying how many signatures an updated TRC should contain to be valid.
+
 Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
+
+### The Control-Plane PKI (CP-PKI)
+
+Trust within an ISD is anchored in a TRC. Each TRC contains root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC can be seen as a collection of root certificates, which also contains policies regarding its usage, validity, and future updates. TRCs are the main components of the CP-PKI. Initial TRCs constitute trust anchors; however, in contrast to other PKIs where any change to root certificates requires a manual or out-of-band action (such as a software update), SCION includes a straightforward process to update TRCs.
+
+### Dissemination of TRC Updates
+
+Information about a TRC update is disseminated via SCION’s beaconing process. Each PCB contains the version number of the currently active TRC. If the TRC version number of a received PCB is higher than the locally stored TRC, a request is sent to the AS that sent the PCB to obtain the new TRC. The new TRC is verified on the basis of the current one, and is accepted if it contains at least the required quorum of correct signatures by trust roots defined in the current TRC. This simple dissemination mechanism has two major advantages: It is very efficient (as fresh PCBs rapidly reach all ASes), and it avoids circular dependencies with regard to the verification of PCBs and the beaconing process itself (as no server needs to be contacted over unknown paths in order to fetch the updated TRC).
+
+### TRC Update and Verification
+
+In each ISD, an initial TRC called base TRC‹ must first be signed (during a signing ceremony) and distributed throughout the ISD. With a base TRC as trust anchor, TRCs can be updated in a verifiable manner. We assume that all entities within an ISD can initially obtain an authentic TRC, for example, with an offline mechanism such as a USB flash drive provided by the ISP, or with an online mechanism that relies on a trust-on-first-use (TOFU) approach.
+
+There are two kinds of TRC updates: regular and sensitive updates. A TRC update is sensitive if and only if critical sections of the TRC are affected (for example, if the set of core ASes is modified). For both regular and sensitive updates, a number of votes (in the form of signatures) must be cast to approve a TRC update. This number of votes is dictated by the voting quorum (a parameter that must be defined within each TRC).
+
+At most two TRCs per ISD can be considered active at the same time. Another TRC parameter called the grace period indicates for how long the previous unexpired version of the TRC can still be considered active after a new TRC is disseminated. The grace period starts at the beginning of the validity period of the new TRC. An older TRC can only be considered active until either (1) the grace period has passed, or (2) yet a newer TRC is announced. AS certificates are validated by following the chain of trust up to an active TRC.
+
+### Revocation and Recovery from a Catastrophic Event
+
+The TRC dissemination mechanism also enables rapid revocation of trust roots. When a trust root is compromised, the other trust roots can remove it from the TRC and disseminate a new TRC alongside a PCB with a new version number.
+
+In case of a catastrophic event—such as several private root keys being disclosed due to a critical vulnerability in a cryptographic library—SCION is equipped with a recovery procedure called trust reset. The procedure consists in creating a new TRC with fresh trustworthy keys (and potentially new algorithms), and redistributing this TRC out of band. A trust reset effectively establishes a new base TRC for the ISD. It is possible for ISDs to opt out and disable trust resets by setting a “no trust reset” Boolean to true in their TRC, with the effect that the entire ISD would have to be abandoned in the event of such a catastrophic compromise (this abandonment would also have to be announced out of band).
+
+The partition of the SCION network into ISDs guarantees that no single entity can take down the entire network. Even if several entities formed a coalition to carry out an attack, the effects of that attack would be limited to one or a few ISDs. Moreover, all actions are publicly visible, which deters misbehavior.
 
 ## Control Plane
 
