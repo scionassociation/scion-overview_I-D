@@ -241,12 +241,42 @@ Shortcut paths that avoid a core AS are possible, if the up- and down-path conta
 
 The path segments contain compact hop-fields, that encode information about which interfaces may be used to enter and leave an AS. The hop-fields are cryptographically protected, preventing path alteration. This so-called Packet-Carried Forwarding State (PCFS) replaces signaling to use a path, ensuring that routers do not need any local state on either paths or flows.
 
+## End hosts and incremental deployability
+- Overview of end-host options (native vs SIG)
+End-users can leverage SCION in two different ways: (1) using native SCION applications on a SCION end host, or (2) using  transparent IP-to-SCION conversion. The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, approach (2) is preferred, leveraging a SCION-IP-Gateway (SIG) that encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
+
+- Native end host structure & components (12, bootstrapping: 13.2)
+For native SCION communication to be possible, the native end-host stack consists of a dispatcher, which handles all incoming and outgoing SCION packets. The current SCION implementation, uses an UDP/IP underlay to communicate between end-hosts and SCION routers. The SCION daemon handles control-plane messages (e.g., to fetch paths to remote ASes) and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). TODO: do we talk about extensions and extensibility?  
+SCION end-hosts can use an automated end-host bootstrapping mechanisms to connect to the SCION network. Such mechanism retrieves hints from the local network using zero-configuration (zeroconf) [112TODO ref? ] services, downloads the required SCION configuration files from a local discovery service, and starts the SCION Daemon. A zeroconf service is a service provided by the network that requires no network-specific configurations on the clients making use of it.
+
+- Legacy end host compatibility mechanisms (13.4: SCRP, SBAS, SIAM, CG-SIG ...)
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SCION offers introduce mechanisms that allow SIGs to coordinate and automatically exchange IP prefix information. We first present SGRP, a system enabling SIGs to mutually discover and announce IP prefixes. Such an approach is well suited to enterprise networks, where SIGs deployed at branches can mutually exchange prefixes for each location.
+We then introduce SIAM, a global and scalable SIG coordination mechanism that translates between legacy public IP and SCION. SIAM transfers authorizations in RPKI [328] to SCION, making it a viable global transition mechanism for public IP networks and ISPs. Finally, we introduce SBAS, a transition mechanism that aims at offering SCION’s benefits to the wider legacy IP Internet, by routing regular IP traffic over SCION.
+TODO: maybe we mention each one of the approaches and then reference the respective paper?
+
+## Deployment model
+- How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?)
+
+A SCION AS needs to set up border routers and run instances of the control service. The border router and control service instances can be deployed on standard x86 commercial off-the-shelf (COTS) servers, supporting up to 100 Gbps links, while with P4 hardware it is possible to forward SCION traffic even at terabit speeds ([155]). The ISP internal IP or MPLS-based network can be reused to enable the SCION infrastructure to communicate within the AS. If dedicated links are not available, queuing disciplines on internal switches can provide separation of IP and SCION traffic.
+
+To transport SCION packets to an egress BR, ISPs do not need to change their internal routing infrastructures; SCION intra-domain packets are IP-routed by an IGP, e.g., OSPF or IS-IS. Given that the AS’s internal entities are considered to be trustworthy, the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers. To exchange SCION packets with the provider network, the customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections.
+
+Customer connections and SCION connectivity between the border routers of neighboring ISPs can be achieved in three different ways. Ideally, SCION- enabled adjacent ISPs would be connected via a native SCION link. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance. The native SCION link is unaffected by BGP failures, achieving a “BGP-free” deployment.
+
+TODO: this section needs to be rephrased, we need to mention the end-customer deployment model (mentioning that SIG can be packaged in the customer's CPE, or run as CG-SIG. In essence, figure 13.3)
 
 # Deployments {#deploy}
 
-SCI-ED, SSFC, SCIONLab
-From the book v2, use:
-chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
+- Deployment experiences: SSFN, SCI-ED (15.3, 15.4), SCIONLab (14)
+SCION is backed by a strong ployment experience, starting from research to production uses.
+
+Since August 2017, SCION has been evaluated for production use by a central bank, with the goal of replacing the existing leased lines network interconnecting banks and their branches. Over time, several of their branches have been connected to their data centers over the SCION network. Their positive experiences have fueled adoption by ISPs, as well as by commercial, education, and government entities. Today, eight ?? ? ISPs offer SCION connections, and several banks and government entities benefit from a native SCION backbone for production use.
+
+Before we describe the technical deployment details, we first discuss the stakeholder incentives that led to the first production use of SCION in 2017, and then briefly discuss deployment considerations that are needed to achieve the salient SCION properties.
+The initial customer incentive was to test the reliability of SCION and to use a SCION connection to replace a leased line. A leased line–often provisioned via dedicated layer-2 circuit switching or layer-3 MPLS–is a premium connectivity service that provides availability and confidentiality. On the other hand, leased lines often have long lead times (in some cases several months), lack flexibility for short-term changes, and are often expensive to operate. SCION approximates leased-line properties, offering geofencing, path transparency, high reliability thanks to fast failover, and flexibility for changes.
+Today, eight ISPs offer SCION connections, and several banks and government entities benefit from their BGP-free backbones for production use. This demonstrates that the initial deployment incentives have been sufficient, but additional ones are needed to further drive deployment of native SCION connectivity on endpoints used by applications.
+
+
 
 
 # IANA Considerations
