@@ -397,7 +397,7 @@ Table of Contents
        path segments, and b. a _path combination_ step, to combine the
        forwarding path from the segments.
 
-   *ISD and AS numbering*
+1.2.2.1.  ISD and AS numbering
 
    SCION decouples end-host addressing from inter-domain routing.
    Routing is based on the <ISD, AS> tuple, agnostic of end-host

@@ -1390,8 +1390,14 @@ svg [stroke="fill"], svg [fill^="#fff"] {
    b. a <em>path combination</em> step, to combine the forwarding path from the segments.<a href="#section-1.2.2-3.3" class="pilcrow">¶</a>
 </li>
           </ol>
-<p id="section-1.2.2-4"><strong>ISD and AS numbering</strong><a href="#section-1.2.2-4" class="pilcrow">¶</a></p>
-<p id="section-1.2.2-5">SCION decouples end-host addressing from inter-domain routing. Routing is based on the &lt;ISD, AS&gt; tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the &lt;ISD, AS, local address&gt; 3-tuple.<a href="#section-1.2.2-5" class="pilcrow">¶</a></p>
+<div id="isd-and-as-numbering">
+<section id="section-1.2.2.1">
+            <h5 id="name-isd-and-as-numbering">
+<a href="#section-1.2.2.1" class="section-number selfRef">1.2.2.1. </a><a href="#name-isd-and-as-numbering" class="section-name selfRef">ISD and AS numbering</a>
+            </h5>
+<p id="section-1.2.2.1-1">SCION decouples end-host addressing from inter-domain routing. Routing is based on the &lt;ISD, AS&gt; tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the &lt;ISD, AS, local address&gt; 3-tuple.<a href="#section-1.2.2.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="infrastructure-components">
