@@ -195,7 +195,7 @@ The process of creating an end-to-end forwarding path consists of the following 
       a. a *path lookup* step, to obtain path segments, and
       b. a *path combination* step, to combine the forwarding path from the segments.
 
-**ISD and AS numbering**
+#### ISD and AS numbering
 
 SCION decouples end-host addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
 
