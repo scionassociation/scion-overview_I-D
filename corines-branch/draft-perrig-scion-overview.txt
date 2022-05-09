@@ -5,8 +5,8 @@
 panrg                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 6 November 2022                                     ETH Zuerich
-                                                              5 May 2022
+Expires: 10 November 2022                                    ETH Zuerich
+                                                              9 May 2022
 
 
                              SCION Overview
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 November 2022.
+   This Internet-Draft will expire on 10 November 2022.
 
 Copyright Notice
 
@@ -138,8 +138,8 @@ Table of Contents
    light, including a lack of transparency and control, poor
    scalability, occurrences of severe outages, weak fault isolation, and
    energy consumption.  As the Internet has not been built with security
-   in mind, the lack thereof is another major problem.  Because of this,
-   the current Internet offers little protection against attacks such as
+   in mind, the lack thereof is another problem.  Because of this, the
+   current Internet offers little protection against attacks such as
    spoofing, prefix- and DNS-hijacking, denial-of-service, and
    combinations of these.  For more background information, see
    [SCHUCHARD2011], [LABOVITZ2000], [GRIFFIN1999], [SAHOO2009], and
@@ -166,8 +166,8 @@ Table of Contents
    packets over secure and trustworthy networking infrastructure, and
    therefore prefer to select themselves the path their data will take.
    They also need availability guarantees across multiple routing
-   domains, even in the presence of attacks.  They also want to rely on
-   an Internet that can be multilaterally governed and is free from
+   domains, even in the presence of attacks.  They further want to rely
+   on an Internet that can be multilaterally governed and is free from
    global kill-switches.  In short, today's users of the Internet seek
    performance, control, reliability, security and trust.
 
@@ -258,6 +258,9 @@ Table of Contents
       can the transition from current ("path-oblivious") to path-aware
       networking be managed?
 
+   The answers to these questions can be found in the sections Key
+   Concepts ({#key}) and Deployments ({#deploy}), respectively.
+
    Another RFC that must be mentioned in the context of this draft is
    [RFC5218], "What Makes for a Successful Protocol?".  SCION fulfils
    most factors that contribute to the success of a protocol, as
@@ -269,8 +272,8 @@ Table of Contents
    use by many actors of the Swiss financial and academic ecosystems,
    and mainstream implementation of SCION is possible, too.
 
-   To conclude: The time is ripe to take SCION to the IETF, to be able
-   to contribute to the important discussion regarding path-aware
+   To conclude: The time is ripe to take SCION to the IETF, in order to
+   contribute to the important discussion regarding path-aware
    networking, and to make a first step towards standardization.
 
 1.2.  SCION Overview
