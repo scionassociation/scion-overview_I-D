@@ -328,8 +328,9 @@ Table of Contents
       usually belong to the same entity or have a provider-customer
       relationship.
 
-   *  A *peering link* also includes at least non-core AS.  A peering
-      link exists between ASes with a (standard or paid) relationship.
+   *  A *peering link* also includes at least one non-core AS.  A
+      peering link exists between ASes with a (standard or paid)
+      relationship.
 
    See Figure 1 for a high-level overview of the SCION network
    structure.
@@ -422,21 +423,21 @@ Table of Contents
    the AS, while _border routers_ provide interconnectivity between
    ASes.
 
-   *  The beacon service discovers path information.  It is responsible
-      for generating, receiving, and propagating PCBs.  Periodically,
-      the beacon service generates a set of PCBs, which are forwarded to
-      its child ASes or neighboring core ASes.  The PCBs are flooded
-      over policy-compliant paths to discover multiple paths between any
-      pair of core ASes.
+   *  The _beacon service_ discovers path information.  It is
+      responsible for generating, receiving, and propagating PCBs.
+      Periodically, the beacon service generates a set of PCBs, which
+      are forwarded to its child ASes or neighboring core ASes.  The
+      PCBs are flooded over policy-compliant paths to discover multiple
+      paths between any pair of core ASes.
 
-   *  The path service stores mappings from AS identifiers to sets of
+   *  The _path service_ stores mappings from AS identifiers to sets of
       announced path segments.  The path service is organized as a
       hierarchical caching system similar to that of DNS.  Through the
       beacon service, ASes select the set of path segments through which
       they want to be reached, and they register them to the path
       service in the ISD core.
 
-   *  The certificate service keeps cached copies of certificates and
+   *  The _certificate service_ keeps cached copies of certificates and
       manages keys and certificates for securing inter-AS communication.
       The certificate service is queried by the beacon service when
       validating the authenticity of PCBs (i.e., when the beacon service
@@ -447,7 +448,7 @@ Table of Contents
    router or the destination host within the AS.  While SCION takes care
    of intra-domain routing, it relies on existing routing protocols
    (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS)
-   for intra-domain forwarding.  _Internal routers_, therefore, do not
+   for intra-domain forwarding. _Internal routers_, therefore, do not
    need to be changed to support SCION.
 
 1.3.  Conventions and Definitions

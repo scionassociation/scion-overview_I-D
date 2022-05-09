@@ -1329,7 +1329,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </li>
             <li class="normal" id="section-1.2.1-7.2">A <strong>parent-child link</strong> requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.<a href="#section-1.2.1-7.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1.2.1-7.3">A <strong>peering link</strong> also includes at least non-core AS. A peering link exists between ASes with a (standard or paid) relationship.<a href="#section-1.2.1-7.3" class="pilcrow">¶</a>
+            <li class="normal" id="section-1.2.1-7.3">A <strong>peering link</strong> also includes at least one non-core AS. A peering link exists between ASes with a (standard or paid) relationship.<a href="#section-1.2.1-7.3" class="pilcrow">¶</a>
 </li>
           </ul>
 <p id="section-1.2.1-8">See <a href="#architecture" class="xref">Figure 1</a> for a high-level overview of the SCION network structure.<a href="#section-1.2.1-8" class="pilcrow">¶</a></p>
@@ -1408,14 +1408,14 @@ svg [stroke="fill"], svg [fill^="#fff"] {
           </h4>
 <p id="section-1.2.3-1">The <strong>beacon service</strong>, the <strong>path service</strong>, and the <strong>certificate service</strong> are the main infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. It is also possible to combine the services into one or more <em>control services</em>. <em>Internal routers</em> forward packets inside the AS, while <em>border routers</em> provide interconnectivity between ASes.<a href="#section-1.2.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.3-2.1">The beacon service discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which are forwarded to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.<a href="#section-1.2.3-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-1.2.3-2.1">The <em>beacon service</em> discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which are forwarded to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.<a href="#section-1.2.3-2.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1.2.3-2.2">The path service stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they register them to the path service in the ISD core.<a href="#section-1.2.3-2.2" class="pilcrow">¶</a>
+            <li class="normal" id="section-1.2.3-2.2">The <em>path service</em> stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they register them to the path service in the ISD core.<a href="#section-1.2.3-2.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-1.2.3-2.3">The certificate service keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).<a href="#section-1.2.3-2.3" class="pilcrow">¶</a>
+            <li class="normal" id="section-1.2.3-2.3">The <em>certificate service</em> keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).<a href="#section-1.2.3-2.3" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-1.2.3-3"><em>Border routers</em> are deployed at the edge of SCION ASes. The main task of border routers is to forward packets to a neighbor border router or the destination host within the AS. While SCION takes care of intra-domain routing, it relies on existing routing protocols (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding.  <em>Internal routers</em>, therefore, do not need to be changed to support SCION.<a href="#section-1.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-1.2.3-3"><em>Border routers</em> are deployed at the edge of SCION ASes. The main task of border routers is to forward packets to a neighbor border router or the destination host within the AS. While SCION takes care of intra-domain routing, it relies on existing routing protocols (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding. <em>Internal routers</em>, therefore, do not need to be changed to support SCION.<a href="#section-1.2.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
