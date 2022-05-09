@@ -106,7 +106,7 @@ The above points facilitate the deployment of SCION and increase its acceptance.
 
 ### Why Now?
 
-SCION can be considered a _path-aware internetworking_ architecture, as described in {{RFC9217}}. This RFC, which was published in March of this year (2022), poses (open) questions that must be answered in order to realize a path-aware internetworking architecture. It was originally written to frame discussions in the Path Aware Networking Research Group (PANRG), and has been published to snapshot current thinking in this space.
+SCION can be considered a _path-aware internetworking_ architecture, as described in {{RFC9217}}. This RFC, which was published in March of this year (2022), poses (open) questions that must be answered in order to realize such a path-aware networking architecture. It was originally written to frame discussions in the Path Aware Networking Research Group (PANRG), and has been published to snapshot current thinking in this space.
 
 SCION clearly provides answers to the questions raised in this RFC. This especially pertains to the second, third, seventh, and eighth question:
 
