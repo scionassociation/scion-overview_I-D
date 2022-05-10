@@ -92,7 +92,7 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
 - Improve the Internet's scalability.
 - Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and Distributed Ledger Technology (DLT).
 
-A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
+**Note**: A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
 ### Formal Verification
 
@@ -151,35 +151,34 @@ There are three types of links in SCION: core links, parent-child links, and pee
 See {{architecture}} for a high-level overview of the SCION network structure.
 
 ~~~~
-       .............................
-     .                               .
-   .       [TCR]                      .
- .            (::::::::::::::)          .               ...........................
-.          (::::: ISD core :::::)         .            .                           .
-.      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
-.   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
-.      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
-.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| === |CAS| :::)   .
-.        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
-.       /            |             o      .         .        /(::::::::::::::)\       .
-.      o             |           +---+    .         .       /                  \      .
-.    +---+           |          /|ASb|    .         .      /                    o     .
-.    |ASa|           |         / +---+    .         .     o                   +---+   .
-.    +---+           |        /    |      .         .   +---+                 |ASy|   .
-.      |             |       /     |      .         .   |ASx| --------------- +---+   .
-.      |             |      /      o      .         .   +---+                         .
-.      o             o     /     +---+    .         .     |                           .
-.    +---+         +---+  /      |ASe|    .         .     o                           .
-.    |ASc| ------- |ASd| o       +---+ ---.---------.-- +---+                         .
- .   +---+         +---+                 .           .  |ASz|           ISD 2        .
-  .                                     .             . +---+                       .
-   .             ISD 1                 .                .                          .
-    ...................................                  ..........................
+    ...............................
+   :                               :
+  :      [TCR]                      :
+ :          (::::::::::::::)         :      ..........................
+:        (::::: ISD core :::::)       :    :                          :
+:    (:: +---+ ::::::::: +---+ ::)    :   :    [TCR]                   :
+: (::::: |CAS|===+---+ : |CAS| :::::) :  :        (:: ISD core ::)      :
+:    (:: +---+ : |CAS|===+---+====)===:==:=====(===+---+ ::: +---+ ::)  :
+:       /(:::::: +---+ ::::::) \      :  :    (::: |CAS|=====|CAS| :::) :
+:      /  (::::::: | :::::::)   \     :  :     (:: +---+ ::: +---+ ::)  :
+:     /            |             o    :  :       /(::::::::::::::)\     :
+:    o             |           +---+  :  :      /                  \    :
+:  +---+           |          /|ASb|  :  :     /                    o   :
+:  |ASa|           |         / +---+  :  :    o                   +---+ :
+:  +---+           |        /    |    :  :  +---+                 |ASy| :
+:    |             |       /     |    :  :  |ASx| --------------- +---+ :
+:    |             |      /      o    :  :  +---+                       :
+:    o             o     /     +---+  :  :    |                         :
+:  +---+         +---+  /      |ASe|  :  :    o                         :
+:  |ASc|---------|ASd| o       +---+ -:--:--+---+                       :
+:  +---+         +---+                :  :  |ASz|           ISD 2       :
+ :                                   :    : +---+                      :
+  :            ISD 1                :      :                          :
+   .................................        ..........................
 
-
-                      |
-                      |
-                      o  Parent AS - child AS    ----  Peering link    ===  Core link
+    |
+    |
+    o  Parent AS - child AS    ----  Peering link    ===  Core link
 ~~~~
 {: #architecture title="SCION network structure"}
 
@@ -221,34 +220,80 @@ _Border routers_ are deployed at the edge of SCION ASes. The main task of border
 
 # Key Concepts {#key}
 
+This section explains the SCION key concepts, including authentication, control- and data plane.
 
 ## Authentication
 
-SCION’s control plane relies on a public-key infrastructure we call the **control-plane PKI (CP-PKI)**, in which each ISD defines its own roots of trust and policies in a file called trust root configuration (TRC). A TRC is a signed collection of certificates, which also contains ISD-specific policies, for example, specifying how many signatures an updated TRC should contain to be valid.
+SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.  
 
-Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
+**Note**: This section describes the SCION authentication concept on a very high level. A much more detailed description of SCION's authentication will follow in a separate internet draft.
+
 
 ### The Control-Plane PKI (CP-PKI)
 
-Trust within an ISD is anchored in a TRC. Each TRC contains root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC can be seen as a collection of root certificates, which also contains policies regarding its usage, validity, and future updates. TRCs are the main components of the CP-PKI. Initial TRCs constitute trust anchors; however, in contrast to other PKIs where any change to root certificates requires a manual or out-of-band action (such as a software update), SCION includes a straightforward process to update TRCs.
+Trust within each isolation domain is anchored in the TRC file. Each TRC contains a collection of signed root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC also includes ISD-policies that specify, for example, the TRC's usage, validity, and future updates. {{chain}} illustrates this. TRCs are the main components of the CP-PKI.
+
+The initial TRC in an ISD is called the **base TRC**. This base TRC constitutes the ISD's trust anchor. It is signed during a signing ceremony and then distributed throughout the ISD. All entities within the ISD obtain the initial TRC with an offline mechanism such as a USB flash drive provided by the ISP, or with an online mechanism that relies on a trust-on-first-use (TOFU) approach. However, all updates to the base TRCs are performed in a straightforward process that does not require any manual or out-of-band action (such as a software update) (see [TRC Update and Verification](#update)).
+
+{{chain}} shows the TRC trust chain and associated certificates. TRC 1 is the base TRC, and TRC 2 and 3 constitute updates to this base TRC. TRC 2 must be verified using the voting certificates in TRC 1. Control-plane (CP) root certificates are used to verify other CP certificates (which are in turn used to verify PCBs).
+
+Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
+
+~~~~
+  TRC 1      ---->         TRC 2            ---->       TRC 3
+(Base TRC)               Parameters:
+                        - Version           
+                        - ID
+                        - Validity
+                        - Grace Period
+                        - Core ASes
+                        - Description
+                        - No Trust Reset
+                        - Voting Quorum
+                         Certificates:
+                        - Regular Voting Certificates  
+                        - Sensitive Voting Certificates   
+                        - CP Root Certificates
+                         Plus:
+                        - Votes & Signatures
+                        |                  |
+                        |                  |
+                        |                  |  
+                        v                  v  
+                      CP CA              CP CA
+                   Certificate         Certificate
+                   |         |             |
+                   |         |             |
+                   |         |             |
+                   v         v             v
+                 CP AS     CP AS         CP AS
+              Certificate Certificate  Certificate
+~~~~
+{: #chain title="TRC contents and trust chain"}
+
+
+### TRC Update and Verification {#update}
+
+With a base TRC as trust anchor, TRCs can be updated in a verifiable manner. There are two kinds of TRC updates: regular and sensitive updates. A _regular_ TRC update happens when the TRC's validity period expires. This period is defined by the _validity_ parameter in the TRC. The default is one year. A TRC update is _sensitive_ if and only if critical sections of the TRC are affected (for example, if the set of core ASes is modified). For both regular and sensitive TRC updates, a number of votes (in the form of signatures) must be cast to approve the update. This number of votes is dictated by the voting quorum and set in each TRC with the _voting quorum_ parameter.
+
 
 ### Dissemination of TRC Updates
 
-Information about a TRC update is disseminated via SCION’s beaconing process. Each PCB contains the version number of the currently active TRC. If the TRC version number of a received PCB is higher than the locally stored TRC, a request is sent to the AS that sent the PCB to obtain the new TRC. The new TRC is verified on the basis of the current one, and is accepted if it contains at least the required quorum of correct signatures by trust roots defined in the current TRC. This simple dissemination mechanism has two major advantages: It is very efficient (as fresh PCBs rapidly reach all ASes), and it avoids circular dependencies with regard to the verification of PCBs and the beaconing process itself (as no server needs to be contacted over unknown paths in order to fetch the updated TRC).
+Information about a TRC update is disseminated via the SCION’s beaconing process. Each PCB contains the version number of the currently active TRC. If an AS receives a PCB with a TRC version number higher than the locally stored TRC, it requests the PCB-sending AS for the new TRC. The new TRC is verified on the basis of the current one, and is accepted if it contains at least the required quorum of correct signatures by trust roots defined in the current TRC.
+This simple dissemination mechanism has two advantages: It is very efficient (as fresh PCBs rapidly reach all ASes), and it avoids circular dependencies with regard to the verification of PCBs and the beaconing process itself (as no server needs to be contacted over unknown paths in order to fetch the updated TRC).
 
-### TRC Update and Verification
 
-In each ISD, an initial TRC called base TRC‹ must first be signed (during a signing ceremony) and distributed throughout the ISD. With a base TRC as trust anchor, TRCs can be updated in a verifiable manner. We assume that all entities within an ISD can initially obtain an authentic TRC, for example, with an offline mechanism such as a USB flash drive provided by the ISP, or with an online mechanism that relies on a trust-on-first-use (TOFU) approach.
+### Grace Period
 
-There are two kinds of TRC updates: regular and sensitive updates. A TRC update is sensitive if and only if critical sections of the TRC are affected (for example, if the set of core ASes is modified). For both regular and sensitive updates, a number of votes (in the form of signatures) must be cast to approve a TRC update. This number of votes is dictated by the voting quorum (a parameter that must be defined within each TRC).
+At most two TRCs per ISD can be active at the same time. The TRC parameter _grace period_ indicates for how long the currently active TRC can still be active after a new TRC is disseminated. This so-called **grace period** starts at the beginning of the validity period of the new TRC. An older TRC can only be considered active until either (1) the grace period has passed, or (2) yet a newer TRC is announced. AS certificates are validated by following the chain of trust up to an active TRC.
 
-At most two TRCs per ISD can be considered active at the same time. Another TRC parameter called the grace period indicates for how long the previous unexpired version of the TRC can still be considered active after a new TRC is disseminated. The grace period starts at the beginning of the validity period of the new TRC. An older TRC can only be considered active until either (1) the grace period has passed, or (2) yet a newer TRC is announced. AS certificates are validated by following the chain of trust up to an active TRC.
 
 ### Revocation and Recovery from a Catastrophic Event
 
 The TRC dissemination mechanism also enables rapid revocation of trust roots. When a trust root is compromised, the other trust roots can remove it from the TRC and disseminate a new TRC alongside a PCB with a new version number.
 
-In case of a catastrophic event—such as several private root keys being disclosed due to a critical vulnerability in a cryptographic library—SCION is equipped with a recovery procedure called trust reset. The procedure consists in creating a new TRC with fresh trustworthy keys (and potentially new algorithms), and redistributing this TRC out of band. A trust reset effectively establishes a new base TRC for the ISD. It is possible for ISDs to opt out and disable trust resets by setting a “no trust reset” Boolean to true in their TRC, with the effect that the entire ISD would have to be abandoned in the event of such a catastrophic compromise (this abandonment would also have to be announced out of band).
+In case of a catastrophic event—such as several private root keys being disclosed due to a critical vulnerability in a cryptographic library—SCION is equipped with a recovery procedure called **trust reset**. The procedure consists of creating a new TRC with fresh trustworthy keys (and potentially new algorithms), and redistributing this TRC out-of-band. A trust reset effectively establishes a new base TRC for the ISD.
+It is possible for ISDs to disable trust resets by setting the _no trust reset_ Boolean parameter to "true" in their TRC, with the effect that the entire ISD would have to be abandoned in the event of such a catastrophic compromise (this abandonment would also have to be announced out of band).
 
 The partition of the SCION network into ISDs guarantees that no single entity can take down the entire network. Even if several entities formed a coalition to carry out an attack, the effects of that attack would be limited to one or a few ISDs. Moreover, all actions are publicly visible, which deters misbehavior.
 
