@@ -257,7 +257,7 @@ TODO: maybe we mention each one of the approaches and then reference the respect
 ## Deployment model
 - How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?)
 
-A SCION AS needs to set up border routers and run instances of the control service. The border router and control service instances can be deployed on standard x86 commercial off-the-shelf (COTS) servers, supporting up to 100 Gbps links, while with P4 hardware it is possible to forward SCION traffic even at terabit speeds ([155]). The ISP internal IP or MPLS-based network can be reused to enable the SCION infrastructure to communicate within the AS. If dedicated links are not available, queuing disciplines on internal switches can provide separation of IP and SCION traffic.
+A SCION AS needs to set up border routers and run instances of the control service. The border router and control service instances can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links, while with P4 hardware it is possible to forward SCION traffic even at terabit speeds ([155] TODO: ref). The ISP internal IP or MPLS-based network can be reused to enable the SCION infrastructure to communicate within the AS. If dedicated links are not available, queuing disciplines on internal switches can provide separation of IP and SCION traffic.
 
 To transport SCION packets to an egress BR, ISPs do not need to change their internal routing infrastructures; SCION intra-domain packets are IP-routed by an IGP, e.g., OSPF or IS-IS. Given that the AS’s internal entities are considered to be trustworthy, the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers. To exchange SCION packets with the provider network, the customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections.
 
@@ -265,10 +265,10 @@ Customer connections and SCION connectivity between the border routers of neighb
 
 TODO: this section needs to be rephrased, we need to mention the end-customer deployment model (mentioning that SIG can be packaged in the customer's CPE, or run as CG-SIG. In essence, figure 13.3)
 
-# Deployments {#deploy}
+# Deployment experiences {#deploy}
 
 - Deployment experiences: SSFN, SCI-ED (15.3, 15.4), SCIONLab (14)
-SCION is backed by a strong ployment experience, starting from research to production uses.
+SCION is backed by a strong deployment experience, starting from research to production uses.
 
 Since August 2017, SCION has been evaluated for production use by a central bank, with the goal of replacing the existing leased lines network interconnecting banks and their branches. Over time, several of their branches have been connected to their data centers over the SCION network. Their positive experiences have fueled adoption by ISPs, as well as by commercial, education, and government entities. Today, eight ?? ? ISPs offer SCION connections, and several banks and government entities benefit from a native SCION backbone for production use.
 
