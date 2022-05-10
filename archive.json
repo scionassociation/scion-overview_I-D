@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-05T01:41:16.144112+00:00",
+  "timestamp": "2022-05-10T01:17:04.063127+00:00",
   "repo": "scionfoundation/scion-overview_I-D",
   "labels": [
     {
@@ -298,6 +298,68 @@
       "mergedBy": "cdekater",
       "mergeCommit": {
         "oid": "7b8894d997acc724ec9a7f6572bd7794c83ad110"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOHF5N3M43grxo",
+      "title": "Corines branch",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/pull/6",
+      "state": "CLOSED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Merge of the Introduction section, which is more or less ready for a final review after several revision rounds. \r\nThe other sections (Key Concepts and Deployments) are still work in progress.",
+      "createdAt": "2022-05-09T15:05:12Z",
+      "updatedAt": "2022-05-09T15:08:44Z",
+      "baseRepository": "scionfoundation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "7b8894d997acc724ec9a7f6572bd7794c83ad110",
+      "headRepository": "scionfoundation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "578edfea4910274c020f48d5f62eb45af9b1a484",
+      "closedAt": "2022-05-09T15:08:44Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merge of the Introduction section, which is more or less ready for a final review after several revision rounds.\r\nThe other sections (Key Concepts and Deployments) are still work in progress.",
+          "createdAt": "2022-05-09T15:08:09Z",
+          "updatedAt": "2022-05-09T15:08:09Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOHF5N3M43gtCg",
+      "title": "Corines branch",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/pull/7",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Merge of the Introduction section, which is more or less ready for a final review after several revision rounds.\r\nThe other sections (Key Concepts and Deployments) are still work in progress.",
+      "createdAt": "2022-05-09T15:09:43Z",
+      "updatedAt": "2022-05-09T15:11:56Z",
+      "baseRepository": "scionfoundation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "7b8894d997acc724ec9a7f6572bd7794c83ad110",
+      "headRepository": "scionfoundation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "578edfea4910274c020f48d5f62eb45af9b1a484",
+      "closedAt": "2022-05-09T15:11:56Z",
+      "mergedAt": "2022-05-09T15:11:56Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "9d2759b1e3556ef7521fe21848d64e669a38474c"
       },
       "comments": [],
       "reviews": []
