@@ -281,8 +281,9 @@ Table of Contents
    and outbound traffic, provide meaningful and enforceable trust, and
    enable scalable routing updates with high path-freshness.
 
-   *Links* There are three types of links in SCION: core links, parent-
-   child links, and peering links.
+   *Links*
+   There are three types of links in SCION: core links, parent-child
+   links, and peering links.
 
    *  A *core link* can only exist between two core ASes.
 
@@ -305,7 +306,7 @@ Table of Contents
 .      (:: +---+ ::::::::: +---+ :::)     .           .    [TCR]                    .
 .   (::::: |CAS|===+---+ : |CAS| ::::::)  .          .        (:: ISD core ::)       .
 .      (:: +---+ : |CAS|===+---+====)=====.=========.======(===+---+ ::: +---+ ::)    .
-.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| ::: |CAS| :::)   .
+.         /(:::::: +---+ :::::::)\        .         .     (::: |CAS| === |CAS| :::)   .
 .        /  (::::::: | ::::::::)  \       .         .      (:: +---+ ::: +---+ ::)    .
 .       /            |             o      .         .        /(::::::::::::::)\       .
 .      o             |           +---+    .         .       /                  \      .
