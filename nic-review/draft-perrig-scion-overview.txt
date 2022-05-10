@@ -5,8 +5,8 @@
 panrg                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 5 November 2022                                     ETH Zuerich
-                                                              4 May 2022
+Expires: 11 November 2022                                    ETH Zuerich
+                                                             10 May 2022
 
 
                              SCION Overview
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 November 2022.
+   This Internet-Draft will expire on 11 November 2022.
 
 Copyright Notice
 
@@ -101,7 +101,7 @@ Table of Contents
      2.3.  Data Plane
      2.4.  End hosts and incremental deployability
      2.5.  Deployment model
-   3.  Deployments
+   3.  Deployment experiences
    4.  IANA Considerations
    5.  Security Considerations
    6.  References
@@ -566,13 +566,13 @@ Table of Contents
 
    A SCION AS needs to set up border routers and run instances of the
    control service.  The border router and control service instances can
-   be deployed on standard x86 commercial off-the-shelf (COTS) servers,
+   be deployed on standard x86 commercial off-the-shelf servers,
    supporting up to 100 Gbps links, while with P4 hardware it is
-   possible to forward SCION traffic even at terabit speeds ([155]).
-   The ISP internal IP or MPLS-based network can be reused to enable the
-   SCION infrastructure to communicate within the AS.  If dedicated
-   links are not available, queuing disciplines on internal switches can
-   provide separation of IP and SCION traffic.
+   possible to forward SCION traffic even at terabit speeds ([155] TODO:
+   ref).  The ISP internal IP or MPLS-based network can be reused to
+   enable the SCION infrastructure to communicate within the AS.  If
+   dedicated links are not available, queuing disciplines on internal
+   switches can provide separation of IP and SCION traffic.
 
    To transport SCION packets to an egress BR, ISPs do not need to
    change their internal routing infrastructures; SCION intra-domain
@@ -597,10 +597,10 @@ Table of Contents
    customer deployment model (mentioning that SIG can be packaged in the
    customer's CPE, or run as CG-SIG.  In essence, figure 13.3)
 
-3.  Deployments
+3.  Deployment experiences
 
    *  Deployment experiences: SSFN, SCI-ED (15.3, 15.4), SCIONLab (14)
-      SCION is backed by a strong ployment experience, starting from
+      SCION is backed by a strong deployment experience, starting from
       research to production uses.
 
    Since August 2017, SCION has been evaluated for production use by a
