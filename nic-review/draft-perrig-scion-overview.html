@@ -13,11 +13,11 @@
        The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts. 
        This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments. 
     " name="description">
-<meta content="xml2rfc 3.12.5" name="generator">
+<meta content="xml2rfc 3.12.6" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-perrig-scion-overview-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.12.5
+  xml2rfc 3.12.6
     Python 3.9.7
     appdirs 1.4.4
     ConfigArgParse 1.3
@@ -1021,7 +1021,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </tr></thead>
 <tfoot><tr>
 <td class="left">de Kater, et al.</td>
-<td class="center">Expires 11 November 2022</td>
+<td class="center">Expires 12 November 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1034,12 +1034,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <dd class="internet-draft">draft-perrig-scion-overview-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-05-10" class="published">10 May 2022</time>
+<time datetime="2022-05-11" class="published">11 May 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-11-11">11 November 2022</time></dd>
+<dd class="expires"><time datetime="2022-11-12">12 November 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1098,7 +1098,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1190,7 +1190,15 @@ svg [stroke="fill"], svg [fill^="#fff"] {
                 <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="xref">2.3</a>.  <a href="#name-data-plane" class="xref">Data Plane</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
-                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="xref">2.4</a>.  <a href="#name-end-hosts-and-incremental-d" class="xref">End hosts and incremental deployability</a></p>
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="xref">2.4</a>.  <a href="#name-end-hosts-and-incremental-d" class="xref">End Hosts and Incremental Deployability</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4.2.1">
+                    <p id="section-toc.1-1.2.2.4.2.1.1"><a href="#section-2.4.1" class="xref">2.4.1</a>.  <a href="#name-native-end-hosts" class="xref">Native End Hosts</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4.2.2">
+                    <p id="section-toc.1-1.2.2.4.2.2.1"><a href="#section-2.4.2" class="xref">2.4.2</a>.  <a href="#name-scion-to-ip-gateway-sig" class="xref">SCION to IP Gateway (SIG)</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.5">
                 <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5" class="xref">2.5</a>.  <a href="#name-deployment-model" class="xref">Deployment model</a></p>
@@ -1297,7 +1305,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
             <li class="normal" id="section-1.1.3-3.4">How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?<a href="#section-1.1.3-3.4" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-1.1.3-4">The answers to these questions can be found in the sections <a href="%7B#key%7D">Key Concepts</a> and <a href="%7B#deploy%7D">Deployments</a>, respectively.<a href="#section-1.1.3-4" class="pilcrow">¶</a></p>
+<p id="section-1.1.3-4">The answers to these questions can be found in the sections <span><a href="#key" class="xref">Key Concepts</a> (<a href="#key" class="xref">Section 2</a>)</span> and <span><a href="#deploy" class="xref">Deployments</a> (<a href="#deploy" class="xref">Section 3</a>)</span>, respectively.<a href="#section-1.1.3-4" class="pilcrow">¶</a></p>
 <p id="section-1.1.3-5">Another RFC that must be mentioned in the context of this draft is <span>[<a href="#RFC5218" class="xref">RFC5218</a>]</span>, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.<a href="#section-1.1.3-5" class="pilcrow">¶</a></p>
 <p id="section-1.1.3-6">To conclude: The time is ripe to take SCION to the IETF, in order to contribute to the important discussion regarding path-aware networking, and to make a first step towards standardization.<a href="#section-1.1.3-6" class="pilcrow">¶</a></p>
 </section>
@@ -1520,22 +1528,35 @@ an ISD.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <div id="end-hosts-and-incremental-deployability">
 <section id="section-2.4">
         <h3 id="name-end-hosts-and-incremental-d">
-<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-end-hosts-and-incremental-d" class="section-name selfRef">End hosts and incremental deployability</a>
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-end-hosts-and-incremental-d" class="section-name selfRef">End Hosts and Incremental Deployability</a>
         </h3>
+<p id="section-2.4-1">End-users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host]](#native-endhost), or using  transparent <span><a href="#sig" class="xref">IP-to-SCION conversion</a> (<a href="#sig" class="xref">Section 2.4.2</a>)</span>. The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, the second approach is preferred.<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<div id="native-endhost">
+<section id="section-2.4.1">
+          <h4 id="name-native-end-hosts">
+<a href="#section-2.4.1" class="section-number selfRef">2.4.1. </a><a href="#name-native-end-hosts" class="section-name selfRef">Native End Hosts</a>
+          </h4>
+<p id="section-2.4.1-1">A SCION native end-host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay to communicate between end-hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end-hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way clients require no pre-existing network-specific configurations.
+TODO: do we want to place the info about the UDP underlay here? Or somewhere else? I'm not so sure about it...<a href="#section-2.4.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.4-1.1">Overview of end-host options (native vs SIG)
-End-users can leverage SCION in two different ways: (1) using native SCION applications on a SCION end host, or (2) using  transparent IP-to-SCION conversion. The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, approach (2) is preferred, leveraging a SCION-IP-Gateway (SIG) that encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.<a href="#section-2.4-1.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.4.1-2.1">Legacy end host compatibility mechanisms (13.4: SCRP, SBAS, SIAM, CG-SIG ...)<a href="#section-2.4.1-2.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="section-2.4-1.2">Native end host structure &amp; components (12, bootstrapping: 13.2)
-For native SCION communication to be possible, the native end-host stack consists of a dispatcher, which handles all incoming and outgoing SCION packets. The current SCION implementation, uses an UDP/IP underlay to communicate between end-hosts and SCION routers. The SCION daemon handles control-plane messages (e.g., to fetch paths to remote ASes) and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). TODO: do we talk about extensions and extensibility?<br>
-SCION end-hosts can use an automated end-host bootstrapping mechanisms to connect to the SCION network. Such mechanism retrieves hints from the local network using zero-configuration (zeroconf) [112TODO ref? ] services, downloads the required SCION configuration files from a local discovery service, and starts the SCION Daemon. A zeroconf service is a service provided by the network that requires no network-specific configurations on the clients making use of it.<a href="#section-2.4-1.2" class="pilcrow">¶</a>
-</li>
-          <li class="normal" id="section-2.4-1.3">Legacy end host compatibility mechanisms (13.4: SCRP, SBAS, SIAM, CG-SIG ...)
-In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SCION offers introduce mechanisms that allow SIGs to coordinate and automatically exchange IP prefix information. We first present SGRP, a system enabling SIGs to mutually discover and announce IP prefixes. Such an approach is well suited to enterprise networks, where SIGs deployed at branches can mutually exchange prefixes for each location.
-We then introduce SIAM, a global and scalable SIG coordination mechanism that translates between legacy public IP and SCION. SIAM transfers authorizations in RPKI [328] to SCION, making it a viable global transition mechanism for public IP networks and ISPs. Finally, we introduce SBAS, a transition mechanism that aims at offering SCION's benefits to the wider legacy IP Internet, by routing regular IP traffic over SCION.
-TODO: maybe we mention each one of the approaches and then reference the respective paper?<a href="#section-2.4-1.3" class="pilcrow">¶</a>
-</li>
-        </ul>
+          </ul>
+</section>
+</div>
+<div id="sig">
+<section id="section-2.4.2">
+          <h4 id="name-scion-to-ip-gateway-sig">
+<a href="#section-2.4.2" class="section-number selfRef">2.4.2. </a><a href="#name-scion-to-ip-gateway-sig" class="section-name selfRef">SCION to IP Gateway (SIG)</a>
+          </h4>
+<p id="section-2.4.2-1">A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SCION offers mechanisms that allow SIGs to coordinate and automatically exchange IP prefix information.
+- SGRP is a system enabling SIGs to mutually discover and announce IP prefixes. Such an approach is well suited to enterprise networks, where SIGs deployed at branches can mutually exchange prefixes for each location.
+- SIAM is a global and scalable SIG coordination mechanism that translates between legacy public IP and SCION. SIAM transfers authorizations in RPKI [328] to SCION, making it a viable global transition mechanism for public IP networks and ISPs. <span>[<a href="#SUPRAJA2021" class="xref">SUPRAJA2021</a>]</span>
+- SBAS is a transition mechanism that aims at offering SCION's benefits to the wider legacy IP Internet, by routing regular IP traffic over SCION.
+TODO: A SIG can be deployed close to end-user (i.e. on CPEs at two enterprise customers), or can be deoployed in the ISP core (CG-SIG)<a href="#section-2.4.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="deployment-model">
@@ -1544,7 +1565,7 @@ TODO: maybe we mention each one of the approaches and then reference the respect
 <a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-deployment-model" class="section-name selfRef">Deployment model</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="section-2.5-1.1">How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?)<a href="#section-2.5-1.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.5-1.1">How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?, IXPs?)<a href="#section-2.5-1.1" class="pilcrow">¶</a>
 </li>
         </ul>
 <p id="section-2.5-2">A SCION AS needs to set up border routers and run instances of the control service. The border router and control service instances can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links, while with P4 hardware it is possible to forward SCION traffic even at terabit speeds ([155] TODO: ref). The ISP internal IP or MPLS-based network can be reused to enable the SCION infrastructure to communicate within the AS. If dedicated links are not available, queuing disciplines on internal switches can provide separation of IP and SCION traffic.<a href="#section-2.5-2" class="pilcrow">¶</a></p>
@@ -1681,8 +1702,12 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
 <span class="refAuthor">Sahoo, A.</span>, <span class="refAuthor">Kant, K.</span>, and <span class="refAuthor">P. Mohapatra</span>, <span class="refTitle">"BGP convergence delay after multiple simultaneous router failures: Characterization and solutions"</span>, <span class="seriesInfo">Computer Communications Vol. 32, pp. 1207-1218</span>, <span class="seriesInfo">DOI 10.1016/j.comcom.2009.03.009</span>, <time datetime="2009-05" class="refDate">May 2009</time>, <span>&lt;<a href="https://doi.org/10.1016/j.comcom.2009.03.009">https://doi.org/10.1016/j.comcom.2009.03.009</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SCHUCHARD2011">[SCHUCHARD2011]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Schuchard, M.</span>, <span class="refAuthor">Mohaisen, A.</span>, <span class="refAuthor">Foo Kune, D.</span>, <span class="refAuthor">Hopper, N.</span>, <span class="refAuthor">Kim, Y.</span>, and <span class="refAuthor">E. Vasserman</span>, <span class="refTitle">"Losing control of the internet: using the data plane to attack the control plane"</span>, <span class="seriesInfo">Proceedings of the 17th ACM conference on Computer and communications security - CCS '10</span>, <span class="seriesInfo">DOI 10.1145/1866307.1866411</span>, <time datetime="2010" class="refDate">2010</time>, <span>&lt;<a href="https://doi.org/10.1145/1866307.1866411">https://doi.org/10.1145/1866307.1866411</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SUPRAJA2021">[SUPRAJA2021]</dt>
+      <dd>
+<span class="refAuthor">Sridhara, S.</span>, <span class="refAuthor">Wirz, F.</span>, <span class="refAuthor">Ruiter, J.</span>, <span class="refAuthor">Schutijser, C.</span>, <span class="refAuthor">Legner, M.</span>, and <span class="refAuthor">A. Perrig</span>, <span class="refTitle">"Global Distributed Secure Mapping of Network Addresses"</span>, <span class="seriesInfo">Proceedings of the ACM SIGCOMM 2021 Workshop on Technologies, Applications, and Uses of a Responsible Internet</span>, <span class="seriesInfo">DOI 10.1145/3472951.3473503</span>, <time datetime="2021-08" class="refDate">August 2021</time>, <span>&lt;<a href="https://doi.org/10.1145/3472951.3473503">https://doi.org/10.1145/3472951.3473503</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1692,7 +1717,9 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">TODO acknowledge.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">TODO acknowledge:
+- SCION Book v2 authors
+- Conext 21 authors https://netsec.ethz.ch/publications/papers/2021_conext_deployment.pdf<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">

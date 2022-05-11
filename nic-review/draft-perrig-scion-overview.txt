@@ -5,8 +5,8 @@
 panrg                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 11 November 2022                                    ETH Zuerich
-                                                             10 May 2022
+Expires: 12 November 2022                                    ETH Zuerich
+                                                             11 May 2022
 
 
                              SCION Overview
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 November 2022.
+   This Internet-Draft will expire on 12 November 2022.
 
 Copyright Notice
 
@@ -104,7 +104,9 @@ Table of Contents
        2.1.4.  Revocation and Recovery from a Catastrophic Event
      2.2.  Control Plane
      2.3.  Data Plane
-     2.4.  End hosts and incremental deployability
+     2.4.  End Hosts and Incremental Deployability
+       2.4.1.  Native End Hosts
+       2.4.2.  SCION to IP Gateway (SIG)
      2.5.  Deployment model
    3.  Deployment experiences
    4.  IANA Considerations
@@ -261,7 +263,7 @@ Table of Contents
       networking be managed?
 
    The answers to these questions can be found in the sections Key
-   Concepts ({#key}) and Deployments ({#deploy}), respectively.
+   Concepts (Section 2) and Deployments (Section 3), respectively.
 
    Another RFC that must be mentioned in the context of this draft is
    [RFC5218], "What Makes for a Successful Protocol?".  SCION fulfils
@@ -633,60 +635,60 @@ Table of Contents
    replaces signaling to use a path, ensuring that routers do not need
    any local state on either paths or flows.
 
-2.4.  End hosts and incremental deployability
+2.4.  End Hosts and Incremental Deployability
 
-   *  Overview of end-host options (native vs SIG) End-users can
-      leverage SCION in two different ways: (1) using native SCION
-      applications on a SCION end host, or (2) using transparent IP-to-
-      SCION conversion.  The benefit of using SCION natively is that the
-      full range of advantages becomes available to applications, at the
-      cost of installing the SCION endpoint stack and making the
-      application SCION-aware.  In the short term, approach (2) is
-      preferred, leveraging a SCION-IP-Gateway (SIG) that encapsulates
-      regular IP packets into SCION packets with a corresponding SIG at
-      the destination that performs the decapsulation.
+   End-users can leverage SCION in two different ways: using SCION-aware
+   applications on a [SCION native end host]](#native-endhost), or using
+   transparent IP-to-SCION conversion (Section 2.4.2).  The benefit of
+   using SCION natively is that the full range of advantages becomes
+   available to applications, at the cost of installing the SCION
+   endpoint stack and making the application SCION-aware.  In the short
+   term, the second approach is preferred.
 
-   *  Native end host structure & components (12, bootstrapping: 13.2)
-      For native SCION communication to be possible, the native end-host
-      stack consists of a dispatcher, which handles all incoming and
-      outgoing SCION packets.  The current SCION implementation, uses an
-      UDP/IP underlay to communicate between end-hosts and SCION
-      routers.  The SCION daemon handles control-plane messages (e.g.,
-      to fetch paths to remote ASes) and provides an API for
-      applications and libraries to interact with the SCION control
-      plane (i.e., for path lookup, SCION extensions).  TODO: do we talk
-      about extensions and extensibility?
-      SCION end-hosts can use an automated end-host bootstrapping
-      mechanisms to connect to the SCION network.  Such mechanism
-      retrieves hints from the local network using zero-configuration
-      (zeroconf) [112TODO ref? ] services, downloads the required SCION
-      configuration files from a local discovery service, and starts the
-      SCION Daemon.  A zeroconf service is a service provided by the
-      network that requires no network-specific configurations on the
-      clients making use of it.
+2.4.1.  Native End Hosts
+
+   A SCION native end-host's stack consists of a dispatcher, which
+   handles all incoming and outgoing SCION packets, and of a SCION
+   daemon, which handles control-plane messages.  The latter fetches
+   paths to remote ASes and provides an API for applications and
+   libraries to interact with the SCION control plane (i.e., for path
+   lookup, SCION extensions).  The current SCION implementation uses an
+   UDP/IP underlay to communicate between end-hosts and SCION routers.
+   This allows reuse of existing intra-domain networking infrastructure.
+   SCION end-hosts can optionally use automated bootstrapping mechanisms
+   to retrieve configuration from the network and establish SCION
+   connectivity.  This way clients require no pre-existing network-
+   specific configurations.  TODO: do we want to place the info about
+   the UDP underlay here?  Or somewhere else?  I'm not so sure about
+   it...
 
    *  Legacy end host compatibility mechanisms (13.4: SCRP, SBAS, SIAM,
-      CG-SIG ...) In order to allow incremental deployability and to
-      ease transition from legacy IP-based Internet to SCION, SCION
-      offers introduce mechanisms that allow SIGs to coordinate and
-      automatically exchange IP prefix information.  We first present
-      SGRP, a system enabling SIGs to mutually discover and announce IP
-      prefixes.  Such an approach is well suited to enterprise networks,
-      where SIGs deployed at branches can mutually exchange prefixes for
-      each location.  We then introduce SIAM, a global and scalable SIG
-      coordination mechanism that translates between legacy public IP
-      and SCION.  SIAM transfers authorizations in RPKI [328] to SCION,
-      making it a viable global transition mechanism for public IP
-      networks and ISPs.  Finally, we introduce SBAS, a transition
-      mechanism that aims at offering SCION's benefits to the wider
-      legacy IP Internet, by routing regular IP traffic over SCION.
-      TODO: maybe we mention each one of the approaches and then
-      reference the respective paper?
+      CG-SIG ...)
+
+2.4.2.  SCION to IP Gateway (SIG)
+
+   A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION
+   packets with a corresponding SIG at the destination that performs the
+   decapsulation.  In order to allow incremental deployability and to
+   ease transition from legacy IP-based Internet to SCION, SCION offers
+   mechanisms that allow SIGs to coordinate and automatically exchange
+   IP prefix information. - SGRP is a system enabling SIGs to mutually
+   discover and announce IP prefixes.  Such an approach is well suited
+   to enterprise networks, where SIGs deployed at branches can mutually
+   exchange prefixes for each location. - SIAM is a global and scalable
+   SIG coordination mechanism that translates between legacy public IP
+   and SCION.  SIAM transfers authorizations in RPKI [328] to SCION,
+   making it a viable global transition mechanism for public IP networks
+   and ISPs.  [SUPRAJA2021] - SBAS is a transition mechanism that aims
+   at offering SCION's benefits to the wider legacy IP Internet, by
+   routing regular IP traffic over SCION.  TODO: A SIG can be deployed
+   close to end-user (i.e. on CPEs at two enterprise customers), or can
+   be deoployed in the ISP core (CG-SIG)
 
 2.5.  Deployment model
 
    *  How can SCION be (incrementally) deployed at an ISP/customer: chp
-      13.1, (table 13.1?  Maybe too detailed?)
+      13.1, (table 13.1?  Maybe too detailed?, IXPs?)
 
    A SCION AS needs to set up border routers and run instances of the
    control service.  The border router and control service instances can
@@ -890,9 +892,19 @@ Table of Contents
               DOI 10.1145/1866307.1866411, 2010,
               <https://doi.org/10.1145/1866307.1866411>.
 
+   [SUPRAJA2021]
+              Sridhara, S., Wirz, F., Ruiter, J., Schutijser, C.,
+              Legner, M., and A. Perrig, "Global Distributed Secure
+              Mapping of Network Addresses", Proceedings of the ACM
+              SIGCOMM 2021 Workshop on Technologies, Applications, and
+              Uses of a Responsible Internet,
+              DOI 10.1145/3472951.3473503, August 2021,
+              <https://doi.org/10.1145/3472951.3473503>.
+
 Acknowledgments
 
-   TODO acknowledge.
+   TODO acknowledge: - SCION Book v2 authors - Conext 21 authors
+   https://netsec.ethz.ch/publications/papers/2021_conext_deployment.pdf
 
 Authors' Addresses
 
