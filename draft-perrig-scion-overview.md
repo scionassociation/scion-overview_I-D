@@ -54,7 +54,7 @@ informative:
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
   MORILLO2021: DOI.10.14722/ndss.2021.24438
   KLENZE2021: DOI.10.1109/CSF51468.2021.00018
-  SUPRAJA2021: DOI.10.1145/3472951.3473503
+  DERUITER2021: DOI.10.1145/3485983.3494839
 
 
 
@@ -204,7 +204,7 @@ The process of creating an end-to-end forwarding path consists of the following 
 SCION decouples end-host addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
 
 
-### Infrastructure Components
+### Infrastructure Components {#infra-components}
 
 The **beacon service**, the **path service**, and the **certificate service** are the main infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. It is also possible to combine the services into one or more _control services_. _Internal routers_ forward packets inside the AS, while _border routers_ provide interconnectivity between ASes.
 
@@ -282,33 +282,30 @@ Shortcut paths that avoid a core AS are possible, if the up- and down-path conta
 
 The path segments contain compact hop-fields, that encode information about which interfaces may be used to enter and leave an AS. The hop-fields are cryptographically protected, preventing path alteration. This so-called Packet-Carried Forwarding State (PCFS) replaces signaling to use a path, ensuring that routers do not need any local state on either paths or flows.
 
+
+# Deployment
+Deploying a next-generation architecture is a challenging task, as it needs to be integrated with and operate alongside existing infrastructure. In the following, we discuss practical deployment approaches, supporting both native SCION hosts and IP hosts.
+
+## Autonomous System Deployment
+A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers. Practice shows that all of them can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links. With a P4 implementation hardware it is possible to forward SCION traffic even at terabit speeds {{DERUITER2021}}. SCION allows, by design, to reuse an AS intra-domain IP or MPLS-based network. Within an AS, SCION is deployed as an IP overlay on top of the existing network. To exchange SCION packets with the provider network, the customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. Given that the AS’s internal entities are considered to be trustworthy, the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
+When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, intra-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance.
+
+
 ## End Hosts and Incremental Deployability
-
-End-users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host]](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, the second approach is preferred.
-
+End-users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, the second approach is preferred.
 
 ### Native End Hosts {#native-endhost}
 A SCION native end-host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay to communicate between end-hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end-hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way clients require no pre-existing network-specific configurations.
 TODO: do we want to place the info about the UDP underlay here? Or somewhere else? I'm not so sure about it...
 
-- Legacy end host compatibility mechanisms (13.4: SCRP, SBAS, SIAM, CG-SIG ...)
-
 ### SCION to IP Gateway (SIG) {#sig}
 A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
-In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SIGs can be augmented with  mechanisms allowing them to coordinate and automatically exchange IP prefix information. A SIG can be deployed close to the end-user (i.e., at branches of an enterprise), or it can be deployed within an ISP's network.
+A SIG can be deployed close to the end-user (i.e., at branches of an enterprise, on a CPE), or it can be deployed within an ISP's network. In the latter case, the SIG is called carrier-grade SIG, as it serves multiple customers within the AS where it is deployed. This approach has the advantage that it does not require any changes at the customer's premises. TODO: I don't like this phrasing I came up about SIG.   
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SIGs can be augmented with  mechanisms allowing them to coordinate and automatically exchange IP prefix information. A more detailed description of the SIG and its coordination mechanisms is to be described in a dedicated document.
 
-## Deployment model
-- How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?, IXPs?)
 
-A SCION AS needs to set up border routers and run instances of the control service. The border router and control service instances can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links, while with P4 hardware it is possible to forward SCION traffic even at terabit speeds ([155] TODO: ref). The ISP internal IP or MPLS-based network can be reused to enable the SCION infrastructure to communicate within the AS. If dedicated links are not available, queuing disciplines on internal switches can provide separation of IP and SCION traffic.
 
-To transport SCION packets to an egress BR, ISPs do not need to change their internal routing infrastructures; SCION intra-domain packets are IP-routed by an IGP, e.g., OSPF or IS-IS. Given that the AS’s internal entities are considered to be trustworthy, the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers. To exchange SCION packets with the provider network, the customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections.
-
-Customer connections and SCION connectivity between the border routers of neighboring ISPs can be achieved in three different ways. Ideally, SCION- enabled adjacent ISPs would be connected via a native SCION link. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance. The native SCION link is unaffected by BGP failures, achieving a “BGP-free” deployment.
-
-TODO: this section needs to be rephrased, we need to mention the end-customer deployment model (mentioning that SIG can be packaged in the customer's CPE, or run as CG-SIG. In essence, figure 13.3)
-
-# Deployment experiences {#deploy}
+## Deployment experiences {#deploy}
 
 - Deployment experiences: SSFN, SCI-ED (15.3, 15.4), SCIONLab (14)
 SCION is backed by a strong deployment experience, starting from research to production uses.
