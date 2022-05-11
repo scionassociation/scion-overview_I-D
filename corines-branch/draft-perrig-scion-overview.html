@@ -13,11 +13,11 @@
        The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts. 
        This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments. 
     " name="description">
-<meta content="xml2rfc 3.12.5" name="generator">
+<meta content="xml2rfc 3.12.6" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-perrig-scion-overview-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.12.5
+  xml2rfc 3.12.6
     Python 3.9.7
     appdirs 1.4.4
     ConfigArgParse 1.3
@@ -1021,7 +1021,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </tr></thead>
 <tfoot><tr>
 <td class="left">de Kater, et al.</td>
-<td class="center">Expires 11 November 2022</td>
+<td class="center">Expires 12 November 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1034,12 +1034,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <dd class="internet-draft">draft-perrig-scion-overview-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-05-10" class="published">10 May 2022</time>
+<time datetime="2022-05-11" class="published">11 May 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-11-11">11 November 2022</time></dd>
+<dd class="expires"><time datetime="2022-11-12">12 November 2022</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1098,7 +1098,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 12 November 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1190,13 +1190,13 @@ svg [stroke="fill"], svg [fill^="#fff"] {
                 <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="xref">2.2</a>.  <a href="#name-control-plane" class="xref">Control Plane</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2.2.1">
-                    <p id="section-toc.1-1.2.2.2.2.1.1"><a href="#section-2.2.1" class="xref">2.2.1</a>.  <a href="#name-path-exploration-and-regist" class="xref">Path Exploration and Registration</a></p>
+                    <p id="section-toc.1-1.2.2.2.2.1.1"><a href="#section-2.2.1" class="xref">2.2.1</a>.  <a href="#name-path-exploration" class="xref">Path Exploration</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2.2.2">
-                    <p id="section-toc.1-1.2.2.2.2.2.1"><a href="#section-2.2.2" class="xref">2.2.2</a>.  <a href="#name-path-lookup" class="xref">Path Lookup</a></p>
+                    <p id="section-toc.1-1.2.2.2.2.2.1"><a href="#section-2.2.2" class="xref">2.2.2</a>.  <a href="#name-path-registration" class="xref">Path Registration</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2.2.3">
-                    <p id="section-toc.1-1.2.2.2.2.3.1"><a href="#section-2.2.3" class="xref">2.2.3</a>.  <a href="#name-pcb-and-path-segment-select" class="xref">PCB and Path-Segment Selection</a></p>
+                    <p id="section-toc.1-1.2.2.2.2.3.1"><a href="#section-2.2.3" class="xref">2.2.3</a>.  <a href="#name-path-lookup" class="xref">Path Lookup</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2.2.4">
                     <p id="section-toc.1-1.2.2.2.2.4.1"><a href="#section-2.2.4" class="xref">2.2.4</a>.  <a href="#name-link-failures" class="xref">Link Failures</a></p>
@@ -1205,6 +1205,20 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
                 <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="xref">2.3</a>.  <a href="#name-data-plane" class="xref">Data Plane</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3.2.1">
+                    <p id="section-toc.1-1.2.2.3.2.1.1"><a href="#section-2.3.1" class="xref">2.3.1</a>.  <a href="#name-path-construction-via-segme" class="xref">Path Construction via Segment Combination</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3.2.2">
+                    <p id="section-toc.1-1.2.2.3.2.2.1"><a href="#section-2.3.2" class="xref">2.3.2</a>.  <a href="#name-path-authorization" class="xref">Path Authorization</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3.2.3">
+                    <p id="section-toc.1-1.2.2.3.2.3.1"><a href="#section-2.3.3" class="xref">2.3.3</a>.  <a href="#name-forwarding" class="xref">Forwarding</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3.2.4">
+                    <p id="section-toc.1-1.2.2.3.2.4.1"><a href="#section-2.3.4" class="xref">2.3.4</a>.  <a href="#name-intra-as-communication" class="xref">Intra-AS Communication</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -1308,7 +1322,7 @@ svg [stroke="fill"], svg [fill^="#fff"] {
             <li class="normal" id="section-1.1.3-3.4">How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?<a href="#section-1.1.3-3.4" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-1.1.3-4">The answers to these questions can be found in the sections <a href="%7B#key%7D">Key Concepts</a> and <a href="%7B#deploy%7D">Deployments</a>, respectively.<a href="#section-1.1.3-4" class="pilcrow">¶</a></p>
+<p id="section-1.1.3-4">The answers to these questions can be found in <span><a href="#key" class="xref">Key Concepts</a> (<a href="#key" class="xref">Section 2</a>)</span> and <span><a href="#deploy" class="xref">Deployments</a> (<a href="#deploy" class="xref">Section 3</a>)</span>, respectively.<a href="#section-1.1.3-4" class="pilcrow">¶</a></p>
 <p id="section-1.1.3-5">Another RFC that must be mentioned in the context of this draft is <span>[<a href="#RFC5218" class="xref">RFC5218</a>]</span>, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.<a href="#section-1.1.3-5" class="pilcrow">¶</a></p>
 <p id="section-1.1.3-6">To conclude: The time is ripe to take SCION to the IETF, in order to contribute to the important discussion regarding path-aware networking, and to make a first step towards standardization.<a href="#section-1.1.3-6" class="pilcrow">¶</a></p>
 </section>
@@ -1487,10 +1501,10 @@ appear in all capitals, as shown here.<a href="#section-1.3-1" class="pilcrow">�
           <h4 id="name-the-control-plane-pki-cp-pk">
 <a href="#section-2.1.1" class="section-number selfRef">2.1.1. </a><a href="#name-the-control-plane-pki-cp-pk" class="section-name selfRef">The Control-Plane PKI (CP-PKI)</a>
           </h4>
-<p id="section-2.1.1-1">Trust within each isolation domain is anchored in the TRC file. Each TRC contains a collection of signed root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC also includes ISD-policies that specify, for example, the TRC's usage, validity, and future updates. <a href="#chain" class="xref">Figure 3</a> illustrates this. TRCs are the main components of the CP-PKI.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-2.1.1-2">The initial TRC in an ISD is called the <strong>base TRC</strong>. This base TRC constitutes the ISD's trust anchor. It is signed during a signing ceremony and then distributed throughout the ISD. All entities within the ISD obtain the initial TRC with an offline mechanism such as a USB flash drive provided by the ISP, or with an online mechanism that relies on a trust-on-first-use (TOFU) approach. However, all updates to the base TRCs are performed in a straightforward process that does not require any manual or out-of-band action (such as a software update) (see <span><a href="#update" class="xref">TRC Update and Verification</a> (<a href="#update" class="xref">Section 2.1.2</a>)</span>).<a href="#section-2.1.1-2" class="pilcrow">¶</a></p>
-<p id="section-2.1.1-3"><a href="#chain" class="xref">Figure 3</a> shows the TRC trust chain and associated certificates. TRC 1 is the base TRC, and TRC 2 and 3 constitute updates to this base TRC. TRC 2 must be verified using the voting certificates in TRC 1. Control-plane (CP) root certificates are used to verify other CP certificates (which are in turn used to verify PCBs).<a href="#section-2.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-2.1.1-4">Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of <strong>AS certificates</strong> and PCBs.<a href="#section-2.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-2.1.1-1">Trust within each isolation domain is anchored in the TRC file. Each TRC contains a collection of signed root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC also includes ISD-policies that specify, for example, the TRC's usage, validity, and future updates. TRCs are the main components of the CP-PKI.<a href="#section-2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.1-2">The initial TRC in an ISD is called the <strong>base TRC</strong>. This base TRC constitutes the ISD's trust anchor. It is signed during a signing ceremony and then distributed throughout the ISD. All entities within the ISD obtain the initial TRC with an offline mechanism such as a USB flash drive provided by the ISP, or with an online mechanism that relies on a trust-on-first-use (TOFU) approach. However, all updates to the base TRCs are performed in a straightforward process that does not require any manual or out-of-band action (such as a software update), see <span><a href="#update" class="xref">TRC Update and Verification</a> (<a href="#update" class="xref">Section 2.1.2</a>)</span>.<a href="#section-2.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-2.1.1-3"><a href="#chain" class="xref">Figure 3</a> shows the TRC trust chain and associated certificates. TRC 1 is the base TRC, and TRC 2 and 3 constitute updates to this base TRC. TRC 2 must be verified using the voting certificates in TRC 1. Control-plane (CP) root certificates are used to verify other CP certificates (which are in turn used to verify path-segment construction beacons PCBs).<a href="#section-2.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-2.1.1-4">Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is enabling the verification of <strong>AS certificates</strong> and PCBs.<a href="#section-2.1.1-4" class="pilcrow">¶</a></p>
 <span id="name-trc-contents-and-trust-chai"></span><div id="chain">
 <figure id="figure-3">
             <div class="alignLeft art-text artwork" id="section-2.1.1-5.1">
@@ -1544,7 +1558,7 @@ appear in all capitals, as shown here.<a href="#section-1.3-1" class="pilcrow">�
           <h4 id="name-dissemination-of-trc-update">
 <a href="#section-2.1.3" class="section-number selfRef">2.1.3. </a><a href="#name-dissemination-of-trc-update" class="section-name selfRef">Dissemination of TRC Updates</a>
           </h4>
-<p id="section-2.1.3-1">Information about a TRC update is disseminated via the SCION's beaconing process. Each PCB contains the version number of the currently active TRC. If an AS receives a PCB with a TRC version number higher than the locally stored TRC, it requests the PCB-sending AS for the new TRC. The new TRC is verified on the basis of the current one, and is accepted if it contains at least the required quorum of correct signatures by trust roots defined in the current TRC.
+<p id="section-2.1.3-1">Information about a TRC update is disseminated via the SCION's beaconing process, through the PCBs. Each PCB contains the version number of the currently active TRC. If an AS receives a PCB with a TRC version number higher than the locally stored TRC, it requests the PCB-sending AS for the new TRC. The new TRC is verified on the basis of the current one, and is accepted if it contains at least the required quorum of correct signatures by trust roots defined in the current TRC.
 This simple dissemination mechanism has two advantages: It is very efficient (as fresh PCBs rapidly reach all ASes), and it avoids circular dependencies with regard to the verification of PCBs and the beaconing process itself (as no server needs to be contacted over unknown paths in order to fetch the updated TRC).<a href="#section-2.1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1553,7 +1567,7 @@ This simple dissemination mechanism has two advantages: It is very efficient (as
           <h4 id="name-grace-period">
 <a href="#section-2.1.4" class="section-number selfRef">2.1.4. </a><a href="#name-grace-period" class="section-name selfRef">Grace Period</a>
           </h4>
-<p id="section-2.1.4-1">At most two TRCs per ISD can be active at the same time. The TRC parameter <em>grace period</em> indicates for how long the currently active TRC can still be active after a new TRC is disseminated. This so-called <strong>grace period</strong> starts at the beginning of the validity period of the new TRC. An older TRC can only be considered active until either (1) the grace period has passed, or (2) yet a newer TRC is announced. AS certificates are validated by following the chain of trust up to an active TRC.<a href="#section-2.1.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.1.4-1">At most two TRCs per ISD can be active at the same time. The TRC parameter <em>grace period</em> indicates for how long the currently active TRC can still be active after a new TRC is disseminated. This so-called <strong>grace period</strong> starts at the beginning of the validity period of the new TRC. An older TRC can only be active until either (1) the grace period has passed, or (2) yet a newer TRC is announced. AS certificates are validated by following the chain of trust up to an active TRC.<a href="#section-2.1.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="revocation-and-recovery-from-a-catastrophic-event">
@@ -1562,8 +1576,8 @@ This simple dissemination mechanism has two advantages: It is very efficient (as
 <a href="#section-2.1.5" class="section-number selfRef">2.1.5. </a><a href="#name-revocation-and-recovery-fro" class="section-name selfRef">Revocation and Recovery from a Catastrophic Event</a>
           </h4>
 <p id="section-2.1.5-1">The TRC dissemination mechanism also enables rapid revocation of trust roots. When a trust root is compromised, the other trust roots can remove it from the TRC and disseminate a new TRC alongside a PCB with a new version number.<a href="#section-2.1.5-1" class="pilcrow">¶</a></p>
-<p id="section-2.1.5-2">In case of a catastrophic event--such as several private root keys being disclosed due to a critical vulnerability in a cryptographic library--SCION is equipped with a recovery procedure called <strong>trust reset</strong>. The procedure consists of creating a new TRC with fresh trustworthy keys (and potentially new algorithms), and redistributing this TRC out-of-band. A trust reset effectively establishes a new base TRC for the ISD.
-It is possible for ISDs to disable trust resets by setting the <em>no trust reset</em> Boolean parameter to "true" in their TRC, with the effect that the entire ISD would have to be abandoned in the event of such a catastrophic compromise (this abandonment would also have to be announced out of band).<a href="#section-2.1.5-2" class="pilcrow">¶</a></p>
+<p id="section-2.1.5-2">In case of a catastrophic event--such as several private root keys being disclosed due to a critical vulnerability in a cryptographic library--SCION is equipped with a recovery procedure called <strong>trust reset</strong>. This procedure consists of creating a new TRC with fresh trustworthy keys (and potentially new algorithms), and redistributing this TRC out-of-band. A trust reset effectively establishes a new base TRC for the ISD.
+It is possible for ISDs to disable trust resets by setting the <em>no trust reset</em> Boolean parameter to "true" in their TRC, with the effect that the entire ISD would have to be abandoned in the event of such a catastrophic compromise (this abandonment would also have to be announced out-of-band).<a href="#section-2.1.5-2" class="pilcrow">¶</a></p>
 <p id="section-2.1.5-3">The partition of the SCION network into ISDs guarantees that no single entity can take down the entire network. Even if several entities formed a coalition to carry out an attack, the effects of that attack would be limited to one or a few ISDs. Moreover, all actions are publicly visible, which deters misbehavior.<a href="#section-2.1.5-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1574,63 +1588,85 @@ It is possible for ISDs to disable trust resets by setting the <em>no trust rese
         <h3 id="name-control-plane">
 <a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-control-plane" class="section-name selfRef">Control Plane</a>
         </h3>
-<p id="section-2.2-1">The control plane is responsible for discovering path segments and making them available to end hosts, together with the certificates needed to verify those path segments. This process includes path exploration, registration, and lookup. In SCION, the exploration of paths segments is called <strong>beaconing</strong>, and the main actors are the <strong>path-segment construction beacons</strong>, or PCBs.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
-<div id="path-exploration-and-registration">
+<p id="section-2.2-1">The control plane is responsible for discovering path segments and making them available to end hosts, together with the certificates needed to verify those path segments. This process includes path exploration, registration, and lookup; it involves the path service, beacon service, and certificate service, both in core ASes and non-core ASes.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2"><strong>Note</strong>: This section describes the SCION control plane on a very high level. A much more detailed description of SCION's control plane will follow in a separate internet draft.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<div id="path-exploration">
 <section id="section-2.2.1">
-          <h4 id="name-path-exploration-and-regist">
-<a href="#section-2.2.1" class="section-number selfRef">2.2.1. </a><a href="#name-path-exploration-and-regist" class="section-name selfRef">Path Exploration and Registration</a>
+          <h4 id="name-path-exploration">
+<a href="#section-2.2.1" class="section-number selfRef">2.2.1. </a><a href="#name-path-exploration" class="section-name selfRef">Path Exploration</a>
           </h4>
-<p id="section-2.2.1-1">The path segment construction process is referred to as beaconing, where a Path-segment Construction Beacon (PCB) is initiated by core ASes to iteratively construct path segments. Up- and down-path segments are interchangeable, simply by reversing the order of ASes in a segment. The beaconing process in each AS is performed by its beacon server which is a part of its Control Service (CS), that performs control-plane-related tasks. There are three types of path segments:<a href="#section-2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.2.1-1">In SCION, the path segment construction process or routing is referred to as <strong>beaconing</strong>. Responsible for the beaconing process is the <em>beacon service</em> of each AS: The beacon service generates, receives, and propagates so-called <strong>path-segment construction beacons (PCBs)</strong> on a regular bases, to iteratively construct path segments. The PCBs accumulate cryptographically protected path- and forwarding information on AS-level.<a href="#section-2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.2.1-2">There are three types of path segments:<a href="#section-2.2.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-2.2.1-2.1">A path segment from a non-core AS to the core is an up-segment.<a href="#section-2.2.1-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-2.2.1-3.1">A path segment from a non-core AS to the core is an <em>up-segment</em>.<a href="#section-2.2.1-3.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-2.2.1-2.2">A path segment from the core to a non-core AS is a down-segment.<a href="#section-2.2.1-2.2" class="pilcrow">¶</a>
+            <li class="normal" id="section-2.2.1-3.2">A path segment from the core to a non-core AS is a <em>down-segment</em>.<a href="#section-2.2.1-3.2" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-2.2.1-2.3">A path segment between core ASes is a core-segment.<a href="#section-2.2.1-2.3" class="pilcrow">¶</a>
+            <li class="normal" id="section-2.2.1-3.3">A path segment between core ASes is a <em>core-segment</em>.<a href="#section-2.2.1-3.3" class="pilcrow">¶</a>
 </li>
           </ul>
-<p id="section-2.2.1-3">However, path segments are typically bidirectional and thus support packet forwarding in both directions. In other words, up-segments and down- segments are invertible: An up-segment can be converted to a down-segment and vice versa. The path service in non-core ASes learns up-segments by extracting them from PCBs they obtain from the local beacon service. Path services in core ASes obtain down-segments when they are registered by beacon services in non-core ASes and in addition store core-segments to reach other core ASes.<a href="#section-2.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-4">An AS typically receives several PCBs representing several path segments to various core ASes.<a href="#section-2.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-5">Core beaconing enables core ASes to learn paths to other core ASes. Through intra-ISD beaconing, non-core ASes learn path segments leading to core ASes (and vice versa).<a href="#section-2.2.1-5" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-6">Routing (or path segment construction) is conducted hierarchically on two levels: (1) among all core ASes of all ISDs, which constructs core-path segments, and (2) within each ISD, which constructs up- and down-path segments.<a href="#section-2.2.1-6" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-7">Core beaconing is the process of constructing path segments between core ASes. During core beaconing, a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to all other neighboring core ASes.<a href="#section-2.2.1-7" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-8">Intra-ISD beaconing is the second level of the beaconing hierarchy, which creates path segments from core ASes to non-core ASes. For this, core ASes create PCBs and send them to their non-core neighbors (typically customer ASes). Each non-core AS propagates the received PCBs to its respective customers. This procedure continues until the PCB reaches an AS without any customer (leaf AS) and as a result, all ASes receive path segments to reach the core ASes of their ISD. Non-core ASes can include their peering links in the PCBs, enabling valley-free forwarding if both up- and down-path segments contain the same peering link.<a href="#section-2.2.1-8" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-9">The beaconing process is asynchronous: Each AS can independently set policies dictating which PCBs are sent in which time intervals, and to which neighbors. In particular, PCBs do not need to be propagated immediately upon arrival. However, during bootstrapping and in case a PCB containing a previously unknown path is obtained, it should be forwarded immediately such that other ASes learn about it quickly.<a href="#section-2.2.1-9" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-10">Figure 2.5 shows how PCBs originate from the core beacon service and are propagated to non-core child ASes. The non-core beacon service receives these PCBs and re-sends them to child ASes, which results in AS-level path segments. At every AS, metadata as well as information about the ingress and egress interfaces (i.e., link identifiers) of the AS is added to the PCB.<a href="#section-2.2.1-10" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-11">Paths at AS-level granularity are insufficient for diversity; ASes often have several connection points, and thus a disjoint path is possible despite the AS sequence being identical. For this reason, SCION encodes AS ingress and egress interfaces in the form of interface IDs as part of the path, exposing a finer level of path diversity. These interface IDs identify connections to neighboring ASes and can be chosen and encoded by each AS independently and without any need for coordination as the IDs only need to be unique within each AS. Figure 2.5 demonstrates this feature: AS F receives two different PCBs via two different links from a core AS. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS.<a href="#section-2.2.1-11" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2.2.1-12">
-<pre>
-         Figure 2.5: Intra-ISD PCB propagation from the ISD core down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding.
-</pre><a href="#section-2.2.1-12" class="pilcrow">¶</a>
+<p id="section-2.2.1-4">Up-segments and down-segments are invertible: An up-segment can be converted to a down-segment and vice versa.<a href="#section-2.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-2.2.1-5">Path segment construction is conducted hierarchically on two levels:<a href="#section-2.2.1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2.2.1-6.1">
+              <em>Core beaconing</em> is the process of constructing path segments between core ASes. During core beaconing, the beacon service of a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to all other neighboring core ASes. Core beaconing in SCION is similar to BGP's route-advertising process, although in SCION the process is periodic and PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.<a href="#section-2.2.1-6.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-2.2.1-6.2">
+              <em>Intra-ISD beaconing</em> creates path segments from core ASes to non-core ASes. For this, the beacon service of a core AS creates PCBs and sends them to the core AS's non-core child ASes (typically customer ASes). The non-core beacon service of a non-core child AS receives these PCBs and forwards them to its child ASes. This procedure continues until the PCB reaches an AS without any customer (leaf AS). As a result, all ASes receive path segments to reach the core ASes of their ISD.<a href="#section-2.2.1-6.2" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-2.2.1-7">At every AS, metadata as well as information about the ingress and egress interfaces (i.e., link identifiers) of the AS is added to the PCB. These interface IDs identify connections to neighboring ASes and can be chosen and encoded by each AS independently and without any need for coordination as the IDs only need to be unique within each AS.<a href="#section-2.2.1-7" class="pilcrow">¶</a></p>
+<p id="section-2.2.1-8">SCION also supports shortcuts and peering links. In a <em>shortcut</em>, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. <em>Peering links</em> can be added to up- or down-path segments, resulting in an operation similar to today's Internet.<a href="#section-2.2.1-8" class="pilcrow">¶</a></p>
+<p id="section-2.2.1-9">To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the same peering link is included in the path segments of the two ASes adjacent to the peering link, then the peering link can be used to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, which also adheres to SCION's path transparency property: A source knows the exact set of ASes and ISDs traversed during the delivery of a packet.<a href="#section-2.2.1-9" class="pilcrow">¶</a></p>
+<div id="certificate-service">
+<section id="section-2.2.1.1">
+            <h5 id="name-certificate-service">
+<a href="#section-2.2.1.1" class="section-number selfRef">2.2.1.1. </a><a href="#name-certificate-service" class="section-name selfRef">Certificate Service</a>
+            </h5>
+<p id="section-2.2.1.1-1">Each PCB contains signatures of on-path ASes. Every time a beacon service receives a PCB, it validates the PCB's authenticity. During this process, and for the sake of security, the beacon service can query the certificate service, i.e., when the beacon service lacks a certificate.<a href="#section-2.2.1.1-1" class="pilcrow">¶</a></p>
+</section>
 </div>
-<p id="section-2.2.1-13">The beacon service in an AS selects the down-segments through which the AS desires to be reached, and registers these path segments at the core path service. When links fail, segments expire, or better segments become available, the beacon service keeps updating the down-segments registered for their AS.<a href="#section-2.2.1-13" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-14">To address the sub-optimality of hierarchical routing, SCION introduces peering links and shortcuts. In a shortcut, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. Peering links can be added to up- or down-path segments, resulting in an operation similar to today's Internet.<a href="#section-2.2.1-14" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-15">Peering links are of paramount importance for an efficient Internet and to implement the existing economic relationships between ISPs. Therefore, SCION has a built-in mechanism for peering links between two non-core ASes or between a core AS and a non-core AS. To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peer- ing links are announced along with a regular path in a PCB. Figure 2.5 shows how AS F includes its two peering links in the PCB. If the same peering link is announced in the path segments by both ASes adjacent to the peering link, then the peering link can be used to shortcut the end-to-end path (i.e., with- out going through the core). SCION also supports peering links that cross ISD boundaries, which also adheres to SCION's path transparency property: A source knows the exact set of ASes and ISDs traversed during the delivery of a packet.<a href="#section-2.2.1-15" class="pilcrow">¶</a></p>
-<p id="section-2.2.1-16">A global path server infrastructure is used to disseminate path segments. Each AS contains a path server as a part of the control service. The infrastructure bears similarities to DNS, where information is fetched on-demand only. A core AS's path server stores all the intra-ISD path segments that were registered by leaf ASes of its own ISD, and core-path segments to reach other core ASes.<a href="#section-2.2.1-16" class="pilcrow">¶</a></p>
+<div id="policies">
+<section id="section-2.2.1.2">
+            <h5 id="name-policies">
+<a href="#section-2.2.1.2" class="section-number selfRef">2.2.1.2. </a><a href="#name-policies" class="section-name selfRef">Policies</a>
+            </h5>
+<p id="section-2.2.1.2-1">Each AS can independently set policies dictating which PCBs are sent in which time intervals, and to which neighbors. In particular, PCBs do not need to be propagated immediately upon arrival. However, during bootstrapping and if the AS obtains a PCB containing a previously unknown path, the AS should forward the PCB immediately, such that other ASes learn about it quickly.<a href="#section-2.2.1.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="path-registration">
+<section id="section-2.2.2">
+          <h4 id="name-path-registration">
+<a href="#section-2.2.2" class="section-number selfRef">2.2.2. </a><a href="#name-path-registration" class="section-name selfRef">Path Registration</a>
+          </h4>
+<p id="section-2.2.2-1">Both the beacon service and the path service are involved in path registration. A non-core AS typically receives several PCBs representing several path segments to various core ASes. It is the task of the beacon service of the non-core AS to select those down-segments through which it wants the AS to be reached, according to the criteria described in <span><a href="#selection" class="xref">Path-Segment Selection</a> (<a href="#selection" class="xref">Section 2.2.2.1</a>)</span>. The beacon service then registers these path segments at the core AS path service. When links fail, segments expire, or better segments become available, the beacon service keeps updating the down-segments registered for their AS.<a href="#section-2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2.2-2">As a result, a core AS's path server contains all the intra-ISD path segments registered by the leaf ASes of its own ISD. In addition, a core AS path service also stores the preferred core-path segments to reach other core ASes. Also each non-core AS contains a path server, as a part of the control service. The path services in non-core ASes learn up-segments by extracting them from the PCBs they obtain from their local beacon service. The global path infrastructure thus bears similarities to DNS, where information is fetched on-demand only.<a href="#section-2.2.2-2" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-2.2.2-3.1">
+              <p id="section-2.2.2-3.1.1">Figure 2.5 - AS F receives two different PCBs via two different links from a core AS. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS. Intra-ISD PCB propagation from the ISD core down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding.<a href="#section-2.2.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<div id="selection">
+<section id="section-2.2.2.1">
+            <h5 id="name-path-segment-selection">
+<a href="#section-2.2.2.1" class="section-number selfRef">2.2.2.1. </a><a href="#name-path-segment-selection" class="section-name selfRef">Path-Segment Selection</a>
+            </h5>
+<p id="section-2.2.2.1-1">Among the received PCBs, ASes must choose (1) a set of PCBs to propagate further, and (2) a set of path segments to register. The selection of these PCBs and path segments is based on a path quality metric with the goal of identifying consistent, diverse, efficient, and policy-compliant paths. <em>Consistency</em> implies that at least one property along which the path is uniform, such as an AS capability (e.g., high bandwidth). <em>Diversity</em> means that the set of paths announced over time are as path-disjoint as possible, in order to provide high-quality multipath options. <em>Efficiency</em> refers to the length, bandwidth, latency, utilization, and availability of a path, where more efficient paths are naturally preferred. <em>Policy compliance</em> implies that the path adheres to the AS's routing policy. Based on past PCBs that were sent, the AS's beacon service scores the current set of candidate path segments and sends the best segments in the next beaconing interval.<a href="#section-2.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.2.2.1-2">Core beaconing operates similarly to intra-ISD beaconing, except that core PCBs only traverse core ASes. The same path selection metrics apply, where a core AS attempts to forward the set of most desirable paths to its neighbors. A difference, however, is that each AS forwards a number of PCBs <em>per source AS</em>.<a href="#section-2.2.2.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="path-lookup">
-<section id="section-2.2.2">
-          <h4 id="name-path-lookup">
-<a href="#section-2.2.2" class="section-number selfRef">2.2.2. </a><a href="#name-path-lookup" class="section-name selfRef">Path Lookup</a>
-          </h4>
-<p id="section-2.2.2-1">An end host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-segment to reach the ISD core, a core-segment to reach the destination ISD, and a down-segment to reach the destination AS. The source host queries the path service in its AS for such segments. The path service has up-segments stored in its database and furthermore checks if it has appropriate core- and down-segments in its cache; in this case it returns them immediately.<a href="#section-2.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-2.2.2-2">If not, the path service in the source AS queries core path services (using locally stored up-segments) in the source ISD for core-segments to the destination ISD. Then, it combines up-segments with the newly retrieved core-segments to query core path services in the remote ISD to fetch remote down-segments. To improve overall efficiency the local path service caches the returned path segments and uses parallelism when requesting path segments from core path services. Finally, the local path service returns all path segments to the source host.<a href="#section-2.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-2.2.2-3">This recursive lookup strongly simplifies the process for end hosts (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).<a href="#section-2.2.2-3" class="pilcrow">¶</a></p>
-<ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="section-2.2.2-4.1">
-              <p id="section-2.2.2-4.1.1">Example. Consider a source host in ISD 1 sending a path lookup request to its local path service. If the destination AS is within ISD 1, the local path service queries the core path services in ISD 1 for down-segments. Each core path service responds returning down-segments to the local path service. If needed, the local path service also requests intra-ISD core-segments to connect up- and down-segments that do not start and end in the same core AS. The local path service then returns the set of up-, down-, and (potentially) core-segments to the source. If the destination AS is in ISD 2, then the local path service first requests core-segments to ISD 2 from the core path services in ISD 1. Combining the returned core-segments with the existing up-segments, the local path service then requests down-segments from core path services in ISD 2. Finally, the set of up-, core- and down-segments is returned to the requesting source. All path segments learned by the local path service are cached.<a href="#section-2.2.2-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-</section>
-</div>
-<div id="pcb-and-path-segment-selection">
 <section id="section-2.2.3">
-          <h4 id="name-pcb-and-path-segment-select">
-<a href="#section-2.2.3" class="section-number selfRef">2.2.3. </a><a href="#name-pcb-and-path-segment-select" class="section-name selfRef">PCB and Path-Segment Selection</a>
+          <h4 id="name-path-lookup">
+<a href="#section-2.2.3" class="section-number selfRef">2.2.3. </a><a href="#name-path-lookup" class="section-name selfRef">Path Lookup</a>
           </h4>
-<p id="section-2.2.3-1">Among the received PCBs, ASes must choose a set of PCBs to propagate further, and a set of path segments to register. These PCBs and path segments are selected based on a path quality metric with the goal of identifying consistent, diverse, efficient, and policy-compliant paths. Consistency refers to the requirement that there exists at least one property along which the path is uniform, such as an AS capability (e.g., support for COLIBRI or link property (e.g., high bandwidth). Diversity refers to the set of paths that are announced over time being as path-disjoint as possible to provide high- quality multipath options. Efficiency refers to the length, bandwidth, latency, utilization, and availability of a path, where more efficient paths are naturally preferred. Policy compliance refers to the requirement that the path adheres to the AS's routing policy. Based on past PCBs that were sent, the beacon service scores the current set of candidate path segments and sends the best segments in the next beaconing interval.<a href="#section-2.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-2.2.3-2">Core beaconing operates similarly to intra-ISD beaconing, except that core PCBs only traverse core ASes. The same path selection metrics apply, where an AS attempts to forward the set of most desirable paths to its neighbors. A difference, however, is that each AS forwards a number of PCBs per source AS. This process, which is similar to how BGP operates, is susceptible to scalability issues as the overhead grows linearly with the number of core ASes. However, as shown by the scalability analysis in S.6.3, on a per-path basis SCION's diversity-based beaconing algorithm (S.4.4.6) is around two orders of magnitude more efficient than BGP due to the following reasons: SCION beaconing does not need to iteratively converge, SCION makes AS-based announcements instead of BGP's prefix-based announcements (there are around 10 times more prefixes than ASes in today's Internet), and diversity-based beaconing is optimized to reduce the number of transmitted beacons.<a href="#section-2.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.2.3-1">An end host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-segment to reach the ISD core, a core-segment to reach the destination ISD, and a down-segment to reach the destination AS. The source host queries the path service in its AS for such segments. The path service has up-segments stored in its database and furthermore checks if it has appropriate core- and down-segments in its cache; in this case it returns them immediately.<a href="#section-2.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.2.3-2">If not, the path service in the source AS queries core path services (using locally stored up-segments) in the source ISD for core-segments to the destination ISD. Then, it combines up-segments with the newly retrieved core-segments, and queries core path services in the remote ISD to fetch remote down-segments. To improve overall efficiency, the local path service caches the returned path segments and uses parallelism when requesting path segments from core path services. Finally, the local path service returns all path segments to the source host.<a href="#section-2.2.3-2" class="pilcrow">¶</a></p>
+<p id="section-2.2.3-3">This recursive lookup strongly simplifies the process for end hosts (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).<a href="#section-2.2.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="link-failures">
@@ -1638,11 +1674,11 @@ It is possible for ISDs to disable trust resets by setting the <em>no trust rese
           <h4 id="name-link-failures">
 <a href="#section-2.2.4" class="section-number selfRef">2.2.4. </a><a href="#name-link-failures" class="section-name selfRef">Link Failures</a>
           </h4>
-<p id="section-2.2.4-1">Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by end hosts. Since SCION forward- ing paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:<a href="#section-2.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-2.2.4-1">Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by end hosts. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:<a href="#section-2.2.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.2.4-2.1">The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, end hosts get immediate feedback from the network if a path stops working and can quickly switch to an alternative path.<a href="#section-2.2.4-2.1" class="pilcrow">¶</a>
 </li>
-            <li class="normal" id="section-2.2.4-2.2">SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices [24]), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application [235], unlike the frequent (albeit mostly brief) outages in the current Internet [285, 307].<a href="#section-2.2.4-2.2" class="pilcrow">¶</a>
+            <li class="normal" id="section-2.2.4-2.2">SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also <span>[<a href="#ANDERSEN2001" class="xref">ANDERSEN2001</a>]</span>, <span>[<a href="#KATZ2012" class="xref">KATZ2012</a>]</span>, and <span>[<a href="#KUSHMAN2007" class="xref">KUSHMAN2007</a>]</span>.<a href="#section-2.2.4-2.2" class="pilcrow">¶</a>
 </li>
           </ul>
 </section>
@@ -1657,6 +1693,75 @@ It is possible for ISDs to disable trust resets by setting the <em>no trust rese
 <p id="section-2.3-1">Name resolution in SCION returns the &lt;ISD, AS, local address&gt; 3-tuple. Core- and down-path segments are fetched based on the &lt;ISD, AS&gt; tuple. Hosts can then combine one of their up-path segments with the received core- and down-path segments.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
 <p id="section-2.3-2">Shortcut paths that avoid a core AS are possible, if the up- and down-path contain the same AS, or if a peering link is available between an AS in the up-path and an AS in the down-path segment. Cryptographic protections ensure authentic path segments and prevent unauthorized path combinations.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
 <p id="section-2.3-3">The path segments contain compact hop-fields, that encode information about which interfaces may be used to enter and leave an AS. The hop-fields are cryptographically protected, preventing path alteration. This so-called Packet-Carried Forwarding State (PCFS) replaces signaling to use a path, ensuring that routers do not need any local state on either paths or flows.<a href="#section-2.3-3" class="pilcrow">¶</a></p>
+<p id="section-2.3-4"><strong>Note</strong>: This section describes the SCION data plane on a very high level. A much more detailed description of SCION's data plane will follow in a separate internet draft.<a href="#section-2.3-4" class="pilcrow">¶</a></p>
+<p id="section-2.3-5">While the control plane is responsible for providing end-to-end paths, the data plane ensures packet forwarding on the selected path. SCION border routers forward packets to the next AS based on the AS-level path in the packet header (which is augmented with ingress and egress interface identifiers for each AS), without inspecting the destination address and also without consulting an interdomain forwarding table. Only the border router at the destination AS needs to inspect the destination address to forward it to the appropriate local end host.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">An interesting aspect of this forwarding is enabled by the split of locator (the path towards the destination AS) and identifier (the destination address) [185]: The identifier can have any format that the destination AS can interpret, since only the destination needs to consider that local identifier. In other words, an AS can select an arbitrary addressing format for its hosts, e.g., a 4-byte IPv4, 6-byte media access control (MAC) address, 16-byte IPv6, or any other up to 16-byte addressing scheme. A valuable consequence is that hosts with different address types can directly communicate, e.g., an IPv4 host can communicate with an IPv6 host over SCION.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-7">In the next two sections, we describe how an end host combines path segments into an end-to-end forwarding path, and how border routers forward packets efficiently.<a href="#section-2.3-7" class="pilcrow">¶</a></p>
+<div id="path-construction-via-segment-combination">
+<section id="section-2.3.1">
+          <h4 id="name-path-construction-via-segme">
+<a href="#section-2.3.1" class="section-number selfRef">2.3.1. </a><a href="#name-path-construction-via-segme" class="section-name selfRef">Path Construction via Segment Combination</a>
+          </h4>
+<p id="section-2.3.1-1">Through the path lookup, the end host obtains path segments that must be combined into an end-to-end path. A valid SCION <strong>forwarding path</strong> can be created by combining up to three path segments, in the following ways (all combinations are illustrated with sample intra-ISD paths depicted in Figure 2.6):<a href="#section-2.3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-2.3.1-2.1">
+              <p id="section-2.3.1-2.1.1">Figure 2.6: ISD with path segments for ASes A, B, C, D, and E.<a href="#section-2.3.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<ul class="normal">
+<li class="normal" id="section-2.3.1-3.1">
+              <strong>Immediate combination of path segments</strong> (e.g., B --&gt; D): The last AS on the up-segment (core AS Z3) is also the first AS on the downsegment. In this case, the simple combination of an up-segment and a down-segment creates a valid forwarding path.<a href="#section-2.3.1-3.1" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-2.3.1-3.2">
+              <strong>AS shortcut</strong> (e.g., B --&gt; C): The up-segment and down-segment intersect at a non-core AS (e.g., K). In this case, a shorter forwarding path can be created by removing the extraneous part of the path.<a href="#section-2.3.1-3.2" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-2.3.1-3.3">
+              <strong>Peering shortcut</strong> (e.g., A --&gt; B): A peering link (e.g., L N K) exists between the two segments, so a shortcut via the peering link is possible. As in the AS shortcut case, the extraneous path segment is cut off. The peering link could be traversing to a different ISD.<a href="#section-2.3.1-3.3" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-2.3.1-3.4">
+              <strong>Combination with a core-segment</strong> (e.g., A --&gt; D): The last AS on the up-segment is different from the first AS on the down-segment. This case requires an additional core-segment (e.g., Z1 NZ2) to connect the up- and down-segment. If the communication remains within the same ISD (A --&gt; D), a local ISD core-segment is needed; otherwise (e.g., A --&gt; I in Figure 2.1), an inter-ISD core-segment is required.<a href="#section-2.3.1-3.4" class="pilcrow">¶</a>
+</li>
+            <li class="normal" id="section-2.3.1-3.5">
+              <strong>On-path</strong> (e.g., A --&gt; E): The destination AS is part of the up-segment or the source AS is part of the down-segment; in this case, a single up- or down-segment, respectively, is sufficient to create a forwarding path.<a href="#section-2.3.1-3.5" class="pilcrow">¶</a>
+</li>
+          </ul>
+<p id="section-2.3.1-4">Once a forwarding path is chosen, it is encoded in the SCION packet header, which makes inter-domain routing tables unnecessary for border routers: Both the egress and the ingress interface of each AS on the path are encoded as packet-carried forwarding state (PCFS) in the packet header. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.<a href="#section-2.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-2.3.1-5">The SCION packet header contains a sequence of hop fields (HFs), one for each AS that is traversed on the end-to-end path. The HF contains interface numbers of the ingress and egress links, which are essentially descriptors of the links across which the packet is entering and exiting the AS. Figure 2.5 depicts how the HF information is assembled in the PCB as part of the beaconing process. In addition to hop fields, each path segment contains an <strong>info field (INF)</strong> with basic information about the segment. A host can create an end-to-end forwarding path by extracting info fields and hop fields from path segments, as
+depicted in Figure 2.7. The additional meta header (META) contains pointers to the currently active INF and HF.<a href="#section-2.3.1-5" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-2.3.1-6.1">
+              <p id="section-2.3.1-6.1.1">Figure 2.7: Example showing the construction of a forwarding path through the combination of three path segments.<a href="#section-2.3.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+<div id="path-authorization">
+<section id="section-2.3.2">
+          <h4 id="name-path-authorization">
+<a href="#section-2.3.2" class="section-number selfRef">2.3.2. </a><a href="#name-path-authorization" class="section-name selfRef">Path Authorization</a>
+          </h4>
+<p id="section-2.3.2-1">A crucial requirement for the data plane is that end hosts can only use paths that were constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). We refer to this property as <strong>path authorization</strong> [297, 327].<a href="#section-2.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.3.2-2">SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.<a href="#section-2.3.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="forwarding">
+<section id="section-2.3.3">
+          <h4 id="name-forwarding">
+<a href="#section-2.3.3" class="section-number selfRef">2.3.3. </a><a href="#name-forwarding" class="section-name selfRef">Forwarding</a>
+          </h4>
+<p id="section-2.3.3-1">Routers can efficiently forward packets in the SCION architecture. In particular, the absence of inter-domain routing tables and the absence of complex longest-IP-prefix matching performed by current routers enables the construction of more efficient routers.<a href="#section-2.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.3.3-2">During packet forwarding, a SCION border router at the ingress point of the AS first verifies that the packet entered through the correct ingress interface corresponding to the information in the HF, that the HF is not expired yet, and that the MAC in the HF is correct. If the packet has not yet reached the destination AS, the egress interface defines the egress SCION border router, in which case native intra-domain forwarding (e.g., IP or MPLS) is used to send the packet from the ingress SCION border router to the egress SCION border router. In the destination AS, the border router inspects the destination address and sends the packet to the corresponding host instead.<a href="#section-2.3.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="intra-as-communication">
+<section id="section-2.3.4">
+          <h4 id="name-intra-as-communication">
+<a href="#section-2.3.4" class="section-number selfRef">2.3.4. </a><a href="#name-intra-as-communication" class="section-name selfRef">Intra-AS Communication</a>
+          </h4>
+<p id="section-2.3.4-1">Communication within an AS is handled by existing intra-domain communication technologies and protocols such as IP with Software-Defined Networking (SDN), or Multiprotocol Label Switching (MPLS). Figure 2.3b shows one possible
+intra-domain path through the magnified AS.<a href="#section-2.3.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 </section>
@@ -1712,6 +1817,10 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
+<dt id="ANDERSEN2001">[ANDERSEN2001]</dt>
+        <dd>
+<span class="refAuthor">Andersen, D.</span>, <span class="refAuthor">Balakrishnan, H.</span>, <span class="refAuthor">Kaashoek, F.</span>, and <span class="refAuthor">R. Morris</span>, <span class="refTitle">"Resilient overlay networks"</span>, <span class="seriesInfo">Proceedings of the eighteenth ACM symposium on Operating systems principles</span>, <span class="seriesInfo">DOI 10.1145/502034.502048</span>, <time datetime="2001-10" class="refDate">October 2001</time>, <span>&lt;<a href="https://doi.org/10.1145/502034.502048">https://doi.org/10.1145/502034.502048</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="COOPER2013">[COOPER2013]</dt>
         <dd>
 <span class="refAuthor">Cooper, D.</span>, <span class="refAuthor">Heilman, E.</span>, <span class="refAuthor">Brogle, K.</span>, <span class="refAuthor">Reyzin, L.</span>, and <span class="refAuthor">S. Goldberg</span>, <span class="refTitle">"On the risk of misbehaving RPKI authorities"</span>, <span class="seriesInfo">Proceedings of the Twelfth ACM Workshop on Hot Topics in Networks</span>, <span class="seriesInfo">DOI 10.1145/2535771.2535787</span>, <time datetime="2013-11" class="refDate">November 2013</time>, <span>&lt;<a href="https://doi.org/10.1145/2535771.2535787">https://doi.org/10.1145/2535771.2535787</a>&gt;</span>. </dd>
@@ -1720,9 +1829,17 @@ TODO: It does have IANA actions, specially regarding ISD and AS numbering.<a hre
         <dd>
 <span class="refAuthor">Griffin, T.</span> and <span class="refAuthor">G. Wilfong</span>, <span class="refTitle">"An analysis of BGP convergence properties"</span>, <span class="seriesInfo">ACM SIGCOMM Computer Communication Review Vol. 29, pp. 277-288</span>, <span class="seriesInfo">DOI 10.1145/316194.316231</span>, <time datetime="1999-10" class="refDate">October 1999</time>, <span>&lt;<a href="https://doi.org/10.1145/316194.316231">https://doi.org/10.1145/316194.316231</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="KATZ2012">[KATZ2012]</dt>
+        <dd>
+<span class="refAuthor">Katz-Bassett, E.</span>, <span class="refAuthor">Scott, C.</span>, <span class="refAuthor">Choffnes, D.</span>, <span class="refAuthor">Cunha, Í.</span>, <span class="refAuthor">Valancius, V.</span>, <span class="refAuthor">Feamster, N.</span>, <span class="refAuthor">Madhyastha, H.</span>, <span class="refAuthor">Anderson, T.</span>, and <span class="refAuthor">A. Krishnamurthy</span>, <span class="refTitle">"LIFEGUARD: practical repair of persistent route failures"</span>, <span class="seriesInfo">ACM SIGCOMM Computer Communication Review Vol. 42, pp. 395-406</span>, <span class="seriesInfo">DOI 10.1145/2377677.2377756</span>, <time datetime="2012-09" class="refDate">September 2012</time>, <span>&lt;<a href="https://doi.org/10.1145/2377677.2377756">https://doi.org/10.1145/2377677.2377756</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="KLENZE2021">[KLENZE2021]</dt>
         <dd>
 <span class="refAuthor">Klenze, T.</span>, <span class="refAuthor">Sprenger, C.</span>, and <span class="refAuthor">D. Basin</span>, <span class="refTitle">"Formal Verification of Secure Forwarding Protocols"</span>, <span class="seriesInfo">2021 IEEE 34th Computer Security Foundations Symposium (CSF)</span>, <span class="seriesInfo">DOI 10.1109/csf51468.2021.00018</span>, <time datetime="2021-06" class="refDate">June 2021</time>, <span>&lt;<a href="https://doi.org/10.1109/csf51468.2021.00018">https://doi.org/10.1109/csf51468.2021.00018</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="KUSHMAN2007">[KUSHMAN2007]</dt>
+        <dd>
+<span class="refAuthor">Kushman, N.</span>, <span class="refAuthor">Kandula, S.</span>, and <span class="refAuthor">D. Katabi</span>, <span class="refTitle">"Can you hear me now?!: it must be BGP"</span>, <span class="seriesInfo">ACM SIGCOMM Computer Communication Review Vol. 37, pp. 75-84</span>, <span class="seriesInfo">DOI 10.1145/1232919.1232927</span>, <time datetime="2007-03" class="refDate">March 2007</time>, <span>&lt;<a href="https://doi.org/10.1145/1232919.1232927">https://doi.org/10.1145/1232919.1232927</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="LABOVITZ2000">[LABOVITZ2000]</dt>
         <dd>
