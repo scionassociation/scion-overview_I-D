@@ -116,7 +116,7 @@ SCION clearly provides answers to the questions raised in this RFC. This especia
 - How can a path-aware network in a path-aware internetwork be effectively operated, given control inputs from network administrators, application designers, and end users?
 - How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?
 
-The answers to these questions can be found in the sections [Key Concepts](#key) and [Deployments](#deploy), respectively.
+The answers to these questions can be found in the sections [Key Concepts]({#key}) and [Deployments]({#deploy}), respectively.
 
 Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
 
@@ -295,11 +295,7 @@ TODO: do we want to place the info about the UDP underlay here? Or somewhere els
 
 ### SCION to IP Gateway (SIG) {#sig}
 A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
-In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SCION offers mechanisms that allow SIGs to coordinate and automatically exchange IP prefix information.
-- SGRP is a system enabling SIGs to mutually discover and announce IP prefixes. Such an approach is well suited to enterprise networks, where SIGs deployed at branches can mutually exchange prefixes for each location.
-- SIAM is a global and scalable SIG coordination mechanism that translates between legacy public IP and SCION. SIAM transfers authorizations in RPKI [328] to SCION, making it a viable global transition mechanism for public IP networks and ISPs. {{SUPRAJA2021}}
-- SBAS is a transition mechanism that aims at offering SCION’s benefits to the wider legacy IP Internet, by routing regular IP traffic over SCION.
-TODO: A SIG can be deployed close to end-user (i.e. on CPEs at two enterprise customers), or can be deoployed in the ISP core (CG-SIG)
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SIGs can be augmented with  mechanisms allowing them to coordinate and automatically exchange IP prefix information. A SIG can be deployed close to the end-user (i.e., at branches of an enterprise), or it can be deployed within an ISP's network.
 
 ## Deployment model
 - How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?, IXPs?)
