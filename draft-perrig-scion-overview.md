@@ -54,6 +54,7 @@ informative:
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
   MORILLO2021: DOI.10.14722/ndss.2021.24438
   KLENZE2021: DOI.10.1109/CSF51468.2021.00018
+  SUPRAJA2021: DOI.10.1145/3472951.3473503
 
 
 
@@ -115,7 +116,7 @@ SCION clearly provides answers to the questions raised in this RFC. This especia
 - How can a path-aware network in a path-aware internetwork be effectively operated, given control inputs from network administrators, application designers, and end users?
 - How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?
 
-The answers to these questions can be found in the sections [Key Concepts]({#key}) and [Deployments]({#deploy}), respectively.
+The answers to these questions can be found in the sections [Key Concepts](#key) and [Deployments](#deploy), respectively.
 
 Another RFC that must be mentioned in the context of this draft is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
 
@@ -281,21 +282,27 @@ Shortcut paths that avoid a core AS are possible, if the up- and down-path conta
 
 The path segments contain compact hop-fields, that encode information about which interfaces may be used to enter and leave an AS. The hop-fields are cryptographically protected, preventing path alteration. This so-called Packet-Carried Forwarding State (PCFS) replaces signaling to use a path, ensuring that routers do not need any local state on either paths or flows.
 
-## End hosts and incremental deployability
-- Overview of end-host options (native vs SIG)
-End-users can leverage SCION in two different ways: (1) using native SCION applications on a SCION end host, or (2) using  transparent IP-to-SCION conversion. The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, approach (2) is preferred, leveraging a SCION-IP-Gateway (SIG) that encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
+## End Hosts and Incremental Deployability
 
-- Native end host structure & components (12, bootstrapping: 13.2)
-For native SCION communication to be possible, the native end-host stack consists of a dispatcher, which handles all incoming and outgoing SCION packets. The current SCION implementation, uses an UDP/IP underlay to communicate between end-hosts and SCION routers. The SCION daemon handles control-plane messages (e.g., to fetch paths to remote ASes) and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). TODO: do we talk about extensions and extensibility?  
-SCION end-hosts can use an automated end-host bootstrapping mechanisms to connect to the SCION network. Such mechanism retrieves hints from the local network using zero-configuration (zeroconf) [112TODO ref? ] services, downloads the required SCION configuration files from a local discovery service, and starts the SCION Daemon. A zeroconf service is a service provided by the network that requires no network-specific configurations on the clients making use of it.
+End-users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host]](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, the second approach is preferred.
+
+
+### Native End Hosts {#native-endhost}
+A SCION native end-host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay to communicate between end-hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end-hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way clients require no pre-existing network-specific configurations.
+TODO: do we want to place the info about the UDP underlay here? Or somewhere else? I'm not so sure about it...
 
 - Legacy end host compatibility mechanisms (13.4: SCRP, SBAS, SIAM, CG-SIG ...)
-In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SCION offers introduce mechanisms that allow SIGs to coordinate and automatically exchange IP prefix information. We first present SGRP, a system enabling SIGs to mutually discover and announce IP prefixes. Such an approach is well suited to enterprise networks, where SIGs deployed at branches can mutually exchange prefixes for each location.
-We then introduce SIAM, a global and scalable SIG coordination mechanism that translates between legacy public IP and SCION. SIAM transfers authorizations in RPKI [328] to SCION, making it a viable global transition mechanism for public IP networks and ISPs. Finally, we introduce SBAS, a transition mechanism that aims at offering SCION’s benefits to the wider legacy IP Internet, by routing regular IP traffic over SCION.
-TODO: maybe we mention each one of the approaches and then reference the respective paper?
+
+### SCION to IP Gateway (SIG) {#sig}
+A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SCION offers mechanisms that allow SIGs to coordinate and automatically exchange IP prefix information.
+- SGRP is a system enabling SIGs to mutually discover and announce IP prefixes. Such an approach is well suited to enterprise networks, where SIGs deployed at branches can mutually exchange prefixes for each location.
+- SIAM is a global and scalable SIG coordination mechanism that translates between legacy public IP and SCION. SIAM transfers authorizations in RPKI [328] to SCION, making it a viable global transition mechanism for public IP networks and ISPs. {{SUPRAJA2021}}
+- SBAS is a transition mechanism that aims at offering SCION’s benefits to the wider legacy IP Internet, by routing regular IP traffic over SCION.
+TODO: A SIG can be deployed close to end-user (i.e. on CPEs at two enterprise customers), or can be deoployed in the ISP core (CG-SIG)
 
 ## Deployment model
-- How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?)
+- How can SCION be (incrementally) deployed at an ISP/customer: chp 13.1, (table 13.1? Maybe too detailed?, IXPs?)
 
 A SCION AS needs to set up border routers and run instances of the control service. The border router and control service instances can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links, while with P4 hardware it is possible to forward SCION traffic even at terabit speeds ([155] TODO: ref). The ISP internal IP or MPLS-based network can be reused to enable the SCION infrastructure to communicate within the AS. If dedicated links are not available, queuing disciplines on internal switches can provide separation of IP and SCION traffic.
 
@@ -335,4 +342,6 @@ The SCION architecture introduces the following security considerations:
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+TODO acknowledge:
+- SCION Book v2 authors
+- Conext 21 authors https://netsec.ethz.ch/publications/papers/2021_conext_deployment.pdf
