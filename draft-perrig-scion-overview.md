@@ -41,6 +41,7 @@ informative:
   RFC5218:
   RFC6480:
   RFC6830:
+  RFC6996:
   RFC8205:
   RFC8446:
   RFC9049:
@@ -58,6 +59,9 @@ informative:
   ANDERSEN2001: DOI.10.1145/502034.502048
   KATZ2012: DOI.10.1145/2377677.2377756
   KUSHMAN2007: DOI.10.1145/1232919.1232927
+  FISCHER2009: DOI.10.1145/1073814.1073868
+  SHAIKH2001: DOI.10.1109/90.917073
+  SCHERRER2020: DOI.10.1145/3453953.3453956
 
 
 --- abstract
@@ -97,9 +101,6 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
 
 **Note**: A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
-### Formal Verification
-
-An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich {{KLENZE2021}}. This guarantees that packet forwarding and SCION's authentication mechanisms are correct and consistent.
 
 ### Avoiding Pitfalls
 
@@ -197,6 +198,8 @@ The process of creating an end-to-end forwarding path consists of the following 
 2. The AS then selects a few PCBs according to defined policies, transforms the selected PCBs into path segments, and registers these segments with a path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.
 3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs (a) a *path lookup* step, to obtain path segments, and (b) a *path combination* step, to combine the forwarding path from the segments.
 
+{{beaconing}} below shows the SCION routing process in a nutshell.
+
 ~~~~
         Path Exploration (Beaconing)
                   |
@@ -216,6 +219,8 @@ The process of creating an end-to-end forwarding path consists of the following 
 
 SCION decouples end-host addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
 
+For more details, see [IANA Considerations](#iana).
+
 
 ### Infrastructure Components
 
@@ -225,7 +230,11 @@ The **beacon service**, the **path service**, and the **certificate service** ar
 - The _path service_ stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they register them to the path service in the ISD core.
 - The _certificate service_ keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).
 
-_Border routers_ are deployed at the edge of SCION ASes. The main task of border routers is to forward packets to a neighbor border router or the destination host within the AS. While SCION takes care of inter-domain routing, it relies on existing routing protocols (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding. _Internal routers_, therefore, do not need to be changed to support SCION.
+_Border routers_ are deployed at the edge of SCION ASes. The main task of border routers is to forward packets to a neighbor border router or to the destination host within the AS. While SCION takes care of inter-domain routing, it relies on existing routing protocols (e.g., IS-IS, OSPF, SDN) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding. _Internal routers_, therefore, do not need to be changed to support SCION.
+
+### Formal Verification
+
+An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich {{KLENZE2021}}. This guarantees that packet forwarding and SCION's authentication mechanisms are correct and consistent.
 
 
 ## Conventions and Definitions
@@ -327,7 +336,7 @@ There are three types of path segments:
 - A path segment from a core AS to a non-core AS is a _down-segment_.
 - A path segment between core ASes is a _core-segment_.
 
-Up-segments and down-segments are invertible: An up-segment can be converted to a down-segment and vice versa.
+Up-segments and down-segments are invertible: An up-segment can be converted to a down-segment and vice versa, depending on the direction of the end-to-end path.
 
 Path segment construction is conducted hierarchically on two levels:
 
@@ -338,9 +347,12 @@ On its way down, a PCB accumulates cryptographically protected path- and forward
 
 SCION also supports shortcuts and peering links. In a _shortcut_, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. _Peering links_ can be added to up- or down-path segments, resulting in an operation similar to today’s Internet.
 
-To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the path segments of both ASes at the end of the peering link contain this peering link, then it is possible to use the peering link to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, according to SCION’s path transparency property: A source knows the exact set of ASes and ISDs traversed during the delivery of a packet.
+To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the path segments of both ASes at the end of a peering link contain this peering link, then it is possible to use the peering link to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, according to SCION’s path transparency property: A source knows the exact set of ASes and ISDs traversed during the delivery of a packet.
 
-#### Certificate Service
+> Figure 2.5 - AS F receives two different PCBs via two different links from a core AS. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS. Intra-ISD PCB propagation from the ISD core down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding.
+
+
+#### Security
 
 Each PCB contains signatures of all on-path ASes. Every time a beacon service receives a PCB, it validates the PCB's authenticity. During this process, the beacon service can query the certificate service, for example, when the beacon service lacks a certificate.
 
@@ -355,13 +367,11 @@ Both the beacon service and the path service are involved in the path registrati
 
 As a result, a core AS’s path service contains all the intra-ISD path segments registered by the leaf ASes of its ISD. In addition, a core AS path service also stores the preferred core-path segments to other core ASes.
 
-Also each non-core AS includes a path service, as part of the control service. A path service in a non-core AS contains up-segments to the core ASes of the ISD. The path services learn these up-segments by extracting them from the PCBs they obtain from their local beacon service. The global path infrastructure thus bears similarities to DNS, where information is fetched on-demand only.
-
-> Figure 2.5 - AS F receives two different PCBs via two different links from a core AS. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS. Intra-ISD PCB propagation from the ISD core down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding.
+Also each non-core AS includes a path service, as part of the AS's control service. A path service in a non-core AS contains up-segments to the core ASes of the ISD. The path services learn these up-segments by extracting them from the PCBs they obtain from their local beacon service. The global path infrastructure thus bears similarities to DNS, where information is fetched on-demand only.
 
 #### Path-Segment Selection {#selection}
 
-Among the received PCBs, the beacon service of an AS must choose (1) a set of PCBs to propagate further, and (2) a set of path segments to register. The selection of these PCBs and path segments is based on a path quality metric. This metric has the goal of identifying consistent, diverse, efficient, and policy-compliant paths:
+Among the received PCBs, the beacon service of an AS must choose (1) a set of PCBs to propagate further, and (2) a set of path segments to register. The selection of these PCBs and path segments is based on a path quality metric. This metric aims at identifying consistent, diverse, efficient, and policy-compliant paths:
 
 - _Consistency_ implies that at least one property along the path is uniform, such as an AS capability (e.g., high bandwidth).
 - _Diversity_ means that the set of paths announced over time are as path-disjoint as possible, in order to provide high-quality multipath options.
@@ -385,7 +395,7 @@ This recursive lookup strongly simplifies the process for end hosts (which only 
 Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by end hosts. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
 
 - The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, end hosts get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
-- SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, and {{KUSHMAN2007}}.
+- SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, and {{KUSHMAN2007}}, as well as [Demonstrating the reliability and resilience of Secure Swiss Finance Network](https://perma.cc/4H3Q-WZNG).
 
 
 ## SCION Data Plane
@@ -417,13 +427,13 @@ The SCION packet header consists of a sequence of **hop fields (HFs)**, one HF f
 
 ### Path Authorization
 
-A crucial requirement for the data plane is that end hosts can only use paths that were constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}}).
+It is crucial for the data plane that end hosts only use paths constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and [EPIC: Every packet is checked in the data plane of a path-aware Internet](https://netsec.ethz.ch/publications/papers/Legner_Usenix2020_EPIC)).
 
 SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
 
 ### Forwarding
 
-Routers can efficiently forward packets in the SCION architecture. In particular, the absence of inter-domain routing tables and the absence of complex longest-IP-prefix matching performed by current routers enables the construction of more efficient routers.
+Routers can efficiently forward packets in the SCION architecture. In particular, the absence of inter-domain routing tables and of complex longest-IP-prefix matching performed by current routers enables the construction of more efficient routers.
 
 During packet forwarding, a SCION border router at the ingress point of the AS verifies that:
 
@@ -446,20 +456,50 @@ From the book v2, use:
 chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
 
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
-TODO
-(It does have IANA actions, specially regarding ISD and AS numbering.)
+Within the SCION ecosystem, each ISD-AS is identified with a 64-bit number; the most significant 16 bits identify the ISD (represented in decimal), the least significant 48 bits identify the AS in a format similar to that of IPv6 addresses, and a hyphen is used to separate the two—e.g., 4-ff00:1:f. In the remainder of this
+section, we elaborate on the latter (i.e., the concrete numbering).
 
+## ISD Numbers
+ISDs are represented with decimal numbers, ranging from 0 to 65535. Table 2.1 shows the current allocation of ISD numbers. The ISD number 0 is reserved to mean “any ISD” and used notably during path lookup.
+
+| ISD Number                       | Description                                      |
+| -------------------------------- | ------------------------------------------------ |
+| 0                                | Wildcard ISD (stands for “any ISD”) |
+| 1–15                             | Reserved for documentation and sample code |
+| 16–63                            | Private use (can be used for testing, analogously to {{RFC6996}} |
+| 64–4094                          | Public ISDs, should be assigned in ascending order, without gaps and without vanity numbers |
+| 4095–65535                       | Reserved |  
+{: #numbers title="Allocation and description of ISD number ranges"}
+
+## AS Numbers
+
+The SCION numbering scheme uses a superset of the existing BGP AS numbering scheme (see also [Autonomous system numbers](https://perma.cc/TEG2-8D3Z)). The default format for AS numbers is similar to IPv6. It uses a 16-bit colon separated lower-case hexadecimal encoding with leading zeros omitted. However, the double colon (::) zero-compression feature of IPv6 is not supported. As for ISD numbers, 0 represents the wildcard AS and stands for “any AS”, which may be used during path lookup.
+
+The range from 1 to 232 - 1 is dedicated to BGP AS numbers. If a BGP AS supports SCION, it has the same AS number for both BGP and SCION. To facilitate the comparison with BGP AS numbers, any number in the BGP AS range is represented as a decimal. While it is legal to write a BGP AS number using the SCION syntax, programs should use the decimal representation for display. For example, if a program receives 0:1:f, it should display it as 65551.
+
+Currently, the 2:0:0/16 range is allocated to public SCION-only ASes (i.e., ASes that are not existing BGP ASes). AS numbers in that range should be assigned in ascending order, without gaps and without vanity numbers.
+
+## Assignment of ISD and AS Numbers
+
+Ideally, each AS number should be globally unique (partly to facilitate the comparison and transition from BGP), but the actual requirement is only that each AS number be unique within an ISD. Since an AS can be part of several ISDs, picking a globally unique AS number also facilitates joining new ISDs.
+
+In principle, ISD numbers can be self-assigned: A number that is not yet used by any other ISD is picked by the constituents of the new ISD before the first TRC is signed and distributed, then other ISDs are free to accept or reject the new TRC. Preferably, however, an organization such as ICANN or a regional Internet registry (e.g., RIPE NCC) will take on the responsibility of assigning ISD and AS numbers.  
 
 # Security Considerations
 
-The SCION architecture introduces the following security considerations:
+SCION seeks to achieve greater transparency and control for the forwarding paths of network packets, and the trust roots used for authentication. When the network offers path transparency, end hosts can predict (and verify) the forwarding path taken by packets.
 
+Taking transparency of network paths as a first property, SCION aims to additionally achieve path control, a stronger property that (1) enables ASes to control the incoming path segments through which they are reachable and (2) allows senders to then create and select end-to-end paths. This seemingly benign requirement has several repercussions—beneficial but also fragile if implemented incorrectly. This section lists the fragile aspects that need to be handled with care.
+
+- **Respecting the forwarding policies of ISPs**: If senders have complete path control, they may violate ISPs’ forwarding policies. It must therefore be ensured that ISPs offer a set of policy-compliant paths which senders can choose from.
+- **Preventing malicious path creation**: A malicious sender could exploit path control for attacks, for example by forming malicious forwarding paths such as loops that consume increased network resources.
+- **Network stability**: Past research has shown that uncoordinated path selection by end hosts can lead to persistent oscillations, i.e., an alternating grow-and-shrink pattern of traffic volumes on links (see {{FISCHER2009}}, {{SHAIKH2001}}). This is often raised as a key concern and represents one of the biggest obstacles to deployment of path-aware networks ({{RFC9049}}). It is thus imperative that a future Internet architecture take this into account and develop mechanisms preventing these instabilities ({{SCHERRER2020}}).
 
 --- back
 
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+Many thanks go to Cyrill Krähenbühl for his review of this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, Peter Müller, and Adrian Perrig, for writing the book "The Complete Guide to SCION", which provides all the background information needed to write this informational draft.
