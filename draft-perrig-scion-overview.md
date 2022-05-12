@@ -201,16 +201,20 @@ The process of creating an end-to-end forwarding path consists of the following 
 {{beaconing}} below shows the SCION routing process in a nutshell.
 
 ~~~~
-        Path Exploration (Beaconing)
-                  |
-                  |
-                  V  
-           Path Registration
-                  |
-                  |
-                  V
-            Path Resolution
-    Path Lookup ----> Path Combination        
++------------------+             +------------------+
+| Path Exploration |             |                  |
+|   (Beaconing)    |------------>|Path Registration |
+|                  |             |                  |
++------------------+             +--------+---------+
+                                          |
+                        +-----------------+
+                        |
+     +------------------v-----------------------+
+     |            Path Resolution               |
+     |+--------------+     +-------------------+|
+     || Path Lookup  |---->| Path Combination  ||
+     |+--------------+     +-------------------+|
+     +------------------------------------------+        
 ~~~~
 {: #beaconing title="SCION routing in a nutshell"}
 
@@ -264,34 +268,36 @@ The initial TRC in an ISD is called the **base TRC**. This base TRC constitutes 
 Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
 
 ~~~~
-  TRC 1      ---->         TRC 2            ---->       TRC 3
-(Base TRC)               Parameters:
-                        - Version           
-                        - ID
-                        - Validity
-                        - Grace Period
-                        - Core ASes
-                        - Description
-                        - No Trust Reset
-                        - Voting Quorum
-                         Certificates:
-                        - Regular Voting Certificates  
-                        - Sensitive Voting Certificates   
-                        - CP Root Certificates
-                         Plus:
-                        - Votes & Signatures
-                        |                  |
-                        |                  |
-                        |                  |  
-                        V                  V  
-                      CP CA              CP CA
-                   Certificate         Certificate
-                   |         |             |
-                   |         |             |
-                   |         |             |
-                   V         V             V
-                 CP AS     CP AS         CP AS
-              Certificate Certificate  Certificate
+                +---------------------------------------------+
+                |                    TRC 2                    |
+                |+-------------------------------------------+|
+                ||- Version   - Grace Period - No Trust Reset||
+                ||- ID        - Core ASes    - Voting Quorum ||
++---------+     ||- Validity  - Description  - ...           ||    +---------+
+|  TRC 1  |     |+-------------------------------------------+|    |  TRC 3  |
+|  (Base  |---->|+--------------------+ +--------------------+|--->|         |
+|  TRC)   |     ||   Regular Voting   | |  Sensitive Voting  ||    |         |
++---------+     ||    Certificate     | |    Certificate     ||    +---------+
+                |+--------------------+ +--------------------+|
+                |+--------------------+ +--------------------+|
+                ||       Votes        | |     Signatures     ||
+                |+--------------------+ +--------------------+|
+                |+-------------------------------------------+|
+                ||           CP Root Certificates            ||
+                |+---------------+-------------+-------------+|
+                |                |             |              |
+                +----------------+-------------+--------------+
+                                 |             |
+                       +---------v-+         +-v---------+
+                       |   CP CA   |         |   CP CA   |
+                       |Certificate|         |Certificate|
+                       +-+-------+-+         +-----+-----+
+                         |       |                 |
+                         |       |                 |
+                +--------v--+ +--v--------+      +-v---------+
+                |   CP AS   | |   CP AS   |      |   CP AS   |
+                |Certificate| |Certificate|      |Certificate|
+                +-----------+ +-----------+      +-----------+
 ~~~~
 {: #chain title="TRC contents and trust chain"}
 
@@ -543,7 +549,7 @@ up-segment             core-segment             down-segment
                        +--------+
                      forwarding path
 ~~~~
-{: #HFs title="Constructing a forwarding path through the combination of three path segments"}
+{: #HFs title="Combining three path segments into a forwarding path"}
 
 
 ### Path Authorization
