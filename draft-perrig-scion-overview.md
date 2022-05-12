@@ -349,8 +349,77 @@ SCION also supports shortcuts and peering links. In a _shortcut_, a path only co
 
 To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the path segments of both ASes at the end of a peering link contain this peering link, then it is possible to use the peering link to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, according to SCION’s path transparency property: A source knows the exact set of ASes and ISDs traversed during the delivery of a packet.
 
-> Figure 2.5 - AS F receives two different PCBs via two different links from a core AS. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS. Intra-ISD PCB propagation from the ISD core down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding.
+{{pcb}} shows how intra-ISD PCB propagation works, from the ISD core down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding. Here, AS F receives two different PCBs via two different links from a core AS. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS.
 
+~~~~
+                                  .-----.
+                                 ;  Core :
+                        +-----+  :       ;
+                        |PCB  |   \ 2 1 / +-----+
+                        |Core |    `+-+'  |pcb  |
+                        |Out:2|     | |   |core |
+                        +--+--+   +-+ |   |out:1|
+                           |      |   |   +--+--+
+                           v      |   |      |
+                                .-+---+.     v
+                   .---.       /  2   3 \             .---.
+                  (  J  )- - -; 1      4 :- - - - - -(  H  )
+                   `---'      :   AS F   ;            `---'
+                            +--\7       /
++----------+ +----------+ <-+     6  5
+|PCB       | |pcb       |        `+--+'
+|Core      | |core      |         |  |
+|Out:2     | |out:1     |         |  |
+|----------| |----------|         |  |
+|AS F      | |as f      |         |  |
+|In:2 Out:7| |in:3 out:7|         |  |
+|Peer J:1  | |peer j:1  |         |  | +----------+ +----------+
+|Peer H:4  | |peer h:4  |         |  | |PCB       | |pcb       |
+|          | |          |         |  | |Core      | |core      |
++--+-------+ +--+-------+         |  | |Out:2     | |out:1     |
+   |            |                 |  | |----------| |----------|
+  <+           <+                 |  | |AS F      | |as f      |
+                                  |  | |In:2 Out:5| |in:3 out:5|
+         +----------+ +----------+|  | |Peer J:1  | |peer j:1  |
+         |PCB       | |pcb       ||  | |Peer H:4  | |peer h:4  |
+         |Core      | |core      ||  | |          | |          |
+         |Out:2     | |out:1     ||  | +----+-----+ +----+-----+
+         |----------| |----------||  |      |            |
+         |AS F      | |as f      ||  |      v            v
+         |In:2 Out:6| |in:3 out:6||  |
+         |Peer J:1  | |peer j:1  ||  |
+         |Peer H:4  | |peer h:4  ||  |
+         |          | |          ||  |
+         +----+-----+ +----+-----+|  |
+              |            |     .+--+-.
+              v            v   ,' 5  1  `.
+                              ;           :
+                              :   AS G    ;
+                               \         /
+                            +---` 4  3 ,'
+                          <-+     `--+'
+                                     |  +----------+ +----------+
+                                     |  |PCB       | |pcb       |
+                                     |  |Core      | |core      |
+                                     |  |Out:2     | |out:1     |
+           +----------+ +----------+ |  |----------| |----------|
+           |PCB       | |pcb       | |  |AS F      | |as f      |
+           |Core      | |core      | |  |In:2 Out:5| |in:3 out:5|
+           |Out:2     | |out:1     | |  |Peer J:1  | |peer j:1  |
+           |----------| |----------| |  |Peer H:4  | |peer h:4  |
+           |AS F      | |as f      | |  |----------| |----------|
+           |In:2 Out:6| |in:3 out:6| |  |AS G      | |as g      |
+           |Peer J:1  | |peer j:1  | |  |In:1 Out:3| |in:1 out:3|
+           |Peer H:4  | |peer h:4  | |  |          | |          |
+           |----------| |----------| |  +----+-----+ +----+-----+
+           |AS G      | |as g      | |       |            |
+           |In:5 Out:3| |in:5 out:3| v       v            v
+           |          | |          |
+           +----+-----+ +----+-----+
+                |            |
+                v            v
+~~~~
+{: #pcb title="Intra-ISD PCB propagation from the ISD core down to child ASes"}
 
 #### Security
 
@@ -420,9 +489,61 @@ Through the path lookup, the end host obtains path segments that must be combine
 
 Once a forwarding path is chosen, it is encoded in the SCION packet header. This makes inter-domain routing tables unnecessary for border routers: Both the ingress and the egress interface of each AS on the path are encoded as **packet-carried forwarding state (PCFS)** in the packet header. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.
 
-The SCION packet header consists of a sequence of **hop fields (HFs)**, one HF for each AS that is traversed on the end-to-end path. Each hop field contains the encoded numbers of the ingress and egress links, and thus defines which interfaces may be used to enter and leave an AS. In addition to the hop fields, each path segment contains an **info field (INF)** with basic information about the segment. A host can create an end-to-end forwarding path by extracting info fields and hop fields from path segments, as depicted in Figure 2.7. The additional meta header (META) contains pointers to the currently active INF and HF.
+The SCION packet header consists of a sequence of **hop fields (HFs)**, one HF for each AS that is traversed on the end-to-end path. Each hop field contains the encoded numbers of the ingress and egress links, and thus defines which interfaces may be used to enter and leave an AS. In addition to the hop fields, each path segment contains an **info field (INF)** with basic information about the segment. A host can create an end-to-end forwarding path by extracting info fields and hop fields from path segments, as depicted in {{HFs}}. The additional meta header (META) contains pointers to the currently active INF and HF.
 
-> Figure 2.7: Example showing the construction of a forwarding path through the combination of three path segments.
+~~~~
+up-segment             core-segment             down-segment
+
++-------+              +-------+                +-------+
+|+-----+|              |+-----+|                |+-----+|
+|+ INF ||----------+   |+ INF ||---+            |+ INF ||-+
+|+-----+|          |   |+-----+|   |            |+-----+| |
+|+-----+|          |   |+-----+|   |            |+-----+| |
+|| hf  ||--------+ |   || hf  ||---+--+         || hf  ||-+--+
+|+-----+|        | |   |+-----+|   |  |         |+-----+| |  |
+|+-----+|        | |   |+-----+|   |  |         |+-----+| |  |
+|| hf  ||-----+  | |   || hf  ||---+--+--+      || hf  ||-+--+--+
+|+-----+|     |  | |   |+-----+|   |  |  |      |+-----+| |  |  |
+|+-----+|     |  | |   +-------+   |  |  |      +-------+ |  |  |
+|| hf  ||--+  |  | |               |  |  |                |  |  |
+|+-----+|  |  |  | |   +--------+  |  |  |                |  |  |
++-------+  |  |  | |   |++-----+|  |  |  |                |  |  |
+           |  |  | |   |++ Meta||  |  |  |                |  |  |
+           |  |  | |   |++-----+|  |  |  |                |  |  |
+           |  |  | |   |+-----+ |  |  |  |                |  |  |
+           |  |  | +-->|+ INF | |  |  |  |                |  |  |
+           |  |  |     |+-----+ |  |  |  |                |  |  |
+           |  |  |     |+-----+ |  |  |  |                |  |  |
+           |  |  |     |+ INF | |<-+  |  |                |  |  |
+           |  |  |     |+-----+ |     |  |                |  |  |
+           |  |  |     |+-----+ |     |  |                |  |  |
+           |  |  |     |+ INF | |<----+--+----------------+  |  |
+           |  |  |     |+-----+ |     |  |                   |  |
+           |  |  |     |+-----+ |     |  |                   |  |
+           |  |  +---->|| hf  | |     |  |                   |  |
+           |  |        |+-----+ |     |  |                   |  |
+           |  |        |+-----+ |     |  |                   |  |
+           |  +------->|| hf  | |     |  |                   |  |
+           |           |+-----+ |     |  |                   |  |
+           |           |+-----+ |     |  |                   |  |
+           +---------->|| hf  | |     |  |                   |  |
+                       |+-----+ |     |  |                   |  |
+                       |+-----+ |     |  |                   |  |
+                       || hf  | |<----+  |                   |  |
+                       |+-----+ |        |                   |  |
+                       |+-----+ |        |                   |  |
+                       || hf  | |<-------+                   |  |
+                       |+-----+ |                            |  |
+                       |+-----+ |                            |  |
+                       || hf  | |<---------------------------+  |
+                       |+-----+ |                               |
+                       |+-----+ |                               |
+                       || hf  | |<------------------------------+
+                       |+-----+ |
+                       +--------+
+                     forwarding path
+~~~~
+{: #HFs title="Constructing a forwarding path through the combination of three path segments"}
 
 
 ### Path Authorization
