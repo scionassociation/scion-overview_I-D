@@ -1433,16 +1433,20 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <figure id="figure-2">
             <div class="alignLeft art-text artwork" id="section-1.2.2-5.1">
 <pre>
-        Path Exploration (Beaconing)
-                  |
-                  |
-                  V
-           Path Registration
-                  |
-                  |
-                  V
-            Path Resolution
-    Path Lookup ----&gt; Path Combination
++------------------+             +------------------+
+| Path Exploration |             |                  |
+|   (Beaconing)    |------------&gt;|Path Registration |
+|                  |             |                  |
++------------------+             +--------+---------+
+                                          |
+                        +-----------------+
+                        |
+     +------------------v-----------------------+
+     |            Path Resolution               |
+     |+--------------+     +-------------------+|
+     || Path Lookup  |----&gt;| Path Combination  ||
+     |+--------------+     +-------------------+|
+     +------------------------------------------+
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
@@ -1526,34 +1530,36 @@ appear in all capitals, as shown here.<a href="#section-1.3-1" class="pilcrow">�
 <figure id="figure-3">
             <div class="alignLeft art-text artwork" id="section-2.1.1-5.1">
 <pre>
-  TRC 1      ----&gt;         TRC 2            ----&gt;       TRC 3
-(Base TRC)               Parameters:
-                        - Version
-                        - ID
-                        - Validity
-                        - Grace Period
-                        - Core ASes
-                        - Description
-                        - No Trust Reset
-                        - Voting Quorum
-                         Certificates:
-                        - Regular Voting Certificates
-                        - Sensitive Voting Certificates
-                        - CP Root Certificates
-                         Plus:
-                        - Votes &amp; Signatures
-                        |                  |
-                        |                  |
-                        |                  |
-                        V                  V
-                      CP CA              CP CA
-                   Certificate         Certificate
-                   |         |             |
-                   |         |             |
-                   |         |             |
-                   V         V             V
-                 CP AS     CP AS         CP AS
-              Certificate Certificate  Certificate
+                +---------------------------------------------+
+                |                    TRC 2                    |
+                |+-------------------------------------------+|
+                ||- Version   - Grace Period - No Trust Reset||
+                ||- ID        - Core ASes    - Voting Quorum ||
++---------+     ||- Validity  - Description  - ...           ||    +---------+
+|  TRC 1  |     |+-------------------------------------------+|    |  TRC 3  |
+|  (Base  |----&gt;|+--------------------+ +--------------------+|---&gt;|         |
+|  TRC)   |     ||   Regular Voting   | |  Sensitive Voting  ||    |         |
++---------+     ||    Certificate     | |    Certificate     ||    +---------+
+                |+--------------------+ +--------------------+|
+                |+--------------------+ +--------------------+|
+                ||       Votes        | |     Signatures     ||
+                |+--------------------+ +--------------------+|
+                |+-------------------------------------------+|
+                ||           CP Root Certificates            ||
+                |+---------------+-------------+-------------+|
+                |                |             |              |
+                +----------------+-------------+--------------+
+                                 |             |
+                       +---------v-+         +-v---------+
+                       |   CP CA   |         |   CP CA   |
+                       |Certificate|         |Certificate|
+                       +-+-------+-+         +-----+-----+
+                         |       |                 |
+                         |       |                 |
+                +--------v--+ +--v--------+      +-v---------+
+                |   CP AS   | |   CP AS   |      |   CP AS   |
+                |Certificate| |Certificate|      |Certificate|
+                +-----------+ +-----------+      +-----------+
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
@@ -1823,7 +1829,7 @@ This simple dissemination mechanism has two advantages: It is very efficient (as
           </ul>
 <p id="section-2.3.1-3">Once a forwarding path is chosen, it is encoded in the SCION packet header. This makes inter-domain routing tables unnecessary for border routers: Both the ingress and the egress interface of each AS on the path are encoded as <strong>packet-carried forwarding state (PCFS)</strong> in the packet header. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.<a href="#section-2.3.1-3" class="pilcrow">¶</a></p>
 <p id="section-2.3.1-4">The SCION packet header consists of a sequence of <strong>hop fields (HFs)</strong>, one HF for each AS that is traversed on the end-to-end path. Each hop field contains the encoded numbers of the ingress and egress links, and thus defines which interfaces may be used to enter and leave an AS. In addition to the hop fields, each path segment contains an <strong>info field (INF)</strong> with basic information about the segment. A host can create an end-to-end forwarding path by extracting info fields and hop fields from path segments, as depicted in <a href="#HFs" class="xref">Figure 5</a>. The additional meta header (META) contains pointers to the currently active INF and HF.<a href="#section-2.3.1-4" class="pilcrow">¶</a></p>
-<span id="name-constructing-a-forwarding-p"></span><div id="HFs">
+<span id="name-combining-three-path-segmen"></span><div id="HFs">
 <figure id="figure-5">
             <div class="alignLeft art-text artwork" id="section-2.3.1-5.1">
 <pre>
@@ -1880,7 +1886,7 @@ up-segment             core-segment             down-segment
 </pre>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-constructing-a-forwarding-p" class="selfRef">Constructing a forwarding path through the combination of three path segments</a>
+<a href="#name-combining-three-path-segmen" class="selfRef">Combining three path segments into a forwarding path</a>
             </figcaption></figure>
 </div>
 </section>
