@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-10T01:17:04.063127+00:00",
+  "timestamp": "2022-05-12T01:46:25.528431+00:00",
   "repo": "scionfoundation/scion-overview_I-D",
   "labels": [
     {
@@ -360,6 +360,60 @@
       "mergedBy": "cdekater",
       "mergeCommit": {
         "oid": "9d2759b1e3556ef7521fe21848d64e669a38474c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOHF5N3M43jeZT",
+      "title": "Deployment section",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/pull/8",
+      "state": "OPEN",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "TODO: \r\n- [ ] decide if we talk about extensions and extensibility (deployment/data plane)\r\n",
+      "createdAt": "2022-05-10T07:18:04Z",
+      "updatedAt": "2022-05-11T16:44:00Z",
+      "baseRepository": "scionfoundation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "9d2759b1e3556ef7521fe21848d64e669a38474c",
+      "headRepository": "scionfoundation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "e5dd9dab4786f1be1f1c0187d6db950dab38dd0d",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOHF5N3M43qknX",
+      "title": "Corines branch",
+      "url": "https://github.com/scionfoundation/scion-overview_I-D/pull/9",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "First version content of the Internet Draft is ready for Cyrill to review (except for the Deployment section and some figures). ",
+      "createdAt": "2022-05-11T16:27:21Z",
+      "updatedAt": "2022-05-11T16:28:13Z",
+      "baseRepository": "scionfoundation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "9d2759b1e3556ef7521fe21848d64e669a38474c",
+      "headRepository": "scionfoundation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "6112ec2c5685e24ede0c0c8f4dcacdb6b51c3495",
+      "closedAt": "2022-05-11T16:28:13Z",
+      "mergedAt": "2022-05-11T16:28:13Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "ef3300e177ae191215107bc7e66b08df72b48f24"
       },
       "comments": [],
       "reviews": []
