@@ -55,6 +55,7 @@ informative:
   MORILLO2021: DOI.10.14722/ndss.2021.24438
   KLENZE2021: DOI.10.1109/CSF51468.2021.00018
   DERUITER2021: DOI.10.1145/3485983.3494839
+  SCIONLAB: DOI.10.1109/ICNP49622.2020.9259355
 
 
 
@@ -287,47 +288,44 @@ The path segments contain compact hop-fields, that encode information about whic
 Deploying a next-generation architecture is a challenging task, as it needs to be integrated with and operate alongside existing infrastructure. In the following, we discuss practical deployment approaches, supporting both native SCION hosts and IP hosts.
 
 ## Autonomous System Deployment
-A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers. Practice shows that all of them can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links. With a P4 implementation hardware it is possible to forward SCION traffic even at terabit speeds {{DERUITER2021}}. SCION allows, by design, to reuse an AS intra-domain IP or MPLS-based network. Within an AS, SCION is deployed as an IP overlay on top of the existing network. To exchange SCION packets with the provider network, the customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. Given that the AS’s internal entities are considered to be trustworthy, the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
+A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers. Practice shows that all of them can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links. With a P4 implementation hardware it is possible to forward SCION traffic even at terabit speeds {{DERUITER2021}}.
+Within an AS, SCION is deployed as an IP overlay on top of the existing network. This way SCION allows, by design, to reuse the existing intra-domain network and equipment (i.e., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
 When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, intra-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance.
 
+TODO: sentences mentioning throughput seem a bit out of the blue here..  Also, maybe a figure showing customer/provider deployment might not be a bad idea?
+
 ### Internet Exchange Points
-TODO: Something from Conext paper & something about SwissIX.
+Internet Exchange Points (IXP) play an important role for SCION as they do in today’s Internet.  SCION can be deployed at existing IXPs following a "big switch" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over a dedicated SCION port.
+
+Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model. The internal topology of an IXP to be exposed within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
 
 ## End Hosts and Incremental Deployability
 End-users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, the second approach is preferred.
 
 ### Native End Hosts {#native-endhost}
 A SCION native end-host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay to communicate between end-hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end-hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way clients require no pre-existing network-specific configurations.
-TODO: do we want to place the info about the UDP underlay here? Or somewhere else? I'm not so sure about it...
 
 ### SCION to IP Gateway (SIG) {#sig}
 A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
-A SIG can be deployed close to the end-user (i.e., at branches of an enterprise, on a CPE), or it can be deployed within an ISP's network. In the latter case, the SIG is called carrier-grade SIG, as it serves multiple customers within the AS where it is deployed. This approach has the advantage that it does not require any changes at the customer's premises. TODO: I don't like this phrasing I came up about SIG.
-In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SIGs can be augmented with  mechanisms allowing them to coordinate and automatically exchange IP prefix information. A more detailed description of the SIG and its coordination mechanisms is to be described in a dedicated document.
+A SIG can be deployed close to the end-user (i.e., at branches of an enterprise, on a CPE), or it can be deployed within an ISP's network. In the latter case, the SIG is called carrier-grade SIG, as it serves multiple customers within the AS where it is deployed. This approach has the advantage that it does not require any changes at the customer's premises.
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SIGs can be augmented with  mechanisms allowing them to coordinate and automatically exchange IP prefix information. A more detailed description of the SIG and its coordination mechanisms is to be presented in dedicated documents.
 
 
 
 ## Deployment experiences {#deploy}
 
-- Deployment experiences: SSFN, SCI-ED (15.3, 15.4), SCIONLab (14)
-SCION has been deployed in production by multiple entities, growing its acceptance among industry. While early deployments were on academic networks & NRENs, SCION has expanded to serve the financial industry, government, and healthcare.
+SCION has been deployed in production by multiple entities, growing its acceptance among industry. While early deployments started on academic and research networks, SCION has expanded to serve the financial industry, government, and healthcare.
 
-In 2017, SCION was evaluated for production use by the Swiss National Bank, with the goal of modernising the network interconnecting banks and their branches in order to improve network flexibility and cut cost. Existing leased lines were provisioned via dedicated layer-2 circuit switching or layer-3 MPLS–is, providing availability and confidentiality. SCION approximates leased-line properties, offering geofencing, path transparency, high reliability thanks to fast failover, and flexibility, as it enables connectivity to any other entities connected to the SCION Internet. Positive experiences with the early deployment led the Swiss National Bank (SNB) to extend its SCION deployment to support system-critical applications, like  its real-time gross settlement (RTGS) system, connecting all Swiss banks. 
-Through its native multipath capability and the ability to seamlessly include multiple network service providers in a federation, SCION leads to exceptional availability and resilience of the net- work infrastructure and end-to-end connectivity.
-The SSFN is implemented as a SCION ISD, where the core is formed by a federation of three network service providers (core ASes) deploying SCION routers at the borders of their network.  Members of the SSFN—i.e., financial institutions—are directly connected to one or more of these core ASes. They are themselves SCION ASes that additionally de- ploy SCION–IP gateways (SIGs). These SIGs provide the entry points for members to use the SSFN as a communication platform—they transparently enable traditional IP-based communication to use a SCION network (“IP-in- SCION encapsulation”)
+In 2017, SCION was evaluated for production use by a central bank, with the goal of modernising the network interconnecting banks and their branches in order to improve network flexibility and cut cost. Existing lines were provisioned via dedicated layer-2 circuit switching or layer-3 MPLS–is, providing availability and confidentiality. SCION approximates leased-line properties, offering geofencing, path transparency, high reliability thanks to fast failover, and flexibility, as it enables connectivity to any other entities connected to the SCION Internet. TODO: add link to press release: https://perma.cc/PU5L-ALPM
 
-Positive experiences by the financial industry have fueled adoption by ISPs, as well as by commercial, education, and government entities. Today, eight ISPs offer SCION connections, and several banks and government entities benefit from a native SCION backbone for production use.
+Positive experiences with early deployments led the Swiss financial industry to adopt its SCION connectivity to support system-critical applications, like the national real-time gross settlement (RTGS) system, connecting all country's banks to exchange real-time payment information.  The network, called Secure Swiss Finance Network (SSFN), is implemented as a SCION ISD, where the core is formed by a federation of three network service providers (core ASes) deploying SCION routers at the borders of their network.  Members of the SSFN—i.e., financial institutions, are directly connected to one or more of these core ASes. They are themselves SCION ASes that additionally deploy SCION–IP gateways (SIGs). These SIGs provide the entry points for members to use the SSFN as a communication platform—they transparently enable traditional IP-based communication to use a SCION network.
 
-The initial customer incentive was to test the reliability of SCION and to use a SCION connection to replace a leased line.
-Today, eight ISPs offer SCION connections, and several banks and government entities benefit from their BGP-free backbones for production use. This demonstrates that the initial deployment incentives have been sufficient, but additional ones are needed to further drive deployment of native SCION connectivity on endpoints used by applications.
+SCION connectivity has also been adopted by government entities for their international communications. In addition, Swiss higher education institutions are connected thanks to SCI-ED.
+
+TODO: Link/reference SSFN, SCI-ED
 
 
-
-SCION research and development is often carried out on top of SCIONLab, the global SCION research testbed. The SCIONLAB network is composed of a set of dozens of globally distributed infrastructure ASes, and over 1000 user ASes running on various systems.
-SCIONLAB is a globally distributed network in which users can easily set up their own AS, connect and run experiments. It provides a global testbed for path-aware networking research.
-
-
-
+Besides productive deployments, SCION also comprises a global SCION research testbed called {{SCIONLAB}}. Its is composed of a set of dozens of globally distributed infrastructure ASes, mostly run by academic institutions. The testbed is open to any user, who can easily set up their own AS with the aid of a web-based UI, connect to the network and run experiments. The setup has been the earliest global deployment of SCION, and it has been supporting research and development of path-aware networking and SCION.
 
 # IANA Considerations
 
