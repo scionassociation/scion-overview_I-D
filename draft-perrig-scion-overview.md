@@ -11,8 +11,8 @@ keyword: Internet-Draft
 venue:
   group: WG
   type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
+  mail: panrg@irtf.org
+  arch: https://datatracker.ietf.org/rg/panrg
   github: scionfoundation/scion-overview_I-D
   latest: https://example.com/LATEST
 
@@ -57,7 +57,7 @@ informative:
   MORILLO2021: DOI.10.14722/ndss.2021.24438
   KLENZE2021: DOI.10.1109/CSF51468.2021.00018
   DERUITER2021: DOI.10.1145/3485983.3494839
-  SCIONLAB: DOI.10.1109/ICNP49622.2020.9259355
+  KWON2021: DOI.10.1109/ICNP49622.2020.9259355
   ANDERSEN2001: DOI.10.1145/502034.502048
   KATZ2012: DOI.10.1145/2377677.2377756
   KUSHMAN2007: DOI.10.1145/1232919.1232927
@@ -216,7 +216,7 @@ The process of creating an end-to-end forwarding path consists of the following 
      |+--------------+     +-------------------+|
      || Path Lookup  |---->| Path Combination  ||
      |+--------------+     +-------------------+|
-     +------------------------------------------+        
+     +------------------------------------------+
 ~~~~
 {: #beaconing title="SCION routing in a nutshell"}
 
@@ -253,7 +253,7 @@ This section explains the SCION key concepts, including authentication, control-
 
 ## Authentication
 
-SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.  
+SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.
 
 **Note**: This section describes the SCION authentication concept on a very high level. A much more detailed description of SCION's authentication will follow in a separate internet draft.
 
@@ -587,7 +587,7 @@ When it comes to inter-domain communication, an overlay deployment on top of tod
 
 TODO: sentences mentioning throughput seem a bit out of the blue here..  Also, maybe a figure showing customer/provider deployment might not be a bad idea?
 
-### Internet Exchange Points
+## Internet Exchange Points
 Internet Exchange Points (IXP) play an important role for SCION as they do in today’s Internet.  SCION can be deployed at existing IXPs following a "big switch" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over a dedicated SCION port.
 
 Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model. The internal topology of an IXP to be exposed within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
@@ -618,7 +618,7 @@ SCION connectivity has also been adopted by government entities for their intern
 TODO: Link/reference SSFN, SCI-ED
 
 
-Besides productive deployments, SCION also comprises a global SCION research testbed called {{SCIONLAB}}. Its is composed of a set of dozens of globally distributed infrastructure ASes, mostly run by academic institutions. The testbed is open to any user, who can easily set up their own AS with the aid of a web-based UI, connect to the network and run experiments. The setup has been the earliest global deployment of SCION, and it has been supporting research and development of path-aware networking and SCION.
+Besides productive deployments, SCION also comprises a global SCION research testbed called {{KWON2021}}. Its is composed of a set of dozens of globally distributed infrastructure ASes, mostly run by academic institutions. The testbed is open to any user, who can easily set up their own AS with the aid of a web-based UI, connect to the network and run experiments. The setup has been the earliest global deployment of SCION, and it has been supporting research and development of path-aware networking and SCION.
 
 # IANA Considerations {#iana}
 
@@ -634,7 +634,7 @@ ISDs are represented with decimal numbers, ranging from 0 to 65535. Table 2.1 sh
 | 1–15                             | Reserved for documentation and sample code |
 | 16–63                            | Private use (can be used for testing, analogously to {{RFC6996}} |
 | 64–4094                          | Public ISDs, should be assigned in ascending order, without gaps and without vanity numbers |
-| 4095–65535                       | Reserved |  
+| 4095–65535                       | Reserved |
 {: #numbers title="Allocation and description of ISD number ranges"}
 
 ## AS Numbers
@@ -649,7 +649,7 @@ Currently, the 2:0:0/16 range is allocated to public SCION-only ASes (i.e., ASes
 
 Ideally, each AS number should be globally unique (partly to facilitate the comparison and transition from BGP), but the actual requirement is only that each AS number be unique within an ISD. Since an AS can be part of several ISDs, picking a globally unique AS number also facilitates joining new ISDs.
 
-In principle, ISD numbers can be self-assigned: A number that is not yet used by any other ISD is picked by the constituents of the new ISD before the first TRC is signed and distributed, then other ISDs are free to accept or reject the new TRC. Preferably, however, an organization such as ICANN or a regional Internet registry (e.g., RIPE NCC) will take on the responsibility of assigning ISD and AS numbers.  
+In principle, ISD numbers can be self-assigned: A number that is not yet used by any other ISD is picked by the constituents of the new ISD before the first TRC is signed and distributed, then other ISDs are free to accept or reject the new TRC. Preferably, however, an organization such as ICANN or a regional Internet registry (e.g., RIPE NCC) will take on the responsibility of assigning ISD and AS numbers.
 
 # Security Considerations
 
