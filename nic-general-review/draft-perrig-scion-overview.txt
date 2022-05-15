@@ -52,7 +52,7 @@ About This Document
    https://datatracker.ietf.org/rg/panrg.
 
    Source for this draft and an issue tracker can be found at
-   https://github.com/scionfoundation/scion-overview_I-D.
+   https://github.com/scionassociation/scion-overview_I-D.
 
 Status of This Memo
 
