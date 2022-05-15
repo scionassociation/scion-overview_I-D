@@ -13,7 +13,7 @@ venue:
   type: Working Group
   mail: panrg@irtf.org
   arch: https://datatracker.ietf.org/rg/panrg
-  github: scionfoundation/scion-overview_I-D
+  github: scionassociation/scion-overview_I-D
   latest: https://example.com/LATEST
 
 author:
