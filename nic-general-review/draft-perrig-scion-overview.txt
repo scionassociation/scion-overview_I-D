@@ -16,13 +16,12 @@ Abstract
 
    The Internet has been successful beyond even the most optimistic
    expectations and is intertwined with many aspects of our society.
-   Unfortunately, the security of today's Internet is far from
-   commensurate with its importance as critical infrastructure.
-   Additionally, the Internet has not primarily been built for high
-   availability in the presence of adversaries, and recent proposals to
-   improve Internet security and availability have been constrained by
-   the setup of the current architecture.  COMMENT: maybe don't say
-   "unfortunately"?
+   However, the security of today's Internet is far from commensurate
+   with its importance as critical infrastructure.  Additionally, the
+   Internet has not primarily been built for high availability in the
+   presence of adversaries, and recent proposals to improve Internet
+   security and availability have been constrained by the setup of the
+   current architecture.
 
    The next-generation inter-network architecture SCION (Scalability,
    Control, and Isolation On Next-generation networks) aims to address
@@ -120,11 +119,8 @@ Table of Contents
      3.3.  End Hosts and Incremental Deployability
        3.3.1.  Native End Hosts
        3.3.2.  SCION to IP Gateway (SIG)
-     3.4.  Deployment experiences
+     3.4.  Deployment Experiences
    4.  IANA Considerations
-     4.1.  ISD Numbers
-     4.2.  AS Numbers
-     4.3.  Assignment of ISD and AS Numbers
    5.  Security Considerations
    6.  References
      6.1.  Normative References
@@ -159,17 +155,9 @@ Table of Contents
    energy consumption.  As the Internet has not been built with security
    in mind, the lack thereof is another problem.  Because of this, the
    current Internet offers little protection against attacks such as
-   spoofing, prefix- and DNS-hijacking, denial-of-service, and
-   combinations of these.  For more background information, see
-   [SCHUCHARD2011], [LABOVITZ2000], [GRIFFIN1999], [SAHOO2009], and
-   [RFC4264].  COMMENT: I find the first half of this paragraph a bit
-   vague.  People don't care about transparency as a concept.
-   Transparency is rather a mean to achieve other goals (which I believe
-   are more within the CIA triad).  So I think we could rewrite this to
-   focus on the direct goals, rather than the means.  COMMENT: we don't
-   mention RHINE, so I'm not sure if it is appropriate to mention DNS
-   hijackings here.  Also, they are somehow prevented by DNSSEC.  So I'd
-   remove DNS hijacking
+   spoofing, IP-address hijacking, denial-of-service, and combinations
+   of these.  For more background information, see [SCHUCHARD2011],
+   [LABOVITZ2000], [GRIFFIN1999], [SAHOO2009], and [RFC4264].
 
    Up until now, there have been numerous initiatives to address the
    above issues (e.g., [RFC4033], [RFC6480], [RFC8205], and [RFC8446]).
@@ -183,10 +171,7 @@ Table of Contents
    enterprises globally exchanging sensitive information with an
    ecosystem, such as financial institutions, healthcare providers,
    universities, multinationals, governments, critical and
-   transportation infrastructure operators.  COMMENT: here I would also
-   mention the importance of inter-domain routing when workloads move to
-   clouds (as the pipe between users and cloud becomes much more
-   important)
+   transportation infrastructure operators.
 
    These users require the Internet to be highly available at all times
    and constantly perform on a high level.  They expect reliable
@@ -198,15 +183,7 @@ Table of Contents
    domains, even in the presence of attacks.  They further want to rely
    on an Internet that can be multilaterally governed and is free from
    global kill-switches.  In short, these Internet users seek
-   performance, control, reliability, security, and trust.  COMMENT: I
-   would focus on motivation (data residency, preventing eavesdropping,
-   confidentiality, ... ).  I would remove "prefer to select themselves
-   the path their data will take" and replace it with something more
-   related to business goals rather than the mean to achieve them.
-   COMMENT: I personally find the "they" a bit funny... It sounds like
-   we are referring to a specific group of users, while in principle we
-   should be talking about all internet users (~= everyone).  Maybe this
-   is just a style thing, no strong opinions here
+   performance, control, reliability, security, and trust.
 
    SCION has been developed in order to meet the above-mentioned
    requirements.  SCION aims to reach the following goals:
@@ -218,17 +195,16 @@ Table of Contents
       -  fast failover in the case of inter-domain link or router
          failures, and
 
-      -  prevention from route hijacking, DoS, and other attacks.
+      -  prevention from IP-address hijacking, DoS, and other attacks.
 
-   *  A more transparent and efficient Internet.
+   *  Enable path transparency as well as application-specific path
+      optimizations.
 
    *  Improve the inter-domain control plane's scalability.
 
    *  Prepare the Internet for tomorrow's applications, such as virtual
       reality, Internet of Things (IoT), and Distributed Ledger
-      Technology (DLT).  COMMENT: I'd mention critical workloads.  Maybe
-      we could also add "tomorrow's applications demanding high
-      performance connectivity, ..."
+      Technology (DLT).
 
    *Note*: A more detailed motivation for developing SCION will be
    described in a separate gap analysis internet draft.
@@ -239,7 +215,7 @@ Table of Contents
    Internet's networking issues.  But unfortunately many other promising
    solutions for the Internet's problems have never managed to succeed,
    for reasons described in [RFC9049].  SCION, however, avoids the
-   pitfalls mentioned in this document.  For example, SCION does not
+   pitfalls mentioned in that document.  For example, SCION does not
    have to be adopted by the entire Internet to be effective: The
    routing architecture provides benefits already to early adapters.
    Even if only a small part of the global network works with SCION,
@@ -250,14 +226,7 @@ Table of Contents
    connectivity, with users who are willing to pay for it.  Furthermore,
    SCION can be installed on top of and function alongside the existing
    routing infrastructure and protocols--there is no need for bigger
-   changes in an operational network.  COMMENT: I'd rephrase the first
-   two sentences a bit, in order to make it sound a bit more "neutral"
-   and less negative.  Something like: SCION is not the first proposal
-   tackling some of the Internet's fundamental issues.  Other solutions
-   never managed to succeed, for reasons described in [RFC9049].  SCION,
-   however, avoids the pitfalls mentioned in this document. ... COMMENT:
-   bigger changes in an operational network --> high-impact changes (as
-   in IT, the "size" of a change depends on its complexity and impact)
+   changes in an operational network.
 
    The above points facilitate the deployment of SCION and increase its
    acceptance.  The several cases where SCION is already successfully
@@ -270,17 +239,14 @@ Table of Contents
    be answered in order to realize such a path-aware networking system.
    It was originally written to frame discussions in the Path Aware
    Networking Research Group (PANRG), and has been published to snapshot
-   current thinking in this space.  COMMENT: removed "this year", as
-   this will not age well
+   current thinking in this space.
 
    SCION clearly provides answers to the questions raised in this RFC.
    This especially pertains to the second, third, seventh, and eighth
    question:
 
    *  How do endpoints and applications get access to accurate, useful,
-      and trustworthy path properties?  COMMENT: this is an open problem
-      that is not really tackled by SCION, rather by some work being
-      done in TAPS (i.e.  Thorben's PANAPI?)
+      and trustworthy path properties?
 
    *  How can endpoints select paths to use for traffic in a way that
       can be trusted by the network, the endpoints, and the applications
@@ -298,7 +264,7 @@ Table of Contents
    The answers to these questions can be found in Key Concepts
    (Section 2) and Deployments (Section 3.4), respectively.
 
-   Another RFC that must be mentioned in the context of this draft is
+   Another RFC that must be mentioned in the context of this document is
    [RFC5218], "What Makes for a Successful Protocol?".  SCION fulfils
    most factors that contribute to the success of a protocol, as
    described in section 2.1 of the RFC.  This includes such factors as
@@ -307,20 +273,12 @@ Table of Contents
    availability.  More importantly, SCION averts the failure criteria
    mentioned in section 1.4 of the RFC: SCION is already deployed and in
    use by many actors of the Swiss financial and academic ecosystems,
-   and mainstream implementation of SCION is possible, too.  COMMENT: in
-   the context of this draft --> in the context of this document
-   (hopefully, it won't be a draft forever ;) COMMENT: "and mainstream
-   implementation of SCION is possible, too" ---> and comprises multiple
-   implementations, both open and closed source.  As existing SCION
-   implementations are easily portable, adoption in mainstream platform
-   is also possible.
+   and mainstream implementation of SCION is possible, too.
 
    The emergence of multiple SCION implementations and early deployments
    highlighted the need for standardization.  The time is therefore ripe
    to take SCION to the IETF, in order to contribute to the important
-   discussion regarding path-aware networking.  COMMENT: maybe we can
-   also mention "SCION addressed fundamental issues in inter-domain
-   routing"
+   discussion regarding path-aware networking.
 
 1.2.  SCION Overview
 
@@ -338,20 +296,10 @@ Table of Contents
    existing ASes into groups of independent routing planes, called
    *Isolation Domains (ISD)*. An AS can be a member of multiple ISDs.
    All ASes in an ISD agree on a set of trust roots, called the *Trust
-   Root Configuration (TRC)*. Such approach provides support for global
-   but heterogeneous trust.  The ISD is governed by a set of *core
+   Root Configuration (TRC)*. The ISD is governed by a set of *core
    ASes*, which provide connectivity to other ISDs and manage the trust
    roots.  Typically, a few distinguished ASes within an ISD form the
-   ISD's core.  COMMENT: I replaced "ensuring that network traffic only
-   flows on policy-compliant paths" with a sentence about scoped trust.
-   My reasoning is that the TRC is part of the control plane.  It is
-   rather the data plane that is ensuring that traffic flows on certain
-   paths, based on the cryptography and trust model provided by the data
-   plane.  Alternatively, we could also omit that part of the sentence,
-   as this is explained later anyways.  COMMENT: why 3-10 largest ASes?
-   I'm not sure if AS size should be a criteria to determine who is the
-   root.  I changed it to "a few distinguished ASes", which is how we
-   introduce this in the book chapter 2
+   ISD's core.
 
    Isolation domains serve the following purposes:
 
@@ -369,13 +317,8 @@ Table of Contents
    ISDs provide natural isolation of routing failures and
    misconfigurations, provide meaningful and enforceable trust, enable
    endpoints to optionally restrict traffic forwarding to trusted parts
-   of Internet infrastructure only, and enable scalable routing updates
-   with high path-freshness.  COMMENT: I removed "give endpoints strong
-   control over both inbound and outbound traffic".  This property is
-   provided not by ISDs, rather by other components of the DP & CP: path
-   registration, path lookup, the fact that endpoints lookup paths and
-   add PCFS.. I rather focused this on the fact that traffic forwarding
-   can be limited to an ISD's "trust bubble".
+   of the Internet infrastructure only, and enable scalable routing
+   updates with high path-freshness.
 
 1.2.1.1.  Links
 
@@ -389,19 +332,17 @@ Table of Contents
       usually belong to the same entity or have a provider-customer
       relationship.
 
-   *  A *peering link* also includes at least one non-core AS.  A
-      peering link exists between ASes with a (standard or paid)
-      relationship.
+   *  A *peering link* also includes at least one non-core AS.
 
    See Figure 1 for a high-level overview of the SCION network
    structure.
 
     ...............................
    :                               :
-  :      [TCR]                      :
+  :      [TRC]                      :
  :          (::::::::::::::)         :      ..........................
 :        (::::: ISD core :::::)       :    :                          :
-:    (:: +---+ ::::::::: +---+ ::)    :   :    [TCR]                   :
+:    (:: +---+ ::::::::: +---+ ::)    :   :    [TRC]                   :
 : (::::: |CAS|===+---+ : |CAS| :::::) :  :        (:: ISD core ::)      :
 :    (:: +---+ : |CAS|===+---+====)===:==:=====(===+---+ ::: +---+ ::)  :
 :       /(:::::: +---+ ::::::) \      :  :    (::: |CAS|=====|CAS| :::) :
@@ -421,15 +362,13 @@ Table of Contents
   :            ISD 1                :      :                          :
    .................................        ..........................
 
-    |
-    |
-    o  Parent AS - child AS    ----  Peering link    ===  Core link
+Legend:
+
+|
+|
+o Parent AS - child AS   ---- Peering link   === Core link   CAS: Core AS
 
                   Figure 1: SCION network structure
-
-   COMMENT: TCR --> Do you mean TRC?  It would also be good to add in
-   the legend the meaning of CAS (Core AS), as this is an abbreviation
-   that we don't really use anywhere.
 
 1.2.2.  Routing
 
@@ -438,18 +377,13 @@ Table of Contents
    network paths.  A PCB is initiated by a core AS and then disseminated
    either within an ISD (to explore intra-ISD paths) or among core ASes
    (to explore core paths across different ISDs).  The PCBs accumulate
-   cryptographically protected path- and forwarding information on AS-
+   cryptographically protected path and forwarding information on AS-
    level, and store this information in the form of *hop fields (HFs)*.
    End hosts use information from these hop fields to create end-to-end
    forwarding paths for data packets, who carry this information in
    their packet headers.  This concept is called *packet-carried
    forwarding state (PCFS)*. The concept also supports multi-path
-   communication among end hosts.  COMMENT: PCBs never really reach end
-   hosts.  End hosts learn about paths via path lookup to path servers.
-   COMMENT: path- --> path (I'm not sure if the - is needed) COMMENT:
-   "End hosts use the information from these PCBs/hop fields": this
-   makes it sound like PCBs are somehow forwarded to end hosts, which is
-   not the case.  This is why I removed PCB
+   communication among end hosts.
 
    The process of creating an end-to-end forwarding path consists of the
    following steps:
@@ -459,7 +393,7 @@ Table of Contents
 
    2.  The AS then selects a few PCBs according to defined policies,
        transforms the selected PCBs into path segments, and registers
-       these segments with a path infrastructure, thus making them
+       these segments with its path infrastructure, thus making them
        available to other ASes.  This happens during the _path
        registration_ phase.
 
@@ -467,9 +401,7 @@ Table of Contents
        end-to-end forwarding path to the destination takes place.  For
        this, an end host performs (a) a _path lookup_ step, to obtain
        path segments, and (b) a _path combination_ step, to combine the
-       forwarding path from the segments.  COMMENT: "a path
-       infrastructure" --> its path infrastructure (as this is in a
-       nutshell the AS own path service?)
+       forwarding path from the segments.
 
    Figure 2 below shows the SCION routing process in a nutshell.
 
@@ -509,15 +441,9 @@ Table of Contents
    The *beacon service*, the *path service*, and the *certificate
    service* are the main control-plane infrastructure components within
    a SCION AS.  Each service can be deployed redundantly, depending on
-   the AS's size and type. _Internal routers_ forward packets inside the
-   AS, while _border routers_ provide interconnectivity between ASes.
-   COMMENT: I proposed some changes, as all the above mentioned services
-   are control services.  COMMENT: I also find it a bit confusing that
-   we mention internal routers here, as they are not really part of the
-   SCION infrastructure.  Maybe we could rewrite it like: "Existing
-   Internal routers are used to forward packets inside the AS, while
-   _SCION border routers_" ... . This is also more in line with what we
-   describe later in the paragraph
+   the AS's size and type.  Existing Internal routers are used to
+   forward packets inside the AS, while _SCION border routers_ provide
+   interconnectivity between ASes.
 
    *  The _beacon service_ discovers path information.  It is
       responsible for generating, receiving, and propagating PCBs.
@@ -543,12 +469,9 @@ Table of Contents
    task of border routers is to forward packets to a neighbor border
    router or to the destination host within the AS.  While SCION takes
    care of inter-domain routing, it relies on existing routing protocols
-   (e.g., IS-IS, OSPF, MPLS, SR, ...) and communication fabric (e.g.,
-   IP, MPLS) for intra-domain forwarding. _Internal routers_, therefore,
-   do not need to be changed to support SCION.  COMMENT: I removed SDN,
-   as it is not really a routing protocol, rather just a paradigm about
-   how to mange & configure networks.  I mentioned, instead, MPLS &
-   Segment Routing
+   (e.g., IS-IS, OSPF, SR) and communication fabric (e.g., IP, MPLS) for
+   intra-domain forwarding. _Internal routers_, therefore, do not need
+   to be changed to support SCION.
 
 1.2.4.  Formal Verification
 
@@ -558,9 +481,9 @@ Table of Contents
    capacities of human beings for considering all possible states and
    interactions.  That is why SCION includes a formal verification
    framework developed by the Department of Computer Science of the ETH
-   Zurich [KLENZE2021].  This guarantees that packet forwarding and
-   SCION's authentication mechanisms are correct and consistent.
-   COMMENT: mechanisms --> mechanisms and implementations
+   Zurich [KLENZE2021].  This guarantees that packet forwarding as well
+   as SCION's authentication mechanisms and implementations are correct
+   and consistent.
 
 1.3.  Conventions and Definitions
 
@@ -593,23 +516,18 @@ Table of Contents
    root certificates, which are used to sign CA certificates, which are
    in turn used to sign AS certificates.  The TRC also includes ISD-
    policies that specify, for example, the TRC's usage, validity, and
-   future updates.  TRCs are the main components of the CP-PKI.
-   COMMENT: are TRC the *main* component?  Configuration-wise yes, but
-   the overall PKI has more components (certificate service, HSMs, ...
-   ).  I'd suggest replacing "the main" with "a fundamental"
+   future updates.  A TRC is a fundamental component of an CP-PKI.
 
    The initial TRC in an ISD is called the *base TRC*. This base TRC
    constitutes the ISD's trust anchor.  It is signed during a signing
    ceremony and then distributed throughout the ISD.  All entities
    within the ISD obtain the initial TRC with an offline mechanism such
-   as a USB flash drive provided by the ISP, or with an online mechanism
-   that relies on a trust-on-first-use (TOFU) approach.  However, all
-   updates to the base TRCs are performed in a straightforward process
-   that does not require any manual or out-of-band action (such as a
-   software update), see TRC Update and Verification (Section 2.1.2).
-   COMMENT: "the ISP" seems a bit out of the blue here, as we are not
-   really talking about any ISP.  I'd rephrase it with something like "a
-   trusted AS"
+   as a USB flash drive provided by a trusted AS, like the relevant ISP,
+   or with an online mechanism that relies on a trust-on-first-use
+   (TOFU) approach.  However, all updates to the base TRCs are performed
+   in a straightforward process that does not require any manual or out-
+   of-band action (such as a software update), see TRC Update and
+   Verification (Section 2.1.2).
 
    Figure 3 shows the TRC trust chain and associated certificates.  TRC
    1 is the base TRC, and TRC 2 and 3 constitute updates to this base
@@ -718,8 +636,7 @@ Table of Contents
    The partition of the SCION network into ISDs guarantees that no
    single entity can take down the entire network.  Even if several
    entities formed a coalition to carry out an attack, the effects of
-   that attack would be limited to one or a few ISDs.  Moreover, all
-   actions are publicly visible, which deters misbehavior.
+   that attack would be limited to one or a few ISDs.
 
 2.2.  SCION Control Plane
 
@@ -735,30 +652,27 @@ Table of Contents
 
 2.2.1.  Path Exploration
 
-   In SCION, the path segment construction process or routing is
-   referred to as *beaconing*. Responsible for the beaconing process is
-   the _beacon service_ of each AS, which generates, receives, and
+   In SCION, the path segment construction process is referred to as
+   *beaconing*. The _beacon service_ of each AS is responsible for the
+   beaconing process.  The beacon service generates, receives, and
    propagates the *path-segment construction beacons (PCBs)* on a
-   regular basis, to iteratively construct path segments.  COMMENT: why
-   "or routing"?  I would omit it.  I'd say that routing is the overall
-   process of discovering and disseminating routing information, and
-   beaconing only takes care of the first part.  "Responsible for the
-   beaconing process is the _beacon service_ of each AS," --> "The
-   beacon service of each AS is responsible for the beaconing process,"
+   regular basis, to iteratively construct path segments.
 
    There are three types of path segments (note that all path segments
    can be used to send data traffic in both directions):
 
-   *  A path segment from a non-core AS to a core AS is an _up-segment_.
-
-   *  A path segment from a core AS to a non-core AS is a _down-
+   *  A path segment from a non-core AS to a core AS is an _up-path
       segment_.
 
-   *  A path segment between core ASes is a _core-segment_.
+   *  A path segment from a core AS to a non-core AS is a _down-path
+      segment_.
 
-   Up-segments and down-segments are invertible: An up-segment can be
-   converted to a down-segment and vice versa, depending on the
-   direction of the end-to-end path.
+   *  A path segment between core ASes is a _core-path segment_.
+
+   All path segments are invertible: A core-path segment can be used
+   bidirectional, and an up-path segment can be converted into a down-
+   path segment, or vice versa, depending on the direction of the end-
+   to-end path.
 
    Path segment construction is conducted hierarchically on two levels:
 
@@ -806,23 +720,19 @@ Table of Contents
    traversed during the delivery of a packet.  COMMENT: maybe last
    sentence can be omitted? it is not really specific to peering links
 
-   Figure 4 shows how intra-ISD PCB propagation works, from the ISD core
-   down to child ASes.  For the sake of illustration, the interfaces of
-   each AS are numbered with integer values.  In practice, each AS can
-   choose any encoding for its interfaces; in fact, only the AS itself
-   needs to understand its encoding.  Here, AS F receives two different
-   PCBs via two different links from a core AS.  Moreover, AS F uses two
-   different links to send two different PCBs to AS G, each containing
-   the respective egress interfaces.  AS G extends the two PCBs and
-   forwards both of them over a single link to a child AS.  COMMENT:
-   "via two different links from a core AS" --> I suggest to give a
-   letter to this 'a core AS' as well (both in the figure and in the
-   explanation).  Otherwise, it is not very clear wether the bubble on
-   top with "core" is the ISD core or a core AS
+   Figure 4 shows how intra-ISD PCB propagation works, from the ISD's
+   core AS down to child ASes.  For the sake of illustration, the
+   interfaces of each AS are numbered with integer values.  In practice,
+   each AS can choose any encoding for its interfaces; in fact, only the
+   AS itself needs to understand its encoding.  Here, AS F receives two
+   different PCBs via two different links from core AS X.  Moreover, AS
+   F uses two different links to send two different PCBs to AS G, each
+   containing the respective egress interfaces.  AS G extends the two
+   PCBs and forwards both of them over a single link to a child AS.
 
                                      .-----.
-                                    ;  Core :
-                           +-----+  :       ;
+                                    ; Core  :
+                           +-----+  : AS X  ;
                            |PCB  |   \ 2 1 / +-----+
                            |Core |    `+-+'  |pcb  |
                            |Out:2|     | |   |core |
@@ -911,26 +821,19 @@ Table of Contents
    Both the beacon service and the path service are involved in the path
    registration process.  A non-core AS typically receives several PCBs
    representing several path segments to various core ASes.  Out of
-   these PCBs, the non-core AS must select those down-segments through
-   which it wants to be reached.  It is the task of the AS's beacon
-   service to make this selection, according to the criteria described
-   in Path-Segment Selection (Section 2.2.2.1).  The beacon service then
-   registers these path segments at the path service of the respective
-   core AS.  When links fail, segments expire, or better segments become
-   available, the beacon service keeps updating the down-segments
-   registered for its AS.
+   these PCBs, the non-core AS must select those down-path segments
+   through which it wants to be reached.  It is the task of the AS's
+   beacon service to make this selection, according to the criteria
+   described in Path-Segment Selection (Section 2.2.2.1).  The beacon
+   service then registers these path segments both at the local path
+   service and at the path service of all core ASes.  When links fail,
+   segments expire, or better segments become available, the beacon
+   service updates the down-path segments registered for its AS.
 
-   As a result, a core AS's path service contains all the intra-ISD path
+   As a result, a core AS's path service contains all intra-ISD path
    segments registered by the leaf ASes of its ISD.  In addition, a core
    AS path service also stores the preferred core-path segments to other
    core ASes.
-
-   Also each non-core AS includes a path service, as part of the AS's
-   control service.  A path service in a non-core AS contains up-
-   segments to the core ASes of the ISD.  The path services learn these
-   up-segments by extracting them from the PCBs they obtain from their
-   local beacon service.  The global path infrastructure thus bears
-   similarities to DNS, where information is fetched on-demand only.
 
 2.2.2.1.  Path-Segment Selection
 
@@ -966,23 +869,23 @@ Table of Contents
 2.2.3.  Path Lookup
 
    An end host (source) who wants to start communication with another
-   host (destination), requires up to three path segments: An up-segment
-   to reach the ISD core, a core-segment to reach the destination ISD,
-   and a down-segment to reach the destination AS.  The source host
-   queries the path service in its AS for such segments.  The path
-   service has up-segments stored in its database and furthermore checks
-   if it has appropriate core- and down-segments in its cache; in this
-   case it returns them immediately.
+   host (destination), requires up to three path segments: An up-path
+   segment to reach the ISD core, a core-path segment to reach the
+   destination ISD, and a down-path segment to reach the destination AS.
+   The source host queries the path service in its AS for such segments.
+   The path service has up-path segments stored in its database and
+   furthermore checks if it has appropriate core- and down-path segments
+   in its cache; in this case it returns them immediately.
 
    If not, the path service in the source AS queries core path services
-   (using locally stored up-segments) in the source ISD for core-
-   segments to the destination ISD.  Then, it combines up-segments with
-   the newly retrieved core-segments, and queries core path services in
-   the remote ISD to fetch remote down-segments.  To improve overall
-   efficiency, the local path service caches the returned path segments
-   and uses parallelism when requesting path segments from core path
-   services.  Finally, the local path service returns all path segments
-   to the source host.
+   (using locally stored up-path segments) in the source ISD for core-
+   path segments to the destination ISD.  Then, it combines up-path
+   segments with the newly retrieved core-path segments, and queries
+   core path services in the remote ISD to fetch remote down-path
+   segments.  To improve overall efficiency, the local path service
+   caches the returned path segments and uses parallelism when
+   requesting path segments from core path services.  Finally, the local
+   path service returns all path segments to the source host.
 
    This recursive lookup significantly simplifies the process for end
    hosts (which only have to send a single query, similar to stub DNS
@@ -1017,8 +920,7 @@ Table of Contents
       brief) outages in the current Internet.  See also [ANDERSEN2001],
       [KATZ2012], and [KUSHMAN2007], as well as Demonstrating the
       reliability and resilience of Secure Swiss Finance Network
-      (https://perma.cc/4H3Q-WZNG).  COMMENT: link reference to be fixed
-      (with others)
+      (https://perma.cc/4H3Q-WZNG).
 
 2.3.  SCION Data Plane
 
@@ -1040,8 +942,7 @@ Table of Contents
    arbitrary addressing format for its hosts, e.g., a 4-byte IPv4,
    6-byte media access control (MAC) address, 16-byte IPv6, or any other
    up to 16-byte addressing scheme.  A valuable consequence is that
-   hosts with different address types can directly communicate, e.g., an
-   IPv4 host can communicate with an IPv6 host over SCION.
+   hosts with different address types can directly communicate.
 
    The next two sections describe how an end host combines path segments
    into an end-to-end forwarding path, and how border routers forward
@@ -1059,30 +960,30 @@ Table of Contents
    following ways:
 
    *  *Immediate combination of path segments*: The last AS on the up-
-      segment is also the first AS on the down-segment.  In this case,
-      the simple combination of an up-segment and a down-segment creates
-      a valid forwarding path.
+      path segment is also the first AS on the down-path segment.  In
+      this case, the simple combination of an up-path segment and a
+      down-path segment creates a valid forwarding path.
 
-   *  *AS shortcut*: The up-segment and down-segment intersect at a non-
-      core AS.  In this case, a shorter forwarding path can be created
-      by removing the extraneous part of the path.
+   *  *AS shortcut*: The up-path segment and down-path segment intersect
+      at a non-core AS.  In this case, a shorter forwarding path can be
+      created by removing the extraneous part of the path.
 
    *  *Peering shortcut*: A peering link exists between the two
       segments, so a shortcut via the peering link is possible.  As in
       the AS shortcut case, the extraneous path segment is cut off.  The
       peering link could be traversing to a different ISD.
 
-   *  *Combination with a core-segment*: The last AS on the up-segment
-      is different from the first AS on the down-segment.  This case
-      requires an additional core-segment to connect the up- and down-
-      segment.  If the communication remains within the same ISD, a
-      local ISD core-segment is needed; otherwise, an inter-ISD core-
-      segment is required.
+   *  *Combination with a core-path segment*: The last AS on the up-path
+      segment is different from the first AS on the down-path segment.
+      This case requires an additional core-path segment to connect the
+      up- and down-path segment.  If the communication remains within
+      the same ISD, a local ISD core-path segment is needed; otherwise,
+      an inter-ISD core-path segment is required.
 
-   *  *On-path*: The destination AS is part of the up-segment or the
-      source AS is part of the down-segment; in this case, a single up-
-      or down-segment, respectively, is sufficient to create a
-      forwarding path.
+   *  *On-path*: The destination AS is part of the up-path segment or
+      the source AS is part of the down-path segment; in this case, a
+      single up- or down-path segment, respectively, is sufficient to
+      create a forwarding path.
 
    Once a forwarding path is chosen, it is encoded in the SCION packet
    header.  This makes inter-domain routing tables unnecessary for
@@ -1103,7 +1004,7 @@ Table of Contents
    in Figure 5.  The additional meta header (META) contains pointers to
    the currently active INF and HF.
 
-   up-segment             core-segment             down-segment
+   up-path segment        core-path segment        down-path segment
 
    +-------+              +-------+                +-------+
    |+-----+|              |+-----+|                |+-----+|
@@ -1202,12 +1103,9 @@ Table of Contents
 
 2.3.4.  Intra-AS Communication
 
-   Communication within an AS is handled by existing intra-domain
-   communication technologies and protocols such as IP with Software-
-   Defined Networking (SDN), or Multiprotocol Label Switching (MPLS).
-   COMMENT: Once again, I'm not a huge fan of mentioning SDN here.  I'd
-   rather specify that SCION routers use IP to communicate intra-AS,
-   therefore they rely on existing intra-domain routing protocols.
+   SCION routers use IP to communicate within an AS, therefore they rely
+   on existing intra-domain routing protocols, such as Multiprotocol
+   Label Switching (MPLS) or others.
 
 3.  Deployment
 
@@ -1240,10 +1138,6 @@ Table of Contents
    of-presence, achieving connectivity with high reliability,
    availability, and performance.
 
-   TODO: sentences mentioning throughput seem a bit out of the blue
-   here..  Also, maybe a figure showing customer/provider deployment
-   might not be a bad idea?
-
 3.2.  Internet Exchange Points
 
    Internet Exchange Points (IXP) play an important role for SCION as
@@ -1273,12 +1167,7 @@ Table of Contents
    using SCION natively is that the full range of advantages becomes
    available to applications, at the cost of installing the SCION
    endpoint stack and making the application SCION-aware.  In the short
-   term, the second approach is preferred.  COMMENT: in section
-   "Avoiding Pitfalls" we mention that SCION provides benefits already
-   for early adopters.  We need to make this more clear in the
-   deployment section.  For example, we could show clearly how
-   ecosystems represent a great use case, where members can all benefit
-   from SCION eventhough there is no widespread global adoption.
+   term, the second approach is preferred.
 
 3.3.1.  Native End Hosts
 
@@ -1311,10 +1200,7 @@ Table of Contents
    A more detailed description of the SIG and its coordination
    mechanisms is to be presented in dedicated documents.
 
-   COMMENT: in "why now", we mention transition mechanisms.  It might
-   not be a bad idea to add a small paragraph about SBAS & SIAM here
-
-3.4.  Deployment experiences
+3.4.  Deployment Experiences
 
    SCION has been deployed in production by multiple entities, growing
    its acceptance among industry.  While early deployments started on
@@ -1351,8 +1237,6 @@ Table of Contents
    their international communications.  In addition, Swiss higher
    education institutions are connected thanks to SCI-ED.
 
-   TODO: Link/reference SSFN, SCI-ED
-
    Besides productive deployments, SCION also comprises a global SCION
    research testbed called [KWON2021].  Its is composed of a set of
    dozens of globally distributed infrastructure ASes, mostly run by
@@ -1364,132 +1248,19 @@ Table of Contents
 
 4.  IANA Considerations
 
-   Within the SCION ecosystem, each ISD-AS is identified with a 64-bit
-   number; the most significant 16 bits identify the ISD (represented in
-   decimal), the least significant 48 bits identify the AS in a format
-   similar to that of IPv6 addresses, and a hyphen is used to separate
-   the two--e.g., 4-ff00:1:f.  In the remainder of this section, we
-   elaborate on the latter (i.e., the concrete numbering).  COMMENT: As
-   far as I understand while skimming through rfc8126, this section is
-   in case we want IANA to keep a registry for certain fields.  It is
-   not meant to contain a description of such fields (that should be
-   somewhere else in the draft).  We didn't really describe yet the
-   SCION header format, how bits within a SCION ASN are allocated, ...
-   We also don't we go into details about how an ISD-AS should be
-   represented.  Do we really want to add a full table for IANA here?  I
-   think it would be best to keep it descriptive for now, as placing
-   such table with defined value here could have very long term
-   consequences.
-
-4.1.  ISD Numbers
-
-   ISDs are represented with decimal numbers, ranging from 0 to 65535.
-   Table 2.1 shows the current allocation of ISD numbers.  The ISD
-   number 0 is reserved to mean "any ISD" and used notably during path
-   lookup.
-
-      +============+================================================+
-      | ISD Number | Description                                    |
-      +============+================================================+
-      | 0          | Wildcard ISD (stands for "any ISD")            |
-      +------------+------------------------------------------------+
-      | 1-15       | Reserved for documentation and sample code     |
-      +------------+------------------------------------------------+
-      | 16-63      | Private use (can be used for testing,          |
-      |            | analogously to [RFC6996]                       |
-      +------------+------------------------------------------------+
-      | 64-4094    | Public ISDs, should be assigned in ascending   |
-      |            | order, without gaps and without vanity numbers |
-      +------------+------------------------------------------------+
-      | 4095-65535 | Reserved                                       |
-      +------------+------------------------------------------------+
-
-          Table 1: Allocation and description of ISD number ranges
-
-4.2.  AS Numbers
-
-   The SCION numbering scheme uses a superset of the existing BGP AS
-   numbering scheme (see also Autonomous system numbers
-   (https://perma.cc/TEG2-8D3Z)).  The default format for AS numbers is
-   similar to IPv6.  It uses a 16-bit colon separated lower-case
-   hexadecimal encoding with leading zeros omitted.  However, the double
-   colon (::) zero-compression feature of IPv6 is not supported.  As for
-   ISD numbers, 0 represents the wildcard AS and stands for "any AS",
-   which may be used during path lookup.
-
-   The range from 1 to 2^32 - 1 is dedicated to BGP AS numbers.  If a
-   BGP AS supports SCION, it has the same AS number for both BGP and
-   SCION.  To facilitate the comparison with BGP AS numbers, any number
-   in the BGP AS range is represented as a decimal.  While it is legal
-   to write a BGP AS number using the SCION syntax, programs should use
-   the decimal representation for display.  For example, if a program
-   receives 0:1:f, it should display it as 65551.
-
-   Currently, the 2:0:0/16 range is allocated to public SCION-only ASes
-   (i.e., ASes that are not existing BGP ASes).  AS numbers in that
-   range should be assigned in ascending order, without gaps and without
-   vanity numbers.
-
-4.3.  Assignment of ISD and AS Numbers
-
-   Ideally, each AS number should be globally unique (partly to
-   facilitate the comparison and transition from BGP), but the actual
-   requirement is only that each AS number be unique within an ISD.
-   Since an AS can be part of several ISDs, picking a globally unique AS
-   number also facilitates joining new ISDs.
-
-   In principle, ISD numbers can be self-assigned: A number that is not
-   yet used by any other ISD is picked by the constituents of the new
-   ISD before the first TRC is signed and distributed, then other ISDs
-   are free to accept or reject the new TRC.  Preferably, however, an
-   organization such as ICANN or a regional Internet registry (e.g.,
-   RIPE NCC) will take on the responsibility of assigning ISD and AS
-   numbers.
+   Currently, this document has no request for action to IANA.  However,
+   when full specification of SCION is available, requests for IANA
+   actions are expected regarding the registration of optional packet
+   header fields as well as the coordination of SCION ISD and AS number
+   assignments.
 
 5.  Security Considerations
 
-   SCION seeks to achieve greater transparency and control for the
-   forwarding paths of network packets, and the trust roots used for
-   authentication.  When the network offers path transparency, end hosts
-   can predict (and verify) the forwarding path taken by packets.
-   COMMENT: "the forwarding paths of network packets" --> inter-domain
-   routing
-
-   Taking transparency of network paths as a first property, SCION aims
-   to additionally achieve path control, a stronger property that (1)
-   enables ASes to control the incoming path segments through which they
-   are reachable and (2) allows senders to then create and select end-
-   to-end paths.  This seemingly benign requirement has several
-   repercussions--beneficial but also fragile if implemented
-   incorrectly.  This section lists the fragile aspects that need to be
-   handled with care.
-
-   *  *Respecting the forwarding policies of ISPs*: If senders have
-      complete path control, they may violate ISPs' forwarding policies.
-      It must therefore be ensured that ISPs offer a set of policy-
-      compliant paths which senders can choose from.
-
-   *  *Preventing malicious path creation*: A malicious sender could
-      exploit path control for attacks, for example by forming malicious
-      forwarding paths such as loops that consume increased network
-      resources.
-
-   *  *Network stability*: Past research has shown that uncoordinated
-      path selection by end hosts can lead to persistent oscillations,
-      i.e., an alternating grow-and-shrink pattern of traffic volumes on
-      links (see [FISCHER2009], [SHAIKH2001]).  This is often raised as
-      a key concern and represents one of the biggest obstacles to
-      deployment of path-aware networks ([RFC9049]).  It is thus
-      imperative that a future Internet architecture take this into
-      account and develop mechanisms preventing these instabilities
-      ([SCHERRER2020]).  COMMENT: this list is a great start, however,
-      being SCION heavily security focused, I think detailed security
-      considerations should be postponed to dedicated drafts (as each
-      component has its own security considerations).  In those cases,
-      we can try to stick to rfc3552 in order to write this section.  So
-      my suggestion for now is that we keep this section at a high
-      level, and explicitly say that we will discuss such considerations
-      in detail for each component in future documents.
+   SCION has been designed from the outset to offer security by default,
+   and thus there are manifold security considerations.  However,
+   describing all considerations here would go beyond the scope of this
+   document.  A separate document including all security implications
+   and considerations will follow later.
 
 6.  References
 
@@ -1526,9 +1297,6 @@ Table of Contents
               International Conference on emerging Networking
               EXperiments and Technologies, DOI 10.1145/3485983.3494839,
               December 2021, <https://doi.org/10.1145/3485983.3494839>.
-
-   [FISCHER2009]
-              "*** BROKEN REFERENCE ***".
 
    [GRIFFIN1999]
               Griffin, T. and G. Wilfong, "An analysis of BGP
@@ -1611,10 +1379,6 @@ Table of Contents
               DOI 10.17487/RFC6830, January 2013,
               <https://www.rfc-editor.org/rfc/rfc6830>.
 
-   [RFC6996]  Mitchell, J., "Autonomous System (AS) Reservation for
-              Private Use", BCP 6, RFC 6996, DOI 10.17487/RFC6996, July
-              2013, <https://www.rfc-editor.org/rfc/rfc6996>.
-
    [RFC8205]  Lepinski, M., Ed. and K. Sriram, Ed., "BGPsec Protocol
               Specification", RFC 8205, DOI 10.17487/RFC8205, September
               2017, <https://www.rfc-editor.org/rfc/rfc8205>.
@@ -1647,13 +1411,6 @@ Table of Contents
               DOI 10.1016/j.comcom.2009.03.009, May 2009,
               <https://doi.org/10.1016/j.comcom.2009.03.009>.
 
-   [SCHERRER2020]
-              Scherrer, S., Legner, M., Perrig, A., and S. Schmid,
-              "Incentivizing Stable Path Selection in Future Internet
-              Architectures", ACM SIGMETRICS Performance Evaluation
-              Review Vol. 48, pp. 12-13, DOI 10.1145/3453953.3453956,
-              March 2021, <https://doi.org/10.1145/3453953.3453956>.
-
    [SCHUCHARD2011]
               Schuchard, M., Mohaisen, A., Foo Kune, D., Hopper, N.,
               Kim, Y., and E. Vasserman, "Losing control of the
@@ -1662,13 +1419,6 @@ Table of Contents
               and communications security - CCS '10,
               DOI 10.1145/1866307.1866411, 2010,
               <https://doi.org/10.1145/1866307.1866411>.
-
-   [SHAIKH2001]
-              Shaikh, A., Rexford, J., and K. Shin, "Evaluating the
-              impact of stale link state on quality-of-service routing",
-              IEEE/ACM Transactions on Networking Vol. 9, pp. 162-176,
-              DOI 10.1109/90.917073, April 2001,
-              <https://doi.org/10.1109/90.917073>.
 
 Acknowledgments
 
