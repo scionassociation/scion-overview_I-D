@@ -5,8 +5,8 @@
 panrg                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 13 November 2022                                    ETH Zuerich
-                                                             12 May 2022
+Expires: 17 November 2022                                    ETH Zuerich
+                                                             16 May 2022
 
 
                              SCION Overview
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 November 2022.
+   This Internet-Draft will expire on 17 November 2022.
 
 Copyright Notice
 
