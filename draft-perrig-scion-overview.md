@@ -580,6 +580,9 @@ Communication within an AS is handled by existing intra-domain communication tec
 # Deployment
 Deploying a next-generation architecture is a challenging task, as it needs to be integrated with and operate alongside existing infrastructure. In the following, we discuss practical deployment approaches, supporting both native SCION hosts and IP hosts.
 
+C0MMENT: Maybe shortly list the deployment variants already here? 
+
+
 ## Autonomous System Deployment
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers. Practice shows that all of them can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links. With a P4 implementation hardware it is possible to forward SCION traffic even at terabit speeds {{DERUITER2021}}.
 Within an AS, SCION is deployed as an IP overlay on top of the existing network. This way SCION allows, by design, to reuse the existing intra-domain network and equipment (i.e., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
