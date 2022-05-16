@@ -89,10 +89,10 @@ Since its introduction back in the 1980s, the Internet has never stopped to expa
 COMMENT: I find the first half of this paragraph a bit vague. People don't care about transparency as a concept. Transparency is rather a mean to achieve other goals (which I believe are more within the CIA triad). So I think we could rewrite this to focus on the direct goals, rather than the means.
 COMMENT: we don't mention RHINE, so I'm not sure if it is appropriate to mention DNS hijackings here. Also, they are somehow prevented by DNSSEC. So I'd remove DNS hijacking
 
-Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Also other requirements that users have of today's Internet are not fulfilled yet (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators.
+Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Today's Internet does not yet fulfil all user requirements (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators.
 COMMENT: here I would also mention the importance of inter-domain routing when workloads move to clouds (as the pipe between users and cloud becomes much more important)
 
-These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over a secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, today's users of the Internet seek performance, control, reliability, security, and trust.
+These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over a secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, these Internet users seek performance, control, reliability, security, and trust.
 COMMENT: I would focus on motivation (data residency, preventing eavesdropping, confidentiality, ... ). I would remove "prefer to select themselves the path their data will take" and replace it with something more related to business goals rather than the mean to achieve them.
 COMMENT: I personally find the "they" a bit funny... It sounds like we are referring to a specific group of users, while in principle we should be talking about all internet users (~= everyone). Maybe this is just a style thing, no strong opinions here
 
@@ -102,7 +102,7 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
   - high availability also in the presence of adversaries,
   - fast failover in the case of inter-domain link or router failures, and
   - prevention from route hijacking, DoS, and other attacks.
-- Make the Internet more transparent and efficient.
+- A more transparent and efficient Internet.
 - Improve the inter-domain control plane's scalability.
 - Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and Distributed Ledger Technology (DLT).
 COMMENT: I'd mention critical workloads. Maybe we could also add "tomorrow's applications demanding high performance connectivity, ..."
@@ -367,7 +367,7 @@ In SCION, the path segment construction process or routing is referred to as **b
 COMMENT: why "or routing"? I would omit it. I'd say that routing is the overall process of discovering and disseminating routing information, and beaconing only takes care of the first part.
 "Responsible for the beaconing process is the _beacon service_ of each AS," --> "The beacon service of each AS is responsible for the beaconing process,"
 
-There are three types of path segments:
+There are three types of path segments (note that all path segments can be used to send data traffic in both directions):
 
 - A path segment from a non-core AS to a core AS is an _up-segment_.
 - A path segment from a core AS to a non-core AS is a _down-segment_.
@@ -378,9 +378,9 @@ Up-segments and down-segments are invertible: An up-segment can be converted to 
 Path segment construction is conducted hierarchically on two levels:
 
 - _Core beaconing_ is the process of constructing path segments between core ASes. During core beaconing, the beacon service of a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to all other neighboring core ASes. Core beaconing in SCION is similar to BGP’s route-advertising process, although in SCION the process is periodic and PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.
-- _Intra-ISD beaconing_ creates path segments from core ASes to non-core ASes. For this, the beacon service of a core AS creates PCBs and sends them to the non-core child ASes (typically customer ASes). The beacon service of a non-core child AS receives these PCBs and forwards them to the AS's child ASes, and so on. This procedure continues until the PCB reaches an AS without any customer (leaf AS). As a result, all ASes receive path segments to reach the core ASes of their ISD.
+- _Intra-ISD beaconing_ creates path segments from core ASes to non-core ASes. For this, the beacon service of a core AS creates PCBs and sends them to the non-core child ASes (typically customer ASes). The beacon service of a non-core child AS receives these PCBs and forwards them to its child ASes, and so on. This procedure continues until the PCB reaches an AS without any customer (leaf AS). As a result, all ASes receive path segments to reach the core ASes of their ISD.
 
-On its way down, a PCB accumulates cryptographically protected path- and forwarding information on AS-level. At every AS, metadata as well as information about the AS's ingress and egress interfaces (i.e., link identifiers) is added to the PCB. The ingress and egress interface IDs identify connections to neighboring ASes. These IDs only need to be unique within each AS. Therefore, they can be chosen and encoded by each AS independently and without any need for coordination.
+On its way down, a PCB accumulates cryptographically protected path- and forwarding information per traversed AS. At every AS, metadata as well as information about the AS's ingress and egress interfaces (i.e., link identifiers) is added to the PCB. The ingress and egress interface IDs identify connections to neighboring ASes. These IDs only need to be unique within each AS. Therefore, they can be chosen and encoded by each AS independently and without any need for coordination.
 
 SCION also supports shortcuts and peering links. In a _shortcut_, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. _Peering links_ can be added to up- or down-path segments, resulting in an operation similar to today’s Internet.
 
@@ -462,12 +462,12 @@ COMMENT: "via two different links from a core AS" --> I suggest to give a letter
 
 #### Security
 
-Each PCB contains signatures of all on-path ASes. Every time a beacon service receives a PCB, it validates the PCB's authenticity. During this process, the beacon service can query the certificate service, for example, when the beacon service lacks a certificate.
+Each PCB contains signatures of all on-path ASes. Every time a beacon service receives a PCB, it validates the PCB's authenticity. During this process, the beacon service can query the certificate service, for example, when it lacks an intermediate certificate.
 
-#### Policies
+#### Policies
 
-Each AS can independently set policies dictating which PCBs are sent in which time intervals, and to which neighbors. In particular, PCBs do not need to be propagated immediately upon arrival. However, during bootstrapping and if the AS obtains a PCB containing a previously unknown path, the AS should forward the PCB immediately, such that other ASes learn about it quickly.
-COMMENT: I would add : "In particular, The beaconing process is asynchronous, so PCBs ... "
+Each AS can independently set policies dictating which PCBs are sent in which time intervals, and to which neighbors. In particular, PCBs do not need to be propagated immediately upon arrival. However, during bootstrapping and if the AS obtains a PCB containing a previously unknown path, the AS should forward the PCB immediately, to ensure quick connectivity establishment.
+
 
 ### Path Registration
 
@@ -496,7 +496,7 @@ An end host (source) who wants to start communication with another host (destina
 
 If not, the path service in the source AS queries core path services (using locally stored up-segments) in the source ISD for core-segments to the destination ISD. Then, it combines up-segments with the newly retrieved core-segments, and queries core path services in the remote ISD to fetch remote down-segments. To improve overall efficiency, the local path service caches the returned path segments and uses parallelism when requesting path segments from core path services. Finally, the local path service returns all path segments to the source host.
 
-This recursive lookup strongly simplifies the process for end hosts (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).
+This recursive lookup significantly simplifies the process for end hosts (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).
 
 ### Link Failures
 
@@ -591,7 +591,7 @@ It is crucial for the data plane that end hosts only use paths constructed and a
 
 SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
 
-### Forwarding
+### Forwarding
 
 Routers can efficiently forward packets in the SCION architecture. In particular, the absence of inter-domain routing tables and of complex longest-IP-prefix matching performed by current routers enables the construction of more efficient routers.
 
@@ -680,7 +680,7 @@ ISDs are represented with decimal numbers, ranging from 0 to 65535. Table 2.1 sh
 
 The SCION numbering scheme uses a superset of the existing BGP AS numbering scheme (see also [Autonomous system numbers](https://perma.cc/TEG2-8D3Z)). The default format for AS numbers is similar to IPv6. It uses a 16-bit colon separated lower-case hexadecimal encoding with leading zeros omitted. However, the double colon (::) zero-compression feature of IPv6 is not supported. As for ISD numbers, 0 represents the wildcard AS and stands for “any AS”, which may be used during path lookup.
 
-The range from 1 to 232 - 1 is dedicated to BGP AS numbers. If a BGP AS supports SCION, it has the same AS number for both BGP and SCION. To facilitate the comparison with BGP AS numbers, any number in the BGP AS range is represented as a decimal. While it is legal to write a BGP AS number using the SCION syntax, programs should use the decimal representation for display. For example, if a program receives 0:1:f, it should display it as 65551.
+The range from 1 to 2^32 - 1 is dedicated to BGP AS numbers. If a BGP AS supports SCION, it has the same AS number for both BGP and SCION. To facilitate the comparison with BGP AS numbers, any number in the BGP AS range is represented as a decimal. While it is legal to write a BGP AS number using the SCION syntax, programs should use the decimal representation for display. For example, if a program receives 0:1:f, it should display it as 65551.
 
 Currently, the 2:0:0/16 range is allocated to public SCION-only ASes (i.e., ASes that are not existing BGP ASes). AS numbers in that range should be assigned in ascending order, without gaps and without vanity numbers.
 
