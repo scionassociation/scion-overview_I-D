@@ -5,8 +5,8 @@
 panrg                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 16 November 2022                                    ETH Zuerich
-                                                             15 May 2022
+Expires: 17 November 2022                                    ETH Zuerich
+                                                             16 May 2022
 
 
                              SCION Overview
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 November 2022.
+   This Internet-Draft will expire on 17 November 2022.
 
 Copyright Notice
 
@@ -1120,6 +1120,8 @@ Table of Contents
    needs to be integrated with and operate alongside existing
    infrastructure.  In the following, we discuss practical deployment
    approaches, supporting both native SCION hosts and IP hosts.
+
+   C0MMENT: Maybe shortly list the deployment variants already here?
 
 3.1.  Autonomous System Deployment
 
