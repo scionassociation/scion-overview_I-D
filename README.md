@@ -9,16 +9,16 @@ ________________________________________________________________________________
 
 This is the working area for the individual Internet-Draft, "SCION Overview".
 
-* [Editor's Copy](https://scionfoundation.github.io/scion-overview_I-D/#go.draft-perrig-scion-overview.html)
+* [Editor's Copy](https://scionassociation.github.io/scion-overview_I-D/#go.draft-perrig-scion-overview.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-perrig-scion-overview)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-perrig-scion-overview)
-* [Compare Editor's Copy to Individual Draft](https://scionfoundation.github.io/scion-overview_I-D/#go.draft-perrig-scion-overview.diff)
+* [Compare Editor's Copy to Individual Draft](https://scionassociation.github.io/scion-overview_I-D/#go.draft-perrig-scion-overview.diff)
 
 
 ## Contributing
 
 See the
-[guidelines for contributions](https://github.com/scionfoundation/scion-overview_I-D/blob/main/CONTRIBUTING.md).
+[guidelines for contributions](https://github.com/scionassociation/scion-overview_I-D/blob/main/CONTRIBUTING.md).
 
 Contributions can be made by creating pull requests.
 The GitHub interface supports creating pull requests using the Edit (✏) button.
