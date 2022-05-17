@@ -59,13 +59,12 @@ informative:
   ANDERSEN2001: DOI.10.1145/502034.502048
   KATZ2012: DOI.10.1145/2377677.2377756
   KUSHMAN2007: DOI.10.1145/1232919.1232927
+  PERRIG2017: DOI.10.1007/978-3-319-67080-5
 
 
 --- abstract
 
-The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. However, the security of today's Internet is far from commensurate with its importance as critical infrastructure. Additionally, the Internet has not primarily been built for high availability in the presence of adversaries, and recent proposals to improve Internet security and availability have been constrained by the setup of the current architecture.
-
-The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address the above-mentioned issues. SCION was explicitly designed from the outset to offer availability and security by default. The architecture provides route control, failure isolation, and explicit trust information for end-to-end communication. It also enables multi-path routing between hosts.
+The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. But although the world-wide communication system guarantees global reachability, the Internet has not primarily been built with security and high availability in mind. The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address these issues. SCION was explicitly designed from the outset to offer security and availability by default. The architecture provides route control, failure isolation, and trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
 This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments.
 
@@ -73,17 +72,15 @@ This document discusses the motivations behind the SCION architecture and gives 
 
 # Introduction
 
-The Internet has been incredibly successful as it grew to a planet-scale network with billions of devices. But although this world-wide communication system guarantees global reachability, it falls short of providing other properties that are in demand today. These shortcomings of the current Internet are the reason for developing SCION: To make the Internet more secure, reliable, transparent, and scalable.
-
-The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide insight into SCION's key concepts and deployment scenarios. The document concludes with some concrete case studies where SCION has been successfully deployed in production.
+The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide further insight into SCION's key concepts and deployment scenarios. The document concludes with some concrete case studies where SCION has been successfully deployed in production.
 
 ## Why SCION - Motivation {#why}
 
-Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of transparency and control, poor scalability, occurrences of severe outages, weak fault isolation, and energy consumption. As the Internet has not been built with security in mind, the lack thereof is another problem. Because of this, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
+Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of control, suboptimal scalability and performance, occurrences of severe outages, weak fault isolation, and energy consumption. As the Internet has not been built with security in mind, the lack thereof is another problem. Because of this, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
 
-Up until now, there have been numerous initiatives to address the above issues (e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}). Although these initiatives have brought many improvements, concerns regarding security and scalability still remain (see, for example, {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, and {{MORILLO2021}}). Today's Internet does not yet fulfil all user requirements (see, among others, [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/)). This especially pertains to the demands of enterprises globally exchanging sensitive information with an ecosystem, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators.
+Up until now, there have been numerous initiatives to address the above issues. Although these initiatives have brought many improvements, concerns regarding security and scalability still remain. For more details, see, e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}, as well as {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, {{MORILLO2021}}, and [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/).
 
-These users require the Internet to be highly available at all times and constantly perform on a high level. They expect reliable operation of the global network also in case of failures, by the use of multi-path routing. They want to send their sensitive data packets over a secure and trustworthy networking infrastructure, and therefore prefer to select themselves the path their data will take. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches. In short, these Internet users seek performance, control, reliability, security, and trust.
+As a consequence, today's Internet fails to fulfil many users' requirements. This especially pertains to the demands of enterprises globally exchanging sensitive information, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators. These users require the Internet to be highly available at all times and to constantly perform on a high level. They expect reliable operation of the global network also in case of failures. They want to send their confidential data over a secure and trustworthy networking infrastructure. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches.
 
 SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:
 
@@ -93,34 +90,40 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
   - prevention from IP-address hijacking, DoS, and other attacks.
 - Enable path transparency as well as application-specific path optimizations.
 - Improve the inter-domain control plane's scalability.
-- Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and Distributed Ledger Technology (DLT).
+- Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and all other applications requiring high-performance connectivity.
 
 **Note**: A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
+### Scope of SCION
 
-### Avoiding Pitfalls
+The above section describes what SCION can do: SCION aspires to improve *inter*-AS routing and focuses on providing end-to-end connectivity. However, SCION does not solve *intra*-AS routing issues, nor does it provide end-to-end payload encryption or identity and access authentication. These topics, which are equally important for the Internet to perform well, lie outside the scope of SCION.
 
-Of course SCION is not the first concept that addresses the Internet's networking issues. But unfortunately many other promising solutions for the Internet's problems have never managed to succeed, for reasons described in {{RFC9049}}. SCION, however, avoids the pitfalls mentioned in that document. For example, SCION does not have to be adopted by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION benefit from it, also ISPs and operators benefit from deploying SCION: early deployments showed that providers can charge the use of SCION as premium connectivity, with users who are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for bigger changes in an operational network.
+### Practical Considerations Based on Related RFCs
 
-The above points facilitate the deployment of SCION and increase its acceptance. The several cases where SCION is already successfully implemented today illustrate this (see [Deployments](#deploy)).
+The SCION inter-domain routing concept has initially been developed by researchers of the ETH Zürich {{PERRIG2017}}, and could in the meantime also gain attention and recognition in the international academic world. However, for an IT architecture to be successful, it must work well in practice, too. This section pays attention to the implementation considerations of a conceptual framework such as SCION in real life, on the basis of some RFCs exploring this topic. It also verifies in how far SCION meets the requirements mentioned and questions raised in these RFCs.
 
-### Why Now?
+#### Avoiding Pitfalls
+
+{{RFC9049}} describes why previous proposals to tackle some of the Internet's fundamental issues did not manage to succeed. SCION seems to avoid the pitfalls mentioned in that document. For example, SCION does not have to be adopted by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION benefit from it, also ISPs and operators benefit from deploying SCION: early deployments showed that providers can charge the use of SCION as premium connectivity, with users who are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for high-impact changes in an operational network.
+
+Another RFC that must be mentioned in this context is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION seems to fulfil most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and allows for multiple implementations, both open and closed source. As existing SCION implementations are easily portable, adoption in mainstream platforms is also possible.
+
+#### Answering Questions
 
 SCION can be considered a _path-aware internetworking_ architecture, as described in {{RFC9217}}. This RFC poses (open) questions that must be answered in order to realize such a path-aware networking system. It was originally written to frame discussions in the Path Aware Networking Research Group (PANRG), and has been published to snapshot current thinking in this space.
 
-SCION clearly provides answers to the questions raised in this RFC. This especially pertains to the second, third, seventh, and eighth question:
+SCION intends to answer the questions raised in this RFC. This especially pertains to the second, third, seventh, and eighth question:
 
 - How do endpoints and applications get access to accurate, useful, and trustworthy path properties?
 - How can endpoints select paths to use for traffic in a way that can be trusted by the network, the endpoints, and the applications using them?
 - How can a path-aware network in a path-aware internetwork be effectively operated, given control inputs from network administrators, application designers, and end users?
 - How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?
 
-The answers to these questions can be found in [Key Concepts](#key) and [Deployments](#deploy), respectively.
+SCION's answers to these questions can be found in [Key Concepts](#key) and [Deployments](#deploy), respectively.
 
-Another RFC that must be mentioned in the context of this document is {{RFC5218}}, "What Makes for a Successful Protocol?". SCION fulfils most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and mainstream implementation of SCION is possible, too.
+### Why Now?
 
-The emergence of multiple SCION implementations and early deployments highlighted the need for standardization.
-The time is therefore ripe to take SCION to the IETF, in order to contribute to the important discussion regarding path-aware networking.
+The emergence of multiple SCION implementations and early deployments highlight the need for standardization. The time seems therefore ripe to take SCION to the IETF, also in order to contribute to the important discussion regarding path-aware networking.
 
 ## SCION Overview
 
@@ -222,7 +225,7 @@ SCION decouples end-host addressing from inter-domain routing. Routing is based 
 
 For more details, see [IANA Considerations](#iana).
 
-### Infrastructure Components {#infra-components}
+### Infrastructure Components {#infra-components}
 
 The **beacon service**, the **path service**, and the **certificate service** are the main control-plane infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. Existing Internal routers are used to forward packets inside the AS, while _SCION border routers_ provide interconnectivity between ASes.   
 
@@ -580,6 +583,7 @@ Deploying a next-generation architecture is a challenging task, as it needs to b
 * [end hosts](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation.
 
 ## Autonomous System Deployment {#deployment-as}
+
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
 Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
 When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, intra-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance.
@@ -587,6 +591,7 @@ When it comes to inter-domain communication, an overlay deployment on top of tod
  All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
 
 ## Internet Exchange Points {#deployment-ixp}
+
 Internet Exchange Points (IXP) play as important a role for SCION as they do in today's Internet.  SCION can be deployed at existing IXPs following a "big switch" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over dedicated SCION ports.
 
 Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e. to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
@@ -624,12 +629,11 @@ However, when full specification of SCION is available, requests for IANA action
 
 # Security Considerations
 
-SCION has been designed from the outset to offer security by default, and thus there are manifold security considerations.
-However, describing all considerations here would go beyond the scope of this document. A separate document including all security implications and considerations will follow later.   
+SCION has been designed from the outset to offer security by default, and thus there are manifold security considerations. As a matter of fact, SCION's protocol design has been formally verified and the open source router implementation is undergoing formal verification (see also {{KLENZE2021}}). Describing all security considerations here, therefore, would go beyond the scope of this document. A separate document including all security implications and considerations will follow later.   
 
 --- back
 
 # Acknowledgments
 {:numbered="false"}
 
-Many thanks go to Cyrill Krähenbühl for his review of this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, Peter Müller, and Adrian Perrig, for writing the book "The Complete Guide to SCION", which provides all the background information needed to write this informational draft.
+Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION", which provides the background information needed to write this informational draft.
