@@ -45,6 +45,7 @@ informative:
   RFC8446:
   RFC9049:
   RFC9217:
+  RFC8170:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
   GRIFFIN1999: DOI.10.1145/316194.316231
@@ -571,13 +572,17 @@ If the packet has not yet reached the destination AS, the egress interface numbe
 SCION routers use IP to communicate within an AS, therefore they rely on existing intra-domain routing protocols, such as Multiprotocol Label Switching (MPLS) or others.
 
 # Deployment
-Deploying a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure. In the following, we discuss practical considerations for deploying SCION at:
+Adoption of a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure.
+SCION is designed to coexist with existing intra-domain routing infrastructure, and comprises coexistence and transition mechanisms that facilitate adoption, in accordance to principles defined in {{RFC8170}}.
+The the following section discusses practical considerations for deploying SCION and briefly touches on some of the transition mechanisms, with focus on:
 
-* [an Autonomous System](#deployment-as),
+* [Autonomous Systems](#deployment-as),
 
 * [internet Exchange Points](#deployment-ixp), and
 
 * [end hosts](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation.
+
+We then describe some of the early adopters deployment experiences. A more detailed adoption plan is to be outlined in dedicated documents.
 
 ## Autonomous System Deployment {#deployment-as}
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
