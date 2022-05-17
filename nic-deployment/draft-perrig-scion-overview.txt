@@ -1143,11 +1143,11 @@ o Parent AS - child AS   ---- Peering link   === Core link   CAS: Core AS
    properties SCION delivers.  When it comes to inter-domain
    communication, an overlay deployment on top of today's Internet is
    not desirable, as SCION would inherit issues from its weak underlay.
-   Thus, intra-AS SCION links are usually deployed in parallel to
+   Thus, inter-AS SCION links are usually deployed in parallel to
    existing links, in order to preserve its security properties.  That
-   is, two SCION border routers are directly connected via a layer-2
-   cross-connection at a common point-of-presence, achieving
-   connectivity with high reliability, availability, and performance.
+   is, two SCION border routers from neighbour ASes are directly
+   connected via a layer-2 cross-connection at a common point-of-
+   presence.
 
    All SCION AS components can be deployed on standard x86 commercial
    off-the-shelf servers or virtual machines.  In fact, SCION border
@@ -1156,6 +1156,10 @@ o Parent AS - child AS   ---- Peering link   === Core link   CAS: Core AS
    hardware can handle up to 100 Gbps links, while a prototype P4
    implementation [DERUITER2021] showed that it is possible to forward
    SCION traffic even at terabit speeds.
+
+   Overall, and AS can be connected to SCION without high-impact changes
+   to its network.  In addition, use of commodity hardware for both
+   control and data-plane components reduces initial deployment costs.
 
 3.2.  Internet Exchange Points
 
