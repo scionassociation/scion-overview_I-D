@@ -1949,10 +1949,12 @@ up-path segment        core-path segment        down-path segment
       <h2 id="name-deployment">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-deployment" class="section-name selfRef">Deployment</a>
       </h2>
-<p id="section-3-1">Deploying a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure. In the following, we discuss practical considerations for deploying SCION at:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">Adoption of a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure.
+SCION is designed to coexist with existing intra-domain routing infrastructure, and comprises coexistence and transition mechanisms that facilitate adoption, in accordance to principles defined in <span>[<a href="#RFC8170" class="xref">RFC8170</a>]</span>.
+The the following section discusses practical considerations for deploying SCION and briefly touches on some of the transition mechanisms, with focus on:<a href="#section-3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3-2.1">
-          <span><a href="#deployment-as" class="xref">an Autonomous System</a> (<a href="#deployment-as" class="xref">Section 3.1</a>)</span>,<a href="#section-3-2.1" class="pilcrow">¶</a>
+          <span><a href="#deployment-as" class="xref">Autonomous Systems</a> (<a href="#deployment-as" class="xref">Section 3.1</a>)</span>,<a href="#section-3-2.1" class="pilcrow">¶</a>
 </li>
         <li class="normal" id="section-3-2.2">
           <span><a href="#deployment-ixp" class="xref">internet Exchange Points</a> (<a href="#deployment-ixp" class="xref">Section 3.2</a>)</span>, and<a href="#section-3-2.2" class="pilcrow">¶</a>
@@ -1961,6 +1963,7 @@ up-path segment        core-path segment        down-path segment
           <span><a href="#deployment-end-host" class="xref">end hosts</a> (<a href="#deployment-end-host" class="xref">Section 3.3</a>)</span>, covering both native SCION hosts and SCION to IP encapsulation.<a href="#section-3-2.3" class="pilcrow">¶</a>
 </li>
       </ul>
+<p id="section-3-3">We then describe some of the early adopters deployment experiences. A more detailed adoption plan is to be outlined in dedicated documents.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <div id="deployment-as">
 <section id="section-3.1">
         <h3 id="name-autonomous-system-deploymen">
@@ -2128,6 +2131,10 @@ However, describing all considerations here would go beyond the scope of this do
 <dt id="RFC6830">[RFC6830]</dt>
         <dd>
 <span class="refAuthor">Farinacci, D.</span>, <span class="refAuthor">Fuller, V.</span>, <span class="refAuthor">Meyer, D.</span>, and <span class="refAuthor">D. Lewis</span>, <span class="refTitle">"The Locator/ID Separation Protocol (LISP)"</span>, <span class="seriesInfo">RFC 6830</span>, <span class="seriesInfo">DOI 10.17487/RFC6830</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6830">https://www.rfc-editor.org/rfc/rfc6830</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8170">[RFC8170]</dt>
+        <dd>
+<span class="refAuthor">Thaler, D., Ed.</span>, <span class="refTitle">"Planning for Protocol Adoption and Subsequent Transitions"</span>, <span class="seriesInfo">RFC 8170</span>, <span class="seriesInfo">DOI 10.17487/RFC8170</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8170">https://www.rfc-editor.org/rfc/rfc8170</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8205">[RFC8205]</dt>
         <dd>
