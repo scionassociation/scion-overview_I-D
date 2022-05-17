@@ -45,6 +45,7 @@ informative:
   RFC8446:
   RFC9049:
   RFC9217:
+  RFC8170:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
   GRIFFIN1999: DOI.10.1145/316194.316231
@@ -574,21 +575,27 @@ If the packet has not yet reached the destination AS, the egress interface numbe
 SCION routers use IP to communicate within an AS, therefore they rely on existing intra-domain routing protocols, such as Multiprotocol Label Switching (MPLS) or others.
 
 # Deployment
-Deploying a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure. In the following, we discuss practical considerations for deploying SCION at:
+Adoption of a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure.
+SCION is designed to coexist with existing intra-domain routing infrastructure, and comprises coexistence and transition mechanisms that facilitate adoption, in accordance to principles defined in {{RFC8170}}.
+The the following section discusses practical considerations for deploying SCION and briefly touches on some of the transition mechanisms, with focus on:
 
-* [an Autonomous System](#deployment-as),
+* [Autonomous Systems](#deployment-as),
 
 * [internet Exchange Points](#deployment-ixp), and
 
 * [end hosts](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation.
 
+We then describe some of the early adopters deployment experiences. A more detailed adoption plan is to be outlined in dedicated documents.
+
 ## Autonomous System Deployment {#deployment-as}
 
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
 Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
-When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, intra-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance.
+When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.
 
  All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
+
+ Overall, and AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs. 
 
 ## Internet Exchange Points {#deployment-ixp}
 
