@@ -11,8 +11,8 @@ keyword: Internet-Draft
 venue:
   group: WG
   type: Working Group
-  mail: WG@example.com
-  arch: https://example.com/WG
+  mail: panrg@irtf.org
+  arch: https://datatracker.ietf.org/rg/panrg
   github: scionfoundation/scion-overview_I-D
   latest: https://example.com/LATEST
 
@@ -56,6 +56,7 @@ informative:
   ROTHENBERGER2017: DOI.10.1145/3065913.3065922
   MORILLO2021: DOI.10.14722/ndss.2021.24438
   KLENZE2021: DOI.10.1109/CSF51468.2021.00018
+  DERUITER2021: DOI.10.1145/3485983.3494839
   ANDERSEN2001: DOI.10.1145/502034.502048
   KATZ2012: DOI.10.1145/2377677.2377756
   KUSHMAN2007: DOI.10.1145/1232919.1232927
@@ -214,7 +215,7 @@ The process of creating an end-to-end forwarding path consists of the following 
      |+--------------+     +-------------------+|
      || Path Lookup  |---->| Path Combination  ||
      |+--------------+     +-------------------+|
-     +------------------------------------------+        
+     +------------------------------------------+
 ~~~~
 {: #beaconing title="SCION routing in a nutshell"}
 
@@ -225,8 +226,7 @@ SCION decouples end-host addressing from inter-domain routing. Routing is based 
 
 For more details, see [IANA Considerations](#iana).
 
-
-### Infrastructure Components
+### Infrastructure Components {#infra-components}
 
 The **beacon service**, the **path service**, and the **certificate service** are the main infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. It is also possible to combine the services into one or more _control services_. _Internal routers_ forward packets inside the AS, while _border routers_ provide interconnectivity between ASes.
 
@@ -252,7 +252,7 @@ This section explains the SCION key concepts, including authentication, control-
 
 ## Authentication
 
-SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.  
+SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.
 
 **Note**: This section describes the SCION authentication concept on a very high level. A much more detailed description of SCION's authentication will follow in a separate internet draft.
 
@@ -577,12 +577,54 @@ Communication within an AS is handled by existing intra-domain communication tec
 
 
 
-# Deployments {#deploy}
+# Deployment
+Deploying a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure. In the following, we discuss practical considerations for deploying SCION at:
 
-SCI-ED, SSFC, SCIONLab
-From the book v2, use:
-chapters 13 introduction (table 13.1), 13.1, 14.1, 15.3, 15.4
+* [an Autonomous System](#deployment-as)
 
+* [internet Exchange Points](#deployment-ixp)
+
+* [end hosts](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation
+
+## Autonomous System Deployment {#deployment-as}
+A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
+Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
+When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, intra-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance.
+
+ All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle  up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it possible to forward SCION traffic even at terabit speeds.
+
+## Internet Exchange Points {#deployment-ixp}
+Internet Exchange Points (IXP) play as important a role for SCION as they do in today's Internet.  SCION can be deployed at existing IXPs following a "big switch" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over dedicated SCION ports.
+
+Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e. to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
+
+## End Hosts and Incremental Deployability {#deployment-end-host}
+End users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
+
+
+### Native End Hosts {#native-endhost}
+A SCION native end host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay for communication between end hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way clients require no pre-existing network-specific configurations.
+
+### SCION to IP Gateway (SIG) {#sig}
+A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
+A SIG can be deployed close to the end user (i.e., at branches of an enterprise, on a CPE), or within an ISP's network. In the latter case, the SIG is called carrier-grade SIG, as it serves multiple customers within the AS where it is deployed. This approach has the advantage that it does not require any changes at the customer's premises.
+In order to allow incremental deployability and to ease transition from legacy IP-based Internet to SCION, SIGs can be augmented with  mechanisms allowing them to coordinate and automatically exchange IP prefix information. A more detailed description of the SIG and its coordination mechanisms is to be presented in dedicated documents.
+
+
+
+## Deployment experiences {#deploy}
+
+SCION has been deployed in production by multiple entities, growing its acceptance among industry. While early deployments started on academic and research networks, SCION has expanded to serve the financial industry, government, and it is being evaluated for the healthcare sector.
+
+In 2017, SCION was evaluated for production use by a central bank, with the goal of modernising the network interconnecting banks and their branches. SCION was chosen, as it allows moving away from a dedicated private network to a reliable internet-based solution. SCION connectivity was later extended to support system-critical applications, like the national real-time gross settlement (RTGS) system, connecting all country's banks to exchange real-time payment information.
+The network, called Secure Swiss Finance Network or [SSFN](https://perma.cc/PU5L-ALPM), is implemented as a SCION ISD, where a federation of three ISPs forms the ISD core.
+Financial institutions are themselves SCION ASes and directly connect to one or more of the core ASes. Institutions deploy SCION–IP gateways (SIGs), transparently enabling their traditional IP-based applications to use the SCION network.
+The concept of the SCION ISD also provides a mechanism to implement strict governance and access control (through the issuance of AS certificates).
+
+Besides the SSFN, SCION connectivity has also been adopted by government entities for their international communications. In addition, Swiss higher education institutions are connected thanks to the [SCI-ED](http://scied.scion-architecture.net/) network.
+
+
+In addition to productive deployments, SCION also comprises a global SCION research testbed called [SCIONLab](https://www.scionlab.org). It is composed of dozens of globally distributed infrastructure ASes, mostly run by academic institutions. The testbed is open to any user who can easily set up their own AS with the aid of a web-based UI, connect to the network, and run experiments. The setup has been the earliest global deployment of SCION and it has been supporting research and development of path-aware networking and SCION.
 
 # IANA Considerations {#iana}
 
@@ -598,7 +640,7 @@ ISDs are represented with decimal numbers, ranging from 0 to 65535. Table 2.1 sh
 | 1–15                             | Reserved for documentation and sample code |
 | 16–63                            | Private use (can be used for testing, analogously to {{RFC6996}} |
 | 64–4094                          | Public ISDs, should be assigned in ascending order, without gaps and without vanity numbers |
-| 4095–65535                       | Reserved |  
+| 4095–65535                       | Reserved |
 {: #numbers title="Allocation and description of ISD number ranges"}
 
 ## AS Numbers
@@ -613,7 +655,7 @@ Currently, the 2:0:0/16 range is allocated to public SCION-only ASes (i.e., ASes
 
 Ideally, each AS number should be globally unique (partly to facilitate the comparison and transition from BGP), but the actual requirement is only that each AS number be unique within an ISD. Since an AS can be part of several ISDs, picking a globally unique AS number also facilitates joining new ISDs.
 
-In principle, ISD numbers can be self-assigned: A number that is not yet used by any other ISD is picked by the constituents of the new ISD before the first TRC is signed and distributed, then other ISDs are free to accept or reject the new TRC. Preferably, however, an organization such as ICANN or a regional Internet registry (e.g., RIPE NCC) will take on the responsibility of assigning ISD and AS numbers.  
+In principle, ISD numbers can be self-assigned: A number that is not yet used by any other ISD is picked by the constituents of the new ISD before the first TRC is signed and distributed, then other ISDs are free to accept or reject the new TRC. Preferably, however, an organization such as ICANN or a regional Internet registry (e.g., RIPE NCC) will take on the responsibility of assigning ISD and AS numbers.
 
 # Security Considerations
 
