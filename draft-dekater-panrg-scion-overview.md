@@ -4,7 +4,7 @@ abbrev: "SCION I-D"
 category: info
 
 docname: draft-dekater-panrg-scion-overview
-v: 3
+v: 01
 area: rtg
 workgroup: panrg
 keyword: Internet-Draft
