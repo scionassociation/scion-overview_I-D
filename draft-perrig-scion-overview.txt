@@ -5,8 +5,8 @@
 panrg                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 18 November 2022                                    ETH Zuerich
-                                                             17 May 2022
+Expires: 19 November 2022                                    ETH Zuerich
+                                                             18 May 2022
 
 
                              SCION Overview
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 November 2022.
+   This Internet-Draft will expire on 19 November 2022.
 
 Copyright Notice
 
@@ -1190,11 +1190,12 @@ o Parent AS - child AS   ---- Peering link   === Core link   CAS: Core AS
    End users can leverage SCION in two different ways: using SCION-aware
    applications on a SCION native end host (Section 3.3.1), or using
    transparent IP-to-SCION conversion (Section 3.3.2).  The benefit of
-   using SCION natively is that the full range of advantages becomes
-   available to applications, at the cost of installing the SCION
-   endpoint stack and making the application SCION-aware.  In early
-   deployments, the second approach is often preferred, so that no
-   changes are needed within applications or end hosts.
+   using SCION natively is that the full range of advantages, such as
+   path control and path transparency, becomes available to
+   applications, at the cost of installing the SCION endpoint stack and
+   making the application SCION-aware.  In early deployments, the second
+   approach is often preferred, so that no changes are needed within
+   applications or end hosts.
 
 3.3.1.  Native End Hosts
 
