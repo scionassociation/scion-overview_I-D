@@ -9,10 +9,10 @@ ________________________________________________________________________________
 
 This is the working area for the individual Internet-Draft, "SCION Overview".
 
-* [Editor's Copy](https://scionassociation.github.io/scion-overview_I-D/#go.draft-dekater-panrg-scion-overview-00.html)
-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-dekater-panrg-scion-overview-00)
-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-dekater-panrg-scion-overview-00)
-* [Compare Editor's Copy to Individual Draft](https://scionassociation.github.io/scion-overview_I-D/#go.draft-dekater-panrg-scion-overview-00.diff)
+* [Editor's Copy](https://scionassociation.github.io/scion-overview_I-D/#go.draft-dekater-panrg-scion-overview.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-dekater-panrg-scion-overview)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-dekater-panrg-scion-overview)
+* [Compare Editor's Copy to Individual Draft](https://scionassociation.github.io/scion-overview_I-D/#go.draft-dekater-panrg-scion-overview.diff)
 
 
 ## Contributing
