@@ -709,6 +709,7 @@ When it comes to inter-domain communication, an overlay deployment on top of tod
 
  Overall, an AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs.
 
+
 ## Internet Exchange Points {#deployment-ixp}
 
 Internet Exchange Points (IXP) play as important a role for SCION as they do in today's Internet.  SCION can be deployed at existing IXPs following a "big switch" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over dedicated SCION ports.
@@ -716,7 +717,9 @@ Internet Exchange Points (IXP) play as important a role for SCION as they do in 
 Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e., to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
 
 ## End Hosts and Incremental Deployability {#deployment-end-host}
+
 End users can leverage SCION in two different ways: (1) using SCION-aware applications on a [SCION native end host](#native-endhost), or (2) using transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
+
 
 
 ### Native End Hosts {#native-endhost}
