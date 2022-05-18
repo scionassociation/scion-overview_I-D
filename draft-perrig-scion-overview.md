@@ -3,7 +3,7 @@ title: "SCION Overview"
 abbrev: "SCION I-D"
 category: info
 
-docname: draft-perrig-scion-overview-latest
+docname: draft-dekater-panrg-scion-overview
 v: 3
 area: rtg
 workgroup: panrg
