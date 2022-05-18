@@ -1,9 +1,3 @@
-- [Notes Martin Thomson](#scion-overview)
-- [Notes Juan](#notes-juan)
-- [How to Handle Figures](#how-to-handle-figures)
-
-_________________________________________________________________________________________________________
-
 
 # SCION Overview
 
