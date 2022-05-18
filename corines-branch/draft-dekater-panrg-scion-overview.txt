@@ -1470,8 +1470,8 @@ Acknowledgments
    Many thanks go to Cyrill Kraehenbuehl and Juan A.  Garcia-Pardo for
    reviewing this document.  We are also indebted to Laurent Chuat,
    Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter
-   Mueller, for writing the book "The Complete Guide to SCION"
-   [CHUAT22], which provides the background information needed to write
+   Mueller, for writing the book "The Complete Guide to SCION" (see
+   [CHUAT22]), which provides the background information needed to write
    this informational draft.
 
 Authors' Addresses
