@@ -14,7 +14,7 @@ venue:
   mail: panrg@irtf.org
   arch: https://datatracker.ietf.org/rg/panrg
   github: scionassociation/scion-overview_I-D
-  latest: https://example.com/LATEST
+  latest: https://scionassociation.github.io/scion-overview_I-D/draft-dekater-panrg-scion-overview.html
 
 author:
  -   ins: C. de Kater
