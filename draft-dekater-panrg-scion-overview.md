@@ -4,7 +4,7 @@ abbrev: "SCION I-D"
 category: info
 submissiontype: IRTF
 
-docname: draft-dekater-panrg-scion-overview
+docname: draft-dekater-panrg-scion-overview-latest
 v: 3
 area: IRTF
 workgroup: PANRG
