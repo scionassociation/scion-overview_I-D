@@ -595,7 +595,7 @@ When it comes to inter-domain communication, an overlay deployment on top of tod
 
  All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
 
- Overall, and AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs. 
+ Overall, and AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs.
 
 ## Internet Exchange Points {#deployment-ixp}
 
@@ -604,7 +604,7 @@ Internet Exchange Points (IXP) play as important a role for SCION as they do in 
 Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e. to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
 
 ## End Hosts and Incremental Deployability {#deployment-end-host}
-End users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
+End users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages, such as path control and path transparency, becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
 
 
 ### Native End Hosts {#native-endhost}
