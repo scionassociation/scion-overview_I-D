@@ -2,11 +2,12 @@
 title: "SCION Overview"
 abbrev: "SCION I-D"
 category: info
+submissiontype: IRTF
 
 docname: draft-dekater-panrg-scion-overview
-v: 01
-area: rtg
-workgroup: panrg
+v: 3
+area: IRTF
+workgroup: PANRG
 keyword: Internet-Draft
 venue:
   group: WG
@@ -758,4 +759,4 @@ SCION has been designed from the outset to offer security by default, and thus t
 # Acknowledgments
 {:numbered="false"}
 
-Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" {{CHUAT22}}, which provides the background information needed to write this informational draft.
+Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" (see {{CHUAT22}}), which provides the background information needed to write this informational draft.
