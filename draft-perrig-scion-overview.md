@@ -60,7 +60,114 @@ informative:
   ANDERSEN2001: DOI.10.1145/502034.502048
   KATZ2012: DOI.10.1145/2377677.2377756
   KUSHMAN2007: DOI.10.1145/1232919.1232927
-  PERRIG2017: DOI.10.1007/978-3-319-67080-5
+  PERRIG2017:
+    title: "SCION: A Secure Internet Architecture"
+    date: 2017
+    target: https://doi.org/10.1007/978-3-319-67080-5
+    seriesinfo:
+      ISBN: 978-3-319-67079-9
+    author:
+      -
+        ins: A. Perrig
+        name: Adrian Perrig
+        org: ETH Zuerich
+      -
+        ins: P. Szalachowski
+        name: Pawel Szalachowski
+        org: ETH Zuerich
+      -
+        ins: R. Reischuk
+        name: Raphael Reischuk
+        org: ETH Zuerich
+      -
+        ins: L. Chuat
+        name: Laurent Chuat
+        org: ETH Zuerich         
+  KING2022:
+    title: Challenges for the Internet Routing Systems Introduced by Semantic Routing
+    date: 2022  
+    target: https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/    
+    author:
+      -
+        ins: D. King
+        name: Daniel King
+        org: Lancaster University
+      -
+        ins: A. Farrel
+        name: Adrian Farrel
+        org: Old Dog consulting
+      -
+        ins: C. Jacquenet
+        name: Christian Jacquenet
+        org: Orange
+  HITZ2021:
+    title: Demonstrating the reliability and resilience of Secure Swiss Finance Network
+    date: 2021
+    target: https://perma.cc/4H3Q-WZNG    
+    author:
+      ins: S. Hitz
+      name: Samuel Hitz
+      org: Anapaya Systems
+  LEGNER2020:
+     title: "EPIC: Every Packet Is Checked in the Data Plane of a Path-Aware Internet"
+     date: 2020
+     target: https://www.usenix.org/conference/usenixsecurity20/presentation/legner
+     author:
+       -
+         ins: M. Legner
+         name: Adrian Perrig
+         org: ETH Zuerich
+       -
+         ins: T. Klenze
+         name: Tobias Klenze
+         org: ETH Zuerich
+       -
+         ins: M. Wyss
+         name: Marc Wyss
+         org: ETH Zuerich
+       -
+         ins: C. Sprenger
+         name: Christoph Sprenger
+         org: ETH Zuerich
+       -
+         ins: A. Perrig
+         name: Adrian Perrig
+         org: ETH Zuerich
+  CHUAT22:
+    title: "The Complete Guide to SCION"
+    date: 2022
+    target: https://doi.org/10.1007/978-3-031-05288-0
+    seriesinfo:
+      ISBN: 978-3-031-05287-3
+    author:
+      -
+        ins: L. Chuat
+        name: Laurent Chuat
+        org: ETH Zuerich
+      -
+        ins: M. Legner
+        name: Markus Legner
+        org: ETH Zuerich
+      -
+        ins: D. Basin
+        name: David Basin
+        org: ETH Zuerich
+      -
+        ins: D. Hausheer
+        name: David Hausheer
+        org: Otto von Guericke University Magdeburg
+      -
+        ins: S. Hitz
+        name: Samuel Hitz
+        org: Anapaya Systems
+      -
+        ins: P. Mueller
+        name: Peter Mueller
+        org: ETH Zuerich
+      -
+        ins: A. Perrig
+        name: Adrian Perrig
+        org: ETH Zuerich
 
 
 --- abstract
@@ -77,27 +184,26 @@ The Introduction section explores the motivation to develop SCION, followed by a
 
 ## Why SCION - Motivation {#why}
 
-Since its introduction back in the 1980s, the Internet has never stopped to expand. As a consequence, the global network continually needs to accommodate new uses. This has brought many issues to light, including a lack of control, suboptimal scalability and performance, occurrences of severe outages, weak fault isolation, and energy consumption. As the Internet has not been built with security in mind, the lack thereof is another problem. Because of this, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
+Since its inception, the Internet has continued to expand, encompassing new uses over time. The continuous expansion has brought many issues to light, including a lack of control, limitations in scalability, performance and security, occurrences of severe outages, weak fault isolation, and energy consumption. With the core focus on functionality and operation, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
 
-Up until now, there have been numerous initiatives to address the above issues. Although these initiatives have brought many improvements, concerns regarding security and scalability still remain. For more details, see, e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}, as well as {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, {{MORILLO2021}}, and [draft-king-irtf-challenges-in-routing](https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/).
+There have been numerous initiatives to address the above issues. Although these initiatives have brought many improvements, concerns regarding security and scalability still remain. For more details, see, e.g., {{RFC4033}}, {{RFC6480}}, {{RFC8205}}, and {{RFC8446}}, as well as {{LYCHEV2013}}, {{LI2014}}, {{COOPER2013}}, {{ROTHENBERGER2017}}, {{MORILLO2021}}, and {{KING2022}}.
 
-As a consequence, today's Internet fails to fulfil many users' requirements. This especially pertains to the demands of enterprises globally exchanging sensitive information, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators. These users require the Internet to be highly available at all times and to constantly perform on a high level. They expect reliable operation of the global network also in case of failures. They want to send their confidential data over a secure and trustworthy networking infrastructure. They also need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches.
+As a consequence, today's Internet fails to fulfil many users' requirements. This especially pertains to the demands of enterprises globally exchanging sensitive information, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators. These users require the Internet to be highly available at all times. They expect reliable operation of the global network also in case of failures. They need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches.
 
 SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:
 
-- Address the Internet's fundamental issues by offering
-  - high availability also in the presence of adversaries,
-  - fast failover in the case of inter-domain link or router failures, and
-  - prevention from IP-address hijacking, DoS, and other attacks.
-- Enable path transparency as well as application-specific path optimizations.
-- Improve the inter-domain control plane's scalability.
+- Provide high-availability architecture (also in the presence of adversaries)
+- Provide fast failover in the case of inter-domain link or router failures
+- Prevent from IP-address hijacking, DoS, and other attacks
+- Enable path transparency as well as application-specific path optimizations
+- Improve the inter-domain control plane's scalability
 - Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and all other applications requiring high-performance connectivity.
 
 **Note**: A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
 ### Scope of SCION
 
-The above section describes what SCION can do: SCION aspires to improve *inter*-AS routing and focuses on providing end-to-end connectivity. However, SCION does not solve *intra*-AS routing issues, nor does it provide end-to-end payload encryption or identity and access authentication. These topics, which are equally important for the Internet to perform well, lie outside the scope of SCION.
+The above section describes SCION's aspiration to improve *inter*-AS routing and to focus on providing end-to-end connectivity. However, SCION does not solve *intra*-AS routing issues, nor does it provide end-to-end payload encryption, and identity authentication. These topics, which are equally important for the Internet to perform well, lie outside the scope of SCION.
 
 ### Practical Considerations Based on Related RFCs
 
@@ -158,33 +264,34 @@ See {{architecture}} for a high-level overview of the SCION network structure.
     ...............................
    :                               :
   :      [TRC]                      :
- :          (::::::::::::::)         :      ..........................
-:        (::::: ISD core :::::)       :    :                          :
-:    (:: +---+ ::::::::: +---+ ::)    :   :    [TRC]                   :
-: (::::: |CAS|===+---+ : |CAS| :::::) :  :        (:: ISD core ::)      :
-:    (:: +---+ : |CAS|===+---+====)===:==:=====(===+---+ ::: +---+ ::)  :
-:       /(:::::: +---+ ::::::) \      :  :    (::: |CAS|=====|CAS| :::) :
-:      /  (::::::: | :::::::)   \     :  :     (:: +---+ ::: +---+ ::)  :
-:     /            |             o    :  :       /(::::::::::::::)\     :
-:    o             |           +---+  :  :      /                  \    :
-:  +---+           |          /|ASb|  :  :     /                    o   :
-:  |ASa|           |         / +---+  :  :    o                   +---+ :
-:  +---+           |        /    |    :  :  +---+                 |ASy| :
-:    |             |       /     |    :  :  |ASx| --------------- +---+ :
-:    |             |      /      o    :  :  +---+                       :
-:    o             o     /     +---+  :  :    |                         :
-:  +---+         +---+  /      |ASe|  :  :    o                         :
-:  |ASc|---------|ASd| o       +---+ -:--:--+---+                       :
-:  +---+         +---+                :  :  |ASz|           ISD 2       :
- :                                   :    : +---+                      :
-  :            ISD 1                :      :                          :
-   .................................        ..........................
-
+ :          (::::::::::::::)         :      ......................
+:        (::::: ISD core :::::)       :    :                      :
+:    (:: +---+ ::::::::: +---+ ::)    :   :    [TCR]               :
+: (::::: |CAS|===+---+ : |CAS| :::::) :  :        (: ISD core :)    :
+:    (:: +---+ : |CAS|===+---+====)===:==:=====(=+---+ :: +---+ :)  :
+:       /(:::::: +---+ ::::::) \      :  :    (: |CAS| == |CAS| :)  :
+:      /  (::::::: | :::::::)   \     :  :     ( +---+ :: +---+ )   :
+:     /            |             o    :  :       /(::::::::::::)    :
+:    o             |           +---+  :  :      /         \         :
+:  +---+           |          /|ASb|  :  :     /           \        :
+:  |ASa|           |         / +---+  :  :    o             o       :
+:  +---+           |        /    |    :  :  +---+          +---+    :
+:    |             |       /     |    :  :  |ASx| ---------|ASy|    :
+:    |             |      /      o    :  :  +---+          +---+    :
+:    o             o     /     +---+  :  :    |                     :
+:  +---+         +---+  /      |ASe|  :  :    o                     :
+:  |ASc|---------|ASd| o       +---+ -:--:--+---+                   :
+:  +---+         +---+                :  :  |ASz|      ISD 2        :
+ :                                   :    : +---+                  :
+  :            ISD 1                :      ........................
+   .................................
 Legend:
-
-|
-|
-o Parent AS - child AS   ---- Peering link   === Core link   CAS: Core AS
+                      |
+                      |
+Parent AS - child AS: o        
+Peering link: ----     
+Core link: ===      
+Core AS: CAS   
 ~~~~
 {: #architecture title="SCION network structure"}
 
@@ -224,7 +331,6 @@ The process of creating an end-to-end forwarding path consists of the following 
 
 SCION decouples end-host addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
 
-For more details, see [IANA Considerations](#iana).
 
 ### Infrastructure Components {#infra-components}
 
@@ -267,36 +373,41 @@ The initial TRC in an ISD is called the **base TRC**. This base TRC constitutes 
 Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
 
 ~~~~
-                +---------------------------------------------+
-                |                    TRC 2                    |
-                |+-------------------------------------------+|
-                ||- Version   - Grace Period - No Trust Reset||
-                ||- ID        - Core ASes    - Voting Quorum ||
-+---------+     ||- Validity  - Description  - ...           ||    +---------+
-|  TRC 1  |     |+-------------------------------------------+|    |  TRC 3  |
-|  (Base  |---->|+--------------------+ +--------------------+|--->|         |
-|  TRC)   |     ||   Regular Voting   | |  Sensitive Voting  ||    |         |
-+---------+     ||    Certificate     | |    Certificate     ||    +---------+
-                |+--------------------+ +--------------------+|
-                |+--------------------+ +--------------------+|
-                ||       Votes        | |     Signatures     ||
-                |+--------------------+ +--------------------+|
-                |+-------------------------------------------+|
-                ||           CP Root Certificates            ||
-                |+---------------+-------------+-------------+|
-                |                |             |              |
-                +----------------+-------------+--------------+
-                                 |             |
-                       +---------v-+         +-v---------+
-                       |   CP CA   |         |   CP CA   |
-                       |Certificate|         |Certificate|
-                       +-+-------+-+         +-----+-----+
-                         |       |                 |
-                         |       |                 |
-                +--------v--+ +--v--------+      +-v---------+
-                |   CP AS   | |   CP AS   |      |   CP AS   |
-                |Certificate| |Certificate|      |Certificate|
-                +-----------+ +-----------+      +-----------+
+                               TRC 2      
+               +--------------------------------------+
+               |+------------------------------------+|
+               ||- Version       - Core ASes         ||
++--------+     ||- ID            - Description       ||    +--------+
+| TRC 1  |     ||- Validity      - No Trust Reset    ||    | TRC 3  |
+| (Base  |---->||- Grace Period  - Voting Quorum     ||--->|        |
+|  TRC)  |     ||- ...                               ||    |        |
++--------+     |+------------------------------------+|    +--------+
+               |+----------------+  +----------------+|
+               || Regular Voting |  |Sensitive Voting||
+               ||  Certificate   |  |  Certificate   ||
+               |+----------------+  +----------------+|
+               |+----------------+  +----------------+|
+               ||     Votes      |  |   Signatures   ||
+               |+----------------+  +----------------+|
+               |+------------------------------------+|
+               ||        CP Root Certificates        ||
+               |+----------+-------------+-----------+|
+               |           |             |            |
+               +-----------+-------------+------------+
+                           |             |
+                           |             |
+                           v             v
+                 +-----------+         +-----------+
+                 |   CP CA   |         |   CP CA   |
+                 |Certificate|         |Certificate|
+                 +-+-------+-+         +-----+-----+
+                   |       |                 |
+                   |       |                 |
+                   v       v                 v
+          +-----------+ +-----------+      +-----------+
+          |   CP AS   | |   CP AS   |      |   CP AS   |
+          |Certificate| |Certificate|      |Certificate|
+          +-----------+ +-----------+      +-----------+
 ~~~~
 {: #chain title="TRC contents and trust chain"}
 
@@ -469,7 +580,7 @@ This recursive lookup significantly simplifies the process for end hosts (which 
 Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by end hosts. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
 
 - The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, end hosts get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
-- SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, and {{KUSHMAN2007}}, as well as [Demonstrating the reliability and resilience of Secure Swiss Finance Network](https://perma.cc/4H3Q-WZNG).
+- SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
 
 
 ## SCION Data Plane
@@ -554,7 +665,7 @@ up-path segment        core-path segment        down-path segment
 
 ### Path Authorization
 
-It is crucial for the data plane that end hosts only use paths constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and [EPIC: Every packet is checked in the data plane of a path-aware Internet](https://netsec.ethz.ch/publications/papers/Legner_Usenix2020_EPIC)).
+It is crucial for the data plane that end hosts only use paths constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}.
 
 SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
 
@@ -574,14 +685,15 @@ If the packet has not yet reached the destination AS, the egress interface numbe
 
 SCION routers use IP to communicate within an AS, therefore they rely on existing intra-domain routing protocols, such as Multiprotocol Label Switching (MPLS) or others.
 
+
 # Deployment
-Adoption of a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure.
-SCION is designed to coexist with existing intra-domain routing infrastructure, and comprises coexistence and transition mechanisms that facilitate adoption, in accordance to principles defined in {{RFC8170}}.
-The the following section discusses practical considerations for deploying SCION and briefly touches on some of the transition mechanisms, with focus on:
+
+Adoption of a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure. SCION is designed to coexist with existing intra-domain routing infrastructure, and comprises coexistence and transition mechanisms that facilitate adoption, in accordance to principles defined in {{RFC8170}}.
+The following section discusses practical considerations for deploying SCION and briefly touches on some of the transition mechanisms, with focus on:
 
 * [Autonomous Systems](#deployment-as),
 
-* [internet Exchange Points](#deployment-ixp), and
+* [Internet Exchange Points](#deployment-ixp), and
 
 * [end hosts](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation.
 
@@ -590,25 +702,25 @@ We then describe some of the early adopters deployment experiences. A more detai
 ## Autonomous System Deployment {#deployment-as}
 
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
-Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
+Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
 When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.
 
  All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
 
- Overall, and AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs. 
+ Overall, an AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs.
 
 ## Internet Exchange Points {#deployment-ixp}
 
 Internet Exchange Points (IXP) play as important a role for SCION as they do in today's Internet.  SCION can be deployed at existing IXPs following a "big switch" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over dedicated SCION ports.
 
-Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e. to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
+Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e., to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multi-path and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.
 
 ## End Hosts and Incremental Deployability {#deployment-end-host}
-End users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
+End users can leverage SCION in two different ways: (1) using SCION-aware applications on a [SCION native end host](#native-endhost), or (2) using transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
 
 
 ### Native End Hosts {#native-endhost}
-A SCION native end host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay for communication between end hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way clients require no pre-existing network-specific configurations.
+A SCION native end host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay for communication between end hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way, clients require no pre-existing network-specific configurations.
 
 ### SCION to IP Gateway (SIG) {#sig}
 A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
@@ -619,7 +731,7 @@ In order to allow incremental deployability and to ease transition from legacy I
 
 SCION has been deployed in production by multiple entities, growing its acceptance among industry. While early deployments started on academic and research networks, SCION has expanded to serve the financial industry, government, and it is being evaluated for the healthcare sector.
 
-In 2017, SCION was evaluated for production use by a central bank, with the goal of modernising the network interconnecting banks and their branches. SCION was chosen, as it allows moving away from a dedicated private network to a reliable internet-based solution. SCION connectivity was later extended to support system-critical applications, like the national real-time gross settlement (RTGS) system, connecting all country's banks to exchange real-time payment information.
+In 2017, SCION was evaluated for production use by a central bank, with the goal of modernising the network interconnecting banks and their branches. SCION was chosen, as it allows moving away from a dedicated private network to a reliable Internet-based solution. SCION connectivity was later extended to support system-critical applications, like the national real-time gross settlement (RTGS) system, connecting all country's banks to exchange real-time payment information.
 The network, called Secure Swiss Finance Network or [SSFN](https://perma.cc/PU5L-ALPM), is implemented as a SCION ISD, where a federation of three ISPs forms the ISD core.
 Financial institutions are themselves SCION ASes and directly connect to one or more of the core ASes. Institutions deploy SCION–IP gateways (SIGs), transparently enabling their traditional IP-based applications to use the SCION network.
 The concept of the SCION ISD also provides a mechanism to implement strict governance and access control (through the issuance of AS certificates).
@@ -628,7 +740,7 @@ Besides the SSFN, SCION connectivity has also been adopted by government entitie
 
 In addition to productive deployments, SCION also comprises a global SCION research testbed called [SCIONLab](https://www.scionlab.org). It is composed of dozens of globally distributed infrastructure ASes, mostly run by academic institutions. The testbed is open to any user who can easily set up their own AS with the aid of a web-based UI, connect to the network, and run experiments. The setup has been the earliest global deployment of SCION and it has been supporting research and development of path-aware networking and SCION.
 
-# IANA Considerations {#iana}
+# IANA Considerations
 
 Currently, this document has no request for action to IANA.
 However, when full specification of SCION is available, requests for IANA actions are expected regarding the registration of optional packet header fields as well as the coordination of SCION ISD and AS number assignments.
@@ -643,4 +755,4 @@ SCION has been designed from the outset to offer security by default, and thus t
 # Acknowledgments
 {:numbered="false"}
 
-Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION", which provides the background information needed to write this informational draft.
+Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" {{CHUAT22}}, which provides the background information needed to write this informational draft.
