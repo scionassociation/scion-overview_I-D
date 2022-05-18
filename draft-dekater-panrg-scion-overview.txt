@@ -10,7 +10,7 @@ Expires: 19 November 2022                                    ETH Zuerich
 
 
                              SCION Overview
-                   draft-dekater-panrg-scion-overview
+               draft-dekater-panrg-scion-overview-latest
 
 Abstract
 
@@ -40,7 +40,7 @@ About This Document
    https://scionassociation.github.io/scion-overview_I-D/draft-dekater-
    panrg-scion-overview.html.  Status information for this document may
    be found at https://datatracker.ietf.org/doc/draft-dekater-panrg-
-   scion/.
+   scion-overview/.
 
    Discussion of this document takes place on the WG Working Group
    mailing list (mailto:panrg@irtf.org), which is archived at
