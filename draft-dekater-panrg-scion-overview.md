@@ -82,11 +82,11 @@ informative:
       -
         ins: L. Chuat
         name: Laurent Chuat
-        org: ETH Zuerich         
+        org: ETH Zuerich
   KING2022:
     title: Challenges for the Internet Routing Systems Introduced by Semantic Routing
-    date: 2022  
-    target: https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/    
+    date: 2022
+    target: https://datatracker.ietf.org/doc/draft-king-irtf-challenges-in-routing/
     author:
       -
         ins: D. King
@@ -103,7 +103,7 @@ informative:
   HITZ2021:
     title: Demonstrating the reliability and resilience of Secure Swiss Finance Network
     date: 2021
-    target: https://perma.cc/4H3Q-WZNG    
+    target: https://perma.cc/4H3Q-WZNG
     author:
       ins: S. Hitz
       name: Samuel Hitz
@@ -288,10 +288,10 @@ See {{architecture}} for a high-level overview of the SCION network structure.
 Legend:
                       |
                       |
-Parent AS - child AS: o        
-Peering link: ----     
-Core link: ===      
-Core AS: CAS   
+Parent AS - child AS: o
+Peering link: ----
+Core link: ===
+Core AS: CAS
 ~~~~
 {: #architecture title="SCION network structure"}
 
@@ -334,7 +334,7 @@ SCION decouples end-host addressing from inter-domain routing. Routing is based 
 
 ### Infrastructure Components {#infra-components}
 
-The **beacon service**, the **path service**, and the **certificate service** are the main control-plane infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. Existing Internal routers are used to forward packets inside the AS, while _SCION border routers_ provide interconnectivity between ASes.   
+The **beacon service**, the **path service**, and the **certificate service** are the main control-plane infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. Existing Internal routers are used to forward packets inside the AS, while _SCION border routers_ provide interconnectivity between ASes.
 
 - The _beacon service_ discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which are forwarded to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.
 - The _path service_ stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they register them to the path service in the ISD core.
@@ -373,7 +373,7 @@ The initial TRC in an ISD is called the **base TRC**. This base TRC constitutes 
 Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
 
 ~~~~
-                               TRC 2      
+                               TRC 2
                +--------------------------------------+
                |+------------------------------------+|
                ||- Version       - Core ASes         ||
@@ -751,7 +751,7 @@ However, when full specification of SCION is available, requests for IANA action
 
 # Security Considerations
 
-SCION has been designed from the outset to offer security by default, and thus there are manifold security considerations. As a matter of fact, SCION's protocol design has been formally verified and the open source router implementation is undergoing formal verification (see also {{KLENZE2021}}). Describing all security considerations here, therefore, would go beyond the scope of this document. A separate document including all security implications and considerations will follow later.   
+SCION has been designed from the outset to offer security by default, and thus there are manifold security considerations. As a matter of fact, SCION's protocol design has been formally verified and the open source router implementation is undergoing formal verification (see also {{KLENZE2021}}). Describing all security considerations here, therefore, would go beyond the scope of this document. A separate document including all security implications and considerations will follow later.
 
 --- back
 
