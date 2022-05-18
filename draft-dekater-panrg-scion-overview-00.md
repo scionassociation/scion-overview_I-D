@@ -2,11 +2,12 @@
 title: "SCION Overview"
 abbrev: "SCION I-D"
 category: info
+submissiontype: IRTF
 
-docname: draft-dekater-panrg-scion-overview
-v: 01
-area: rtg
-workgroup: panrg
+docname: draft-dekater-panrg-scion-overview-00
+v: 3
+area: IRTF
+workgroup: PANRG
 keyword: Internet-Draft
 venue:
   group: WG
