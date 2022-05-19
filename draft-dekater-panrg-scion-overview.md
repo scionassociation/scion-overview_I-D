@@ -464,8 +464,7 @@ On its way down, a PCB accumulates cryptographically protected path- and forward
 
 SCION also supports shortcuts and peering links. In a _shortcut_, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. _Peering links_ can be added to up- or down-path segments, resulting in an operation similar to today’s Internet.
 
-To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the path segments of both ASes at the end of a peering link contain this peering link, then it is possible to use the peering link to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, according to SCION’s path transparency property: A source knows the exact set of ASes and ISDs traversed during the delivery of a packet.
-COMMENT: maybe last sentence can be omitted? it is not really specific to peering links
+To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the path segments of both ASes at the end of a peering link contain this peering link, then it is possible to use the peering link to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, according to SCION’s path transparency property.
 
 {{pcb}} shows how intra-ISD PCB propagation works, from the ISD's core AS down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding. Here, AS F receives two different PCBs via two different links from core AS X. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS.
 
@@ -666,7 +665,7 @@ up-path segment        core-path segment        down-path segment
 
 ### Path Authorization
 
-It is crucial for the data plane that end hosts only use paths constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}.
+It is crucial for the data plane that end hosts only use paths constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}).
 
 SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
 
