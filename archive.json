@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-19T01:48:56.335788+00:00",
+  "timestamp": "2022-05-22T01:33:51.460139+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -1036,6 +1036,34 @@
       "mergedBy": "nicorusti",
       "mergeCommit": {
         "oid": "fd54931317aca691a735966d8e43735a44a31c58"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 26,
+      "id": "PR_kwDOHF5N3M44GH31",
+      "title": "Two post-release corrections",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/26",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Found and removed an unremoved comment from the submitted draft and added a missing parenthesis.\n\n<!-- Reviewable:start -->\n---\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/26)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-19T06:31:58Z",
+      "updatedAt": "2022-05-19T06:33:38Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "66930c5355f97c5a2b850b7aed1420283b2a1cc4",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "bded41b7c2a627c4148cbb72a562a36459f85516",
+      "closedAt": "2022-05-19T06:33:37Z",
+      "mergedAt": "2022-05-19T06:33:37Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "e413bdd930db202408b58985ff054f5fb71e1b4b"
       },
       "comments": [],
       "reviews": []
