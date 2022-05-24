@@ -231,7 +231,7 @@ SCION's answers to these questions can be found in [Key Concepts](#key) and [Dep
 
 ### Why Now?
 
-The emergence of multiple SCION implementations and early deployments highlight the need for standardization. The time seems therefore ripe to take SCION to the IETF, also in order to contribute to the important discussion regarding path-aware networking.
+The emergence of multiple SCION implementations and early deployments highlights the need for standardization. The time seems therefore ripe to take SCION to the IETF, also in order to contribute to the important discussion regarding path-aware networking.
 
 ## SCION Overview
 
