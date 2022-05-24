@@ -5,8 +5,8 @@
 PANRG                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                                 A. Perrig
-Expires: 24 November 2022                                    ETH Zuerich
-                                                             23 May 2022
+Expires: 25 November 2022                                    ETH Zuerich
+                                                             24 May 2022
 
 
                              SCION Overview
@@ -64,7 +64,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 November 2022.
+   This Internet-Draft will expire on 25 November 2022.
 
 Copyright Notice
 
@@ -272,7 +272,7 @@ Table of Contents
 1.1.3.  Why Now?
 
    The emergence of multiple SCION implementations and early deployments
-   highlight the need for standardization.  The time seems therefore
+   highlights the need for standardization.  The time seems therefore
    ripe to take SCION to the IETF, also in order to contribute to the
    important discussion regarding path-aware networking.
 
