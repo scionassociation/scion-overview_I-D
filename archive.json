@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-22T01:33:51.460139+00:00",
+  "timestamp": "2022-05-24T01:45:11.654209+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -1064,6 +1064,34 @@
       "mergedBy": "cdekater",
       "mergeCommit": {
         "oid": "e413bdd930db202408b58985ff054f5fb71e1b4b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 27,
+      "id": "PR_kwDOHF5N3M44Q_z7",
+      "title": "Correct Typo",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/27",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/27)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-23T06:25:02Z",
+      "updatedAt": "2022-05-23T06:27:19Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "e413bdd930db202408b58985ff054f5fb71e1b4b",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "8654ebd2d4ae4355ca8b3cbe722fa4221a9a5c7b",
+      "closedAt": "2022-05-23T06:27:19Z",
+      "mergedAt": "2022-05-23T06:27:19Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "6f418ae322d0ef876468b8e86c54b11059ae0bfd"
       },
       "comments": [],
       "reviews": []
