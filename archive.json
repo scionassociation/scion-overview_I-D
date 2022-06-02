@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-26T01:46:38.398965+00:00",
+  "timestamp": "2022-06-02T01:47:19.030534+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -1120,6 +1120,34 @@
       "mergedBy": "cdekater",
       "mergeCommit": {
         "oid": "898bb4d75efff48467e722cb2f19c05e7e0dc43a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 29,
+      "id": "PR_kwDOHF5N3M4412QU",
+      "title": "multipath instead of multi-path",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/29",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/29)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-06-01T11:17:05Z",
+      "updatedAt": "2022-06-01T11:19:52Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "898bb4d75efff48467e722cb2f19c05e7e0dc43a",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "d04ef70eb16325f74695e558625b120a38cbe6fd",
+      "closedAt": "2022-06-01T11:19:52Z",
+      "mergedAt": "2022-06-01T11:19:52Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "8642cda1797b32ccdaf8c0fdc7dcb0da660e11a4"
       },
       "comments": [],
       "reviews": []
