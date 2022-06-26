@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-06-02T01:47:19.030534+00:00",
+  "timestamp": "2022-06-26T01:53:36.932700+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -71,15 +71,15 @@
       "id": "I_kwDOHF5N3M5JvCMz",
       "title": "Improve review workflow & cleanup readme",
       "url": "https://github.com/scionassociation/scion-overview_I-D/issues/14",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "nicorusti",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Integrate reviewable in the process? ",
       "createdAt": "2022-05-16T12:15:29Z",
-      "updatedAt": "2022-05-16T16:32:10Z",
-      "closedAt": null,
+      "updatedAt": "2022-06-24T12:15:39Z",
+      "closedAt": "2022-06-24T12:15:39Z",
       "comments": [
         {
           "author": "nicorusti",
@@ -87,6 +87,13 @@
           "body": "@juagargi reviewable is now enabled on this repo.  Thank you for the hint, we will adjust our workflow soonish (perhaps after we are done with our first submission.  ",
           "createdAt": "2022-05-16T16:32:10Z",
           "updatedAt": "2022-05-16T16:32:10Z"
+        },
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "Reviewable is deployed and we have the option to use it later on. I'll close this issue.",
+          "createdAt": "2022-06-24T12:15:39Z",
+          "updatedAt": "2022-06-24T12:15:39Z"
         }
       ]
     },
