@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-06-26T01:53:36.932700+00:00",
+  "timestamp": "2022-07-03T01:55:38.245834+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -130,6 +130,22 @@
           "updatedAt": "2022-05-18T14:30:54Z"
         }
       ]
+    },
+    {
+      "number": 30,
+      "id": "I_kwDOHF5N3M5NAJbS",
+      "title": "Interim meeting feedback",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/issues/30",
+      "state": "OPEN",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Following the Interim meeting, I feel there are some things that might fit into this draft:\r\n\r\n- [ ] Better explain the motivation behind SCION (justifying the problems it solves)\r\n- [ ] Deployments: T. Pauly mentioned that we should explain what made early deployments successful. Might be a great idea.   ",
+      "createdAt": "2022-07-01T22:32:18Z",
+      "updatedAt": "2022-07-01T22:32:18Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
