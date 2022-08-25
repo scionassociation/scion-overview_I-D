@@ -170,12 +170,41 @@ informative:
         name: Adrian Perrig
         org: ETH Zuerich
 
+  I-D.rustignoli-scion-components:
+    title: SCION Components Analysis
+    date: 2022
+    target: https://datatracker.ietf.org/doc/draft-rustignoli-panrg-scion-components/
+    author:
+      -
+        ins: C. de Kater
+        name: Corine de Kater
+        org: ETH Zürich
+      -
+        ins: N. Rustignoli
+        name: Nicola Rustignoli
+        org: ETH Zürich
+
+  I-D.dekater-scion-pki:
+    title: SCION Overview
+    date: 2022
+    target: https://datatracker.ietf.org/doc/draft-dekater-scion-pki/
+    author:
+      -
+        ins: C. de Kater
+        name: Corine de Kater
+        org: ETH Zürich
+      -
+        ins: N. Rustignoli
+        name: Nicola Rustignoli
+        org: ETH Zürich
 
 --- abstract
 
 The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. But although the world-wide communication system guarantees global reachability, the Internet has not primarily been built with security and high availability in mind. The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address these issues. SCION was explicitly designed from the outset to offer security and availability by default. The architecture provides route control, failure isolation, and trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments.
+This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane.
+A more detailed analysis of relationships and dependencies between components is available in {{I-D.rustignoli-scion-components}}.
+As SCION is already in production use today, the document concludes with an overview of SCION deployments.
 
 --- middle
 
@@ -200,7 +229,6 @@ SCION has been developed in order to meet the above-mentioned requirements. SCIO
 - Improve the inter-domain control plane's scalability
 - Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and all other applications requiring high-performance connectivity.
 
-**Note**: A more detailed motivation for developing SCION will be described in a separate gap analysis internet draft.
 
 ### Scope of SCION
 
@@ -360,7 +388,7 @@ This section explains the SCION key concepts, including authentication, control-
 
 SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.
 
-**Note**: This section describes the SCION authentication concept on a very high level. A much more detailed description of SCION's authentication will follow in a separate internet draft.
+**Note**: This section describes the SCION authentication concept on a very high level. A much more detailed description of SCION's authentication is available in {{I-D.dekater-scion-pki}}.
 
 
 ### The Control-Plane PKI (CP-PKI)
