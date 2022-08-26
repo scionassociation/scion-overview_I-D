@@ -178,11 +178,11 @@ informative:
       -
         ins: C. de Kater
         name: Corine de Kater
-        org: ETH Zürich
+        org: ETH Zuerich
       -
         ins: N. Rustignoli
         name: Nicola Rustignoli
-        org: ETH Zürich
+        org: ETH Zuerich
 
   I-D.dekater-scion-pki:
     title: SCION Overview
@@ -192,11 +192,11 @@ informative:
       -
         ins: C. de Kater
         name: Corine de Kater
-        org: ETH Zürich
+        org: ETH Zuerich
       -
         ins: N. Rustignoli
         name: Nicola Rustignoli
-        org: ETH Zürich
+        org: ETH Zuerich
 
 --- abstract
 
@@ -236,7 +236,7 @@ The above section describes SCION's aspiration to improve *inter*-AS routing and
 
 ### Practical Considerations Based on Related RFCs
 
-The SCION inter-domain routing concept has initially been developed by researchers of the ETH Zürich {{PERRIG2017}}, and could in the meantime also gain attention and recognition in the international academic world. However, for an IT architecture to be successful, it must work well in practice, too. This section pays attention to the implementation considerations of a conceptual framework such as SCION in real life, on the basis of some RFCs exploring this topic. It also verifies in how far SCION meets the requirements mentioned and questions raised in these RFCs.
+The SCION inter-domain routing concept has initially been developed by researchers of the ETH Zuerich {{PERRIG2017}}, and could in the meantime also gain attention and recognition in the international academic world. However, for an IT architecture to be successful, it must work well in practice, too. This section pays attention to the implementation considerations of a conceptual framework such as SCION in real life, on the basis of some RFCs exploring this topic. It also verifies in how far SCION meets the requirements mentioned and questions raised in these RFCs.
 
 #### Avoiding Pitfalls
 
