@@ -20,13 +20,13 @@ venue:
 author:
  -   ins: C. de Kater
      name: Corine de Kater
-     org: ETH Zuerich
-     email: corine.dekatermuehlhaeuser@inf.ethz.ch
+     org: SCION Association
+     email: cdk@scion.org
 
  -   ins: N. Rustignoli
      name: Nicola Rustignoli
-     org: ETH Zuerich
-     email: nicola.rustignoli@inf.ethz.ch
+     org: SCION Association
+     email: nic@scion.org
 
  -   ins: A. Perrig
      name: Adrian Perrig
@@ -172,31 +172,31 @@ informative:
 
   I-D.rustignoli-scion-components:
     title: SCION Components Analysis
-    date: 2022
+    date: 2023
     target: https://datatracker.ietf.org/doc/draft-rustignoli-panrg-scion-components/
     author:
       -
         ins: C. de Kater
         name: Corine de Kater
-        org: ETH Zuerich
+        org: SCION Association
       -
         ins: N. Rustignoli
         name: Nicola Rustignoli
-        org: ETH Zuerich
+        org: SCION Association
 
   I-D.dekater-scion-pki:
-    title: SCION Overview
-    date: 2022
+    title: SCION Control-Plane PKI
+    date: 2023
     target: https://datatracker.ietf.org/doc/draft-dekater-scion-pki/
     author:
       -
         ins: C. de Kater
         name: Corine de Kater
-        org: ETH Zuerich
+        org: SCION Association
       -
         ins: N. Rustignoli
         name: Nicola Rustignoli
-        org: ETH Zuerich
+        org: SCION Association
 
 --- abstract
 
@@ -327,13 +327,13 @@ Core AS: CAS
 
 ### Routing
 
-SCION operates on two routing levels: intra-ISD and inter-ISD. Both levels use **path-segment construction beacons (PCBs)** to explore network paths. A PCB is initiated by a core AS and then disseminated either within an ISD (to explore intra-ISD paths) or among core ASes (to explore core paths across different ISDs). The PCBs accumulate cryptographically protected path and forwarding information on AS-level, and store this information in the form of **hop fields (HFs)**. End hosts use information from these hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called **packet-carried forwarding state (PCFS)**. The concept also supports multi-path communication among end hosts.
+SCION operates on two routing levels: intra-ISD and inter-ISD. Both levels use **path-segment construction beacons (PCBs)** to explore network paths. A PCB is initiated by a core AS and then disseminated either within an ISD (to explore intra-ISD paths) or among core ASes (to explore core paths across different ISDs). The PCBs accumulate cryptographically protected path and forwarding information on AS-level, and store this information in the form of **hop fields (HFs)**. Endpoints use information from these hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called **packet-carried forwarding state (PCFS)**. The concept also supports multi-path communication among endpoints.
 
 The process of creating an end-to-end forwarding path consists of the following steps:
 
 1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.
 2. The AS then selects a few PCBs according to defined policies, transforms the selected PCBs into path segments, and registers these segments with its path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.
-3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an end host performs (a) a *path lookup* step, to obtain path segments, and (b) a *path combination* step, to combine the forwarding path from the segments.
+3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an endpoint performs (a) a *path lookup* step, to obtain path segments, and (b) a *path combination* step, to combine the forwarding path from the segments.
 
 {{beaconing}} below shows the SCION routing process in a nutshell.
 
@@ -358,7 +358,7 @@ The process of creating an end-to-end forwarding path consists of the following 
 
 #### ISD and AS numbering
 
-SCION decouples end-host addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of end-host addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The end host local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
+SCION decouples endpoint addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of endpoint addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The endpoint local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
 
 
 ### Infrastructure Components {#infra-components}
@@ -467,7 +467,7 @@ The partition of the SCION network into ISDs guarantees that no single entity ca
 
 ## SCION Control Plane
 
-The SCION control plane is responsible for discovering path segments and making them available to end hosts. This process includes path exploration, registration, and lookup; it involves the path service, beacon service, and certificate service, both in core ASes and non-core ASes.
+The SCION control plane is responsible for discovering path segments and making them available to endpoints. This process includes path exploration, registration, and lookup; it involves the path service, beacon service, and certificate service, both in core ASes and non-core ASes.
 
 **Note**: This section describes the SCION control plane on a very high level. A much more detailed description of SCION's control plane will follow in a separate internet draft.
 
@@ -597,34 +597,34 @@ Core beaconing operates similarly to intra-ISD beaconing, except that core PCBs 
 
 ### Path Lookup
 
-An end host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-path segment to reach the ISD core, a core-path segment to reach the destination ISD, and a down-path segment to reach the destination AS. The source host queries the path service in its AS for such segments. The path service has up-path segments stored in its database and furthermore checks if it has appropriate core- and down-path segments in its cache; in this case it returns them immediately.
+A host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-path segment to reach the ISD core, a core-path segment to reach the destination ISD, and a down-path segment to reach the destination AS. The source host queries the path service in its AS for such segments. The path service has up-path segments stored in its database and furthermore checks if it has appropriate core- and down-path segments in its cache; in this case it returns them immediately.
 
 If not, the path service in the source AS queries core path services (using locally stored up-path segments) in the source ISD for core-path segments to the destination ISD. Then, it combines up-path segments with the newly retrieved core-path segments, and queries core path services in the remote ISD to fetch remote down-path segments. To improve overall efficiency, the local path service caches the returned path segments and uses parallelism when requesting path segments from core path services. Finally, the local path service returns all path segments to the source host.
 
-This recursive lookup significantly simplifies the process for end hosts (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).
+This recursive lookup significantly simplifies the process for endpoints (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).
 
 ### Link Failures
 
-Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by end hosts. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
+Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by endpoints. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
 
-- The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, end hosts get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
-- SCION end hosts are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and end hosts compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
+- The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, endpoints get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
+- SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
 
 
 ## SCION Data Plane
 
-While the control plane is responsible for providing end-to-end paths, the data plane ensures that packets are forwarded on the selected path. SCION border routers forward packets to the next AS based on the AS-level path in the packet header (which is extended with ingress and egress interface identifiers for each AS), without inspecting the destination address and also without consulting an inter-domain forwarding table. Only the border router at the destination AS needs to inspect the destination address to forward it to the appropriate local end host.
+While the control plane is responsible for providing end-to-end paths, the data plane ensures that packets are forwarded on the selected path. SCION border routers forward packets to the next AS based on the AS-level path in the packet header (which is extended with ingress and egress interface identifiers for each AS), without inspecting the destination address and also without consulting an inter-domain forwarding table. Only the border router at the destination AS needs to inspect the destination address to forward it to the appropriate local endpoint.
 
 Because SCION splits the information about the locator (the path towards the destination AS) and the identifier (the destination address), the identifier can have any format that the destination AS can interpret--only the destination needs to consider that local identifier (see also {{RFC6830}}). In other words, an AS can select an arbitrary addressing format for its hosts, e.g., a 4-byte IPv4, 6-byte media access control (MAC) address, 16-byte IPv6, or any other up to 16-byte addressing scheme. A valuable consequence is that hosts with different address types can directly communicate.
 
-The next two sections describe how an end host combines path segments into an end-to-end forwarding path, and how border routers forward packets efficiently.
+The next two sections describe how an endpoint combines path segments into an end-to-end forwarding path, and how border routers forward packets efficiently.
 
 **Note**: This section describes the SCION data plane on a very high level. A much more detailed description of SCION's data plane will follow in a separate internet draft.
 
 
 ### Path Construction via Segment Combination
 
-Through the path lookup, the end host obtains path segments that must be combined into an end-to-end path. A valid SCION **forwarding path** can be created by combining up to three path segments, in the following ways:
+Through the path lookup, the endpoint obtains path segments that must be combined into an end-to-end path. A valid SCION **forwarding path** can be created by combining up to three path segments, in the following ways:
 
 - **Immediate combination of path segments**: The last AS on the up-path segment is also the first AS on the down-path segment. In this case, the simple combination of an up-path segment and a down-path segment creates a valid forwarding path.
 - **AS shortcut**: The up-path segment and down-path segment intersect at a non-core AS. In this case, a shorter forwarding path can be created by removing the extraneous part of the path.
@@ -693,7 +693,7 @@ up-path segment        core-path segment        down-path segment
 
 ### Path Authorization
 
-It is crucial for the data plane that end hosts only use paths constructed and authorized by ASes in the control plane. In particular, end hosts should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}).
+It is crucial for the data plane that endpoints only use paths constructed and authorized by ASes in the control plane. In particular, endpoints should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}).
 
 SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
 
@@ -723,7 +723,7 @@ The following section discusses practical considerations for deploying SCION and
 
 * [Internet Exchange Points](#deployment-ixp), and
 
-* [end hosts](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation.
+* [endpoints](#deployment-end-host), covering both native SCION hosts and SCION to IP encapsulation.
 
 We then describe some of the early adopters deployment experiences. A more detailed adoption plan is to be outlined in dedicated documents.
 
@@ -744,14 +744,14 @@ Internet Exchange Points (IXP) play as important a role for SCION as they do in 
 
 Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e., to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION’s multipath and fast failover capabilities to leverage the IXP’s internal links (including backup links) and to select paths depending on the application’s needs.  IXPs have therefore an incentive to expose their rich internal connectivity, as the benefits from SCION’s multipath capabilities would increase their value for customers and provide them with a competitive advantage.
 
-## End Hosts and Incremental Deployability {#deployment-end-host}
+## Endpoints and Incremental Deployability {#deployment-end-host}
 
-End users can leverage SCION in two different ways: (1) using SCION-aware applications on a [SCION native end host](#native-endhost), or (2) using transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or end hosts.
+End users can leverage SCION in two different ways: (1) using SCION-aware applications on a [SCION native endpoint](#native-endhost), or (2) using transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In early deployments, the second approach is often preferred, so that no changes are needed within applications or endpoints.
 
 
 
-### Native End Hosts {#native-endhost}
-A SCION native end host's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay for communication between end hosts and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION end hosts can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way, clients require no pre-existing network-specific configurations.
+### Native Endpoints {#native-endhost}
+A SCION native endpoint's stack consists of a dispatcher, which handles all incoming and outgoing SCION packets, and of a SCION daemon, which handles control-plane messages. The latter  fetches paths to remote ASes and provides an API for applications and libraries to interact with the SCION control plane (i.e., for path lookup, SCION extensions). The current SCION implementation uses an UDP/IP underlay for communication between endpoints and SCION routers. This allows reuse of existing intra-domain networking infrastructure. SCION endpoints can optionally use automated bootstrapping mechanisms to retrieve configuration from the network and establish SCION connectivity. This way, clients require no pre-existing network-specific configurations.
 
 ### SCION to IP Gateway (SIG) {#sig}
 A SCION-IP-Gateway (SIG) encapsulates regular IP packets into SCION packets with a corresponding SIG at the destination that performs the decapsulation.
