@@ -363,13 +363,14 @@ SCION decouples endpoint addressing from inter-domain routing. Routing is based 
 
 ### Infrastructure Components {#infra-components}
 
-The **beacon service**, the **path service**, and the **certificate service** are the main control-plane infrastructure components within a SCION AS. Each service can be deployed redundantly, depending on the AS's size and type. Existing Internal routers are used to forward packets inside the AS, while _SCION border routers_ provide interconnectivity between ASes.
+The control service is responsible for the path exploration and registration processes in the control plane. It is the main control-plane infrastructure component within each SCION AS. The control service of an AS has the following tasks:
 
-- The _beacon service_ discovers path information. It is responsible for generating, receiving, and propagating PCBs. Periodically, the beacon service generates a set of PCBs, which are forwarded to its child ASes or neighboring core ASes. The PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.
-- The _path service_ stores mappings from AS identifiers to sets of announced path segments. The path service is organized as a hierarchical caching system similar to that of DNS. Through the beacon service, ASes select the set of path segments through which they want to be reached, and they register them to the path service in the ISD core.
-- The _certificate service_ keeps cached copies of certificates and manages keys and certificates for securing inter-AS communication. The certificate service is queried by the beacon service when validating the authenticity of PCBs (i.e., when the beacon service lacks a certificate).
+- Generating, receiving, and propagating PCBs. Periodically, the control service of a core AS generates a set of PCBs, which are forwarded to the child ASes or neighboring core ASes. In the latter case, the PCBs are sent over policy-compliant paths to discover multiple paths between any pair of core ASes.
+- Selecting and registering the set of path segments via which the AS wants to be reached.
+- Managing certificates and keys to secure inter-AS communication. Each PCB contains signatures of all on-path ASes. Every time the control service of an AS receives a PCB, it validates the PCB's authenticity. When the control service lacks an intermediate certificate, it can query the control service of the neighboring AS that sent the PCB.
 
-_Border routers_ are deployed at the edge of SCION ASes. The main task of border routers is to forward packets to a neighbor border router or to the destination host within the AS. While SCION takes care of inter-domain routing, it relies on existing routing protocols (e.g., IS-IS, OSPF, SR) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding. _Internal routers_, therefore, do not need to be changed to support SCION.
+**Note:** The control service of an AS must not be confused with a border router. The control service of a specific AS is part of the control plane and responsible for *finding and registering suitable paths*. It can be deployed anywhere inside the AS. A border router belongs to the data plane; its main task is to *forward data packets*. Border routers are deployed at the edge of an AS.
+
 
 ### Formal Verification
 
@@ -467,13 +468,13 @@ The partition of the SCION network into ISDs guarantees that no single entity ca
 
 ## SCION Control Plane
 
-The SCION control plane is responsible for discovering path segments and making them available to endpoints. This process includes path exploration, registration, and lookup; it involves the path service, beacon service, and certificate service, both in core ASes and non-core ASes.
+The SCION control plane is responsible for discovering path segments and making them available to endpoints.
 
 **Note**: This section describes the SCION control plane on a very high level. A much more detailed description of SCION's control plane will follow in a separate internet draft.
 
 ### Path Exploration
 
-In SCION, the path segment construction process is referred to as **beaconing**. The _beacon service_ of each AS is responsible for the beaconing process. The beacon service generates, receives, and propagates the **path-segment construction beacons (PCBs)** on a regular basis, to iteratively construct path segments.
+In SCION, the path segment construction process is referred to as **beaconing**. The _control service_ of each AS is responsible for the beaconing process. The control service generates, receives, and propagates the **path-segment construction beacons (PCBs)** on a regular basis, to iteratively construct path segments.
 
 There are three types of path segments (note that all path segments can be used to send data traffic in both directions):
 
@@ -485,8 +486,8 @@ All path segments are invertible: A core-path segment can be used bidirectional,
 
 Path segment construction is conducted hierarchically on two levels:
 
-- _Core beaconing_ is the process of constructing path segments between core ASes. During core beaconing, the beacon service of a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to all other neighboring core ASes. Core beaconing in SCION is similar to BGP’s route-advertising process, although in SCION the process is periodic and PCBs are flooded over policy-compliant paths to discover multiple paths between any pair of core ASes.
-- _Intra-ISD beaconing_ creates path segments from core ASes to non-core ASes. For this, the beacon service of a core AS creates PCBs and sends them to the non-core child ASes (typically customer ASes). The beacon service of a non-core child AS receives these PCBs and forwards them to its child ASes, and so on. This procedure continues until the PCB reaches an AS without any customer (leaf AS). As a result, all ASes receive path segments to reach the core ASes of their ISD.
+- *Inter-ISD or core beaconing* is the process of constructing path segments between core ASes in the same or in different ISDs. During core beaconing, the control service of a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to other neighboring core ASes. Core beaconing is periodic; PCBs are sent over policy-compliant paths to discover multiple paths between any pair of core ASes.
+- *Intra-ISD beaconing* creates path segments from core ASes to non-core ASes. For this, the control service of a core AS creates PCBs and sends them to the non-core child ASes (typically customer ASes). The control service of a non-core child AS receives these PCBs and forwards them to its child ASes, and so on. This procedure continues until the PCB reaches an AS without any customer (leaf AS). As a result, all ASes within an ISD receive path segments to reach the core ASes of their ISD.
 
 On its way down, a PCB accumulates cryptographically protected path- and forwarding information per traversed AS. At every AS, metadata as well as information about the AS's ingress and egress interfaces (i.e., link identifiers) is added to the PCB. The ingress and egress interface IDs identify connections to neighboring ASes. These IDs only need to be unique within each AS. Therefore, they can be chosen and encoded by each AS independently and without any need for coordination.
 
@@ -568,7 +569,7 @@ To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not 
 
 #### Security
 
-Each PCB contains signatures of all on-path ASes. Every time a beacon service receives a PCB, it validates the PCB's authenticity. During this process, the beacon service can query the certificate service, for example, when it lacks an intermediate certificate.
+Each PCB contains signatures of all on-path ASes. Every time a control service receives a PCB, it validates the PCB's authenticity. During this process, the control service can query the control service of the sending AS, for example, when it lacks an intermediate certificate.
 
 #### Policies
 
@@ -577,29 +578,29 @@ Each AS can independently set policies dictating which PCBs are sent in which ti
 
 ### Path Registration
 
-Both the beacon service and the path service are involved in the path registration process. A non-core AS typically receives several PCBs representing several path segments to various core ASes. Out of these PCBs, the non-core AS must select those down-path segments through which it wants to be reached. It is the task of the AS's beacon service to make this selection, according to the criteria described in [Path-Segment Selection](#selection). The beacon service then registers these path segments both at the local path service and at the path service of all core ASes. When links fail, segments expire, or better segments become available, the beacon service updates the down-path segments registered for its AS.
+Path registration is the process where an AS transforms selected PCBs into path segments, and adds these segments to the relevant path databases, thus making them available to other ASes.
 
-As a result, a core AS’s path service contains all intra-ISD path segments registered by the leaf ASes of its ISD. In addition, a core AS path service also stores the preferred core-path segments to other core ASes.
+As mentioned previously, a non-core AS typically receives several PCBs representing several path segments to the core ASes of the ISD the AS belongs to. Out of these PCBs, the non-core AS selects those down-path segments through which it wants to be reached, based on AS-specific selection criteria (see also [Path-Segment Selection](#selection)). The next step is to register the selected down-segments with the control service of the relevant core ASes, according to a process called *intra-ISD path-segment registration*. As a result, a core AS's control service contains all intra-ISD path segments registered by the non-core ASes of its ISD. In addition, each core AS control service also stores preferred core-path segments to other core ASes, in the *core-segment registration* process.
 
 
 #### Path-Segment Selection {#selection}
 
-Among the received PCBs, the beacon service of an AS must choose (1) a set of PCBs to propagate further, and (2) a set of path segments to register. The selection of these PCBs and path segments is based on a path quality metric. This metric aims at identifying consistent, diverse, efficient, and policy-compliant paths:
+Among the received PCBs, the control service of an AS must choose (1) a set of PCBs to propagate further, and (2) a set of path segments to register. The selection of these PCBs and path segments is based on a path quality metric. This metric aims at identifying consistent, diverse, efficient, and policy-compliant paths:
 
 - _Consistency_ implies that at least one property along the path is uniform, such as an AS capability (e.g., high bandwidth).
 - _Diversity_ means that the set of paths announced over time are as path-disjoint as possible, in order to provide high-quality multipath options.
 - _Efficiency_ refers to the length, bandwidth, latency, utilization, and availability of a path, where more efficient paths are naturally preferred.
 - _Policy compliance_ implies that the path adheres to the AS’s routing policy.
 
-Based on past PCBs, the AS beacon service assigns scores to the current set of candidate path segments, and sends the best segments in the next beaconing interval.
+Based on past PCBs, the AS control service assigns scores to the current set of candidate path segments, and sends the best segments in the next beaconing interval.
 
 Core beaconing operates similarly to intra-ISD beaconing, except that core PCBs only traverse core ASes. The same path selection metrics apply, where a core AS attempts to forward the set of most desirable paths to its neighbors.
 
 ### Path Lookup
 
-A host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-path segment to reach the ISD core, a core-path segment to reach the destination ISD, and a down-path segment to reach the destination AS. The source host queries the path service in its AS for such segments. The path service has up-path segments stored in its database and furthermore checks if it has appropriate core- and down-path segments in its cache; in this case it returns them immediately.
+A host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-path segment to reach the ISD core, a core-path segment to reach the destination ISD, and a down-path segment to reach the destination AS. The source host queries the control service in its AS for such segments. The control service has up-path segments stored in its database and furthermore checks if it has appropriate core- and down-path segments in its cache; in this case it returns them immediately.
 
-If not, the path service in the source AS queries core path services (using locally stored up-path segments) in the source ISD for core-path segments to the destination ISD. Then, it combines up-path segments with the newly retrieved core-path segments, and queries core path services in the remote ISD to fetch remote down-path segments. To improve overall efficiency, the local path service caches the returned path segments and uses parallelism when requesting path segments from core path services. Finally, the local path service returns all path segments to the source host.
+If not, the control service in the source AS queries core control services (using locally stored up-path segments) in the source ISD for core-path segments to the destination ISD. Then, it combines up-path segments with the newly retrieved core-path segments, and queries core control services in the remote ISD to fetch remote down-path segments. To improve overall efficiency, the local control service caches the returned path segments and uses parallelism when requesting path segments from core control services. Finally, the local control service returns all path segments to the source host.
 
 This recursive lookup significantly simplifies the process for endpoints (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).
 
@@ -608,7 +609,7 @@ This recursive lookup significantly simplifies the process for endpoints (which 
 Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by endpoints. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
 
 - The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, endpoints get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
-- SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), SCION beacon services attempt to create disjoint paths, SCION path services attempt to select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
+- SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), the SCION control services attempt to create, select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
 
 
 ## SCION Data Plane
