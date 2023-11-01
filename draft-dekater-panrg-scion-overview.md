@@ -34,19 +34,21 @@ author:
      email: adrian.perrig@inf.ethz.ch
 
 normative:
+  RFC5280:
 
 
 informative:
+  RFC1918:
   RFC4264:
   RFC4033:
   RFC5218:
   RFC6480:
-  RFC6830:
   RFC8205:
   RFC8446:
   RFC9049:
   RFC9217:
   RFC8170:
+  RFC8200:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
   GRIFFIN1999: DOI.10.1145/316194.316231
@@ -198,13 +200,46 @@ informative:
         name: Nicola Rustignoli
         org: SCION Association
 
+  I-D.dekater-scion-controlplane:
+    title: SCION Control Plane
+    date: 2023
+    target: https://datatracker.ietf.org/doc/draft-dekater-scion-controlplane/
+    author:
+      -
+        ins: C. de Kater
+        name: Corine de Kater
+        org: SCION Association
+      -
+        ins: M. Frei
+        name: Matthias Frei
+        org: SCION Association
+      -
+        ins: N. Rustignoli
+        name: Nicola Rustignoli
+        org: SCION Association
+
+  I-D.dekater-scion-dataplane:
+    title: SCION Data Plane
+    date: 2023
+    target: https://datatracker.ietf.org/doc/draft-dekater-scion-dataplane/
+    author:
+      -
+        ins: C. de Kater
+        name: Corine de Kater
+        org: SCION Association
+      -
+        ins: N. Rustignoli
+        name: Nicola Rustignoli
+        org: SCION Association
+
+
 --- abstract
 
 The Internet has been successful beyond even the most optimistic expectations and is intertwined with many aspects of our society. But although the world-wide communication system guarantees global reachability, the Internet has not primarily been built with security and high availability in mind. The next-generation inter-network architecture SCION (Scalability, Control, and Isolation On Next-generation networks) aims to address these issues. SCION was explicitly designed from the outset to offer security and availability by default. The architecture provides route control, failure isolation, and trust information for end-to-end communication. It also enables multi-path routing between hosts.
 
-This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane.
-A more detailed analysis of relationships and dependencies between components is available in {{I-D.rustignoli-scion-components}}.
-As SCION is already in production use today, the document concludes with an overview of SCION deployments.
+This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments.
+
+For detailed descriptions of SCION's components, refer to {{I-D.dekater-scion-pki}}, {{I-D.dekater-scion-controlplane}}, and {{I-D.dekater-scion-dataplane}}. A more detailed analysis of relationships and dependencies between components is available in {{I-D.rustignoli-scion-components}}.
 
 --- middle
 
@@ -281,11 +316,11 @@ ISDs provide natural isolation of routing failures and misconfigurations, provid
 
 #### Links
 
-There are three types of links in SCION: core links, parent-child links, and peering links.
+Within and between ISDs, SCION supports three types of links: (1) core links, (2) parent-child links, and (3) peering links.
 
-- A **core link** can only exist between two core ASes.
-- A **parent-child link** requires that at least one of the two connected ASes is a non-core AS. ASes with a parent-child link usually belong to the same entity or have a provider-customer relationship.
-- A **peering link** also includes at least one non-core AS.
+- A **core link** always connects two core ASes, which are either within the same or in a different ISD. Core links can exist for various underlying business relationships, including provider-customer (where the customer pays the provider for traffic) and peering relationships.
+- A **parent-child link** creates a hierarchy between the parent and the child. ASes with a parent-child link typically have a provider-customer relationship.
+- **Peering links** exist between ASes with a (settlement-free or paid) peering relationship. Peering links can only be used to reach destinations within or downstream of the peering AS. They can be established between any two core or non-core ASes, and between core and non-core ASes. Peering links can also cross ISD boundaries.
 
 See {{architecture}} for a high-level overview of the SCION network structure.
 
@@ -329,43 +364,66 @@ See {{architecture}} for a high-level overview of the SCION network structure.
 
 ### Routing
 
-SCION operates on two routing levels: intra-ISD and inter-ISD. Both levels use **path-segment construction beacons (PCBs)** to explore network paths. A PCB is initiated by a core AS and then disseminated either within an ISD (to explore intra-ISD paths) or among core ASes (to explore core paths across different ISDs). The PCBs accumulate cryptographically protected path and forwarding information on AS-level, and store this information in the form of **hop fields (HFs)**. Endpoints use information from these hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called **packet-carried forwarding state (PCFS)**. The concept also supports multi-path communication among endpoints.
+SCION provides path-aware inter-domain routing between ASes across the Internet. The SCION control plane is responsible for discovering these inter-domain paths and making them available to the endpoints within the ASes. SCION inter-domain routing operates on two levels: Within a SCION isolation domain (ISD), which is called *intra*-ISD routing, and between ISDs, called *inter*-ISD routing. Both levels use the so-called *path-segment construction beacons (PCBs)* to explore network paths. A PCB is initiated by a core AS and then disseminated either within an ISD to explore intra-ISD paths, or among core ASes, to explore core paths across different ISDs.
 
-The process of creating an end-to-end forwarding path consists of the following steps:
+The PCBs accumulate cryptographically protected path and forwarding information on AS-level, and store this information in the form of *hop fields*. Endpoints use information from these hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called *packet-carried forwarding state*. The concept also supports multi-path communication among endpoints.
 
-1. First, an AS discovers paths to other ASes, during the *path exploration* (or beaconing) phase.
-2. The AS then selects a few PCBs according to defined policies, transforms the selected PCBs into path segments, and registers these segments with its path infrastructure, thus making them available to other ASes. This happens during the *path registration* phase.
-3. During the *path resolution* phase, the actual creation of an end-to-end forwarding path to the destination takes place. For this, an endpoint performs (a) a *path lookup* step, to obtain path segments, and (b) a *path combination* step, to combine the forwarding path from the segments.
+The creation of an end-to-end forwarding path consists of the following processes:
 
-{{beaconing}} below shows the SCION routing process in a nutshell.
+- *Path exploration (or beaconing)*: This is the process where an AS discovers paths to other ASes.
+- *Path registration*: This is the process where an AS selects a few PCBs, according to defined policies, turns the selected PCBs into path segments, and adds these path segments to the relevant path infrastructure, thus making them available to other ASes.
+- *Path resolution*: This is the process of actually creating an end-to-end forwarding path from the source endpoint to the destination. For this, an endpoint performs (a) a path lookup step, to obtain path segments, and (b) a path combination step, to combine the forwarding path from the segments. This last step takes place in the data plane.
+
+All processes operate concurrently.
+
+For detailed information on path exploration, registration, and lookup, see {{I-D.dekater-scion-controlplane}}. For a detailed description of the path combination and construction process, see {{I-D.dekater-scion-dataplane}}.
+
+{{beaconing}} below shows the SCION routing processes and their relation to each other.
 
 ~~~~
-+------------------+             +------------------+
-| Path Exploration |             |                  |
-|   (Beaconing)    |------------>|Path Registration |
-|                  |             |                  |
-+------------------+             +--------+---------+
-                                          |
-                        +-----------------+
-                        |
-     +------------------v-----------------------+
-     |            Path Resolution               |
-     |+--------------+     +-------------------+|
-     || Path Lookup  |---->| Path Combination  ||
-     |+--------------+     +-------------------+|
-     +------------------------------------------+
++-------------------------+       +-------------------------+
+| Exploration (Beaconing) |------>|      Registration       |
++-------------------------+       +-----------+-------------+
+                                              |
+                              +---------------+
+                              |
+     +------------------------v------------------------+
+     |                 Path Resolution                 |
+     |                                                 |
+     |   +----------------+       +----------------+   |
+     |   |     Lookup     +------>|  Combination   |   |
+     |   |                |       |    (Data Plane)|   |
+     |   +----------------+       +----------------+   |
+     +-------------------------------------------------+
 ~~~~
-{: #beaconing title="SCION routing in a nutshell"}
+{: #beaconing title="SCION routing processes and their relation to each other. All processes operate concurrently."}
+
+
+#### Path Segments
+
+As described previously, the main goal of SCION's control plane is to create and manage path segments, which can then be combined into forwarding paths to transmit packets in the data plane. SCION distinguishes the following types of path segments:
+
+- A path segment from a non-core AS to a core AS is an **up-segment**.
+- A path segment from a core AS to a non-core AS is a **down-segment**.
+- A path segment between core ASes is a **core-segment**.
+
+Each path segment either ends at a core AS, or starts at a core AS, or both.
+
+**Note**: There are no SCION path segments that start and end at a non-core AS. However, when combining path segments into an end-to-end SCION path, it is possible to use peering links.
+
+All path segments are invertible: A core-segment can be used bidirectionally, and an up-segment can be converted into a down-segment, or vice versa, depending on the direction of the end-to-end path. This means that all path segments can be used to send data traffic in both directions.
 
 
 #### ISD and AS numbering
 
-SCION decouples endpoint addressing from inter-domain routing. Routing is based on the <ISD, AS> tuple, agnostic of endpoint addressing. Existing AS numbers are inherited from the current Internet, but a 48-bit namespace allows for additional SCION AS numbers beyond the 32-bit space in use today. The endpoint local address is not used for inter-domain routing or forwarding, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example. A SCION address is therefore composed of the <ISD, AS, local address> 3-tuple.
+The inter-domain SCION routing is based on the <ISD, AS> tuple. Although a complete SCION address is composed of the <ISD, AS, endpoint address> 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. The endpoint address can be of variable length, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example - in fact, the endpoint address is the "normal", currently used, non-SCION-specific endpoint address.
+
+**Note**: As a consequence of the fact that SCION relies on existing routing protocols (e.g., IS-IS, OSPF, SR) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding, existing internal routers do not need to be changed to support SCION.
 
 
-### Infrastructure Components {#infra-components}
+#### Control Service {#infra-components}
 
-The control service is responsible for the path exploration and registration processes in the control plane. It is the main control-plane infrastructure component within each SCION AS. The control service of an AS has the following tasks:
+The **control service** is responsible for the path exploration and registration processes in the control plane. It is the main control-plane infrastructure component within each SCION AS. The control service of an AS has the following tasks:
 
 - Generating, receiving, and propagating PCBs. Periodically, the control service of a core AS generates a set of PCBs, which are forwarded to the child ASes or neighboring core ASes. In the latter case, the PCBs are sent over policy-compliant paths to discover multiple paths between any pair of core ASes.
 - Selecting and registering the set of path segments via which the AS wants to be reached.
@@ -374,9 +432,18 @@ The control service is responsible for the path exploration and registration pro
 **Note:** The control service of an AS must not be confused with a border router. The control service of a specific AS is part of the control plane and responsible for *finding and registering suitable paths*. It can be deployed anywhere inside the AS. A border router belongs to the data plane; its main task is to *forward data packets*. Border routers are deployed at the edge of an AS.
 
 
+### Link Failures
+
+Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by endpoints. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
+
+- The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, endpoints get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
+- SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), the SCION control services attempt to create, select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
+
+
 ### Formal Verification
 
 An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich {{KLENZE2021}}. This guarantees that packet forwarding as well as SCION's authentication mechanisms and implementations are correct and consistent.
+
 
 ## Conventions and Definitions
 
@@ -387,22 +454,35 @@ An additional feature of SCION is its formal verification. The SCION network sys
 
 This section explains the SCION key concepts, including authentication, control- and data plane.
 
-## Authentication
+## The Control-Plane PKI
 
 SCION's control plane relies on a public-key infrastructure called the **control-plane PKI (CP-PKI)**, which is organized on ISD-level. Each ISD can independently build its own roots of trust, defined in a file called **trust root configuration (TRC)**.
 
-**Note**: This section describes the SCION authentication concept on a very high level. A much more detailed description of SCION's authentication is available in {{I-D.dekater-scion-pki}}.
+**Note**: This document describes the SCION control-plane PKI on a very high level. For a detailed specification of the SCION control-plane PKI, see {{I-D.dekater-scion-pki}}.
+
+### Control-Plane PKI - Overview
+
+Authentication in SCION is based on digital certificates that bind identifiers to public keys and carry digital signatures that are verified by roots of trust. SCION allows each ISD to define its own set of trust roots, along with the policy governing their use. Such scoping of trust roots within an ISD improves security, as compromise of a private key associated with a trust root cannot be used to forge a certificate outside the ISD. An ISD's trust roots and policy are encoded in the TRC, which has a version number, a list of public keys that serves as root of trust for various purposes, and policies governing the number of signatures required for performing different types of actions. The TRC serves as a way to bootstrap all authentication within SCION. Additionally, TRC versioning is used to efficiently revoke compromised roots of trust.
+
+Each TRC consists of a collection of signed root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC also includes ISD-policies that specify, for example, the TRC's usage, validity, and future updates. A TRC is a fundamental component of an ISD's control-plane PKI. The so-called **base TRC** constitutes the ISD's trust anchor and is thus axiomatically trusted. It is signed during a signing ceremony by so-called voting ASes and then distributed throughout the ISD. All ASes within an ISD must be pre-loaded with the currently valid base TRC of their own ISD.
+
+### Overview of Certificates, Keys, and Roles
+
+All certificates used in SCION's control-plane PKI are in X.509 v3 format {{RFC5280}}. Additionally, the TRC contains self-signed certificates instead of plain public keys. Self-signed certificates have the following advantages over plain public keys: (1) They make the binding between name and public key explicit; and (2) the binding is signed to prove possession of the corresponding private key.
+
+All ASes in SCION have the task to sign and verify control-plane messages. However, certain ASes have additional roles:
+
+- **Core ASes**: Core ASes are a distinct set of ASes in the SCION control plane. For each ISD, the core ASes are listed in the TRC. Each core AS in an ISD has links to other core ASes (in the same or in different ISDs).
+- **Certification authorities (CAs)**: CAs are responsible for issuing AS certificates to other ASes and/or themselves.
+- **Voting ASes**: Only certain ASes within an ISD may sign TRC updates. The process of appending a signature to a new TRC is called "casting a vote"; the designated ASes that hold the private keys to sign a TRC update are "voting ASes".
+- **Authoritative ASes**: Authoritative ASes are those ASes in an ISD that always have the latest TRCs of the ISD. They start the announcement of a TRC update.
 
 
-### The Control-Plane PKI (CP-PKI)
+### TRC Updates
 
-Trust within each isolation domain is anchored in the trust root configuration (TRC) file. Each TRC contains a collection of signed root certificates, which are used to sign CA certificates, which are in turn used to sign AS certificates. The TRC also includes ISD-policies that specify, for example, the TRC's usage, validity, and future updates. A TRC is a fundamental component of an CP-PKI.
-
-The initial TRC in an ISD is called the **base TRC**. This base TRC constitutes the ISD's trust anchor. It is signed during a signing ceremony and then distributed throughout the ISD. All entities within the ISD obtain the initial TRC with an offline mechanism such as a USB flash drive provided by a trusted AS, like the relevant ISP, or with an online mechanism that relies on a trust-on-first-use (TOFU) approach. However, all updates to the base TRCs are performed in a straightforward process that does not require any manual or out-of-band action (such as a software update), see [TRC Update and Verification](#update).
+There are two types of TRC updates: regular and sensitive. A *regular* TRC update is a periodic re-issuance of the TRC where the entities and policies listed in the TRC remain unchanged, whereas a *sensitive* TRC update is an update that modifies critical aspects of the TRC, such as the set of core ASes. In both cases, the base TRC remains unchanged. If the ISD's TRC has been compromised, it is necessary for an ISD to re-establish the trust root. This is possible with a process called trust reset (if allowed by the ISD's trust policy). In this case, a new base TRC is created. For more details on a trust reset, see {{reset}}.
 
 {{chain}} shows the TRC trust chain and associated certificates. TRC 1 is the base TRC, and TRC 2 and 3 constitute updates to this base TRC. TRC 2 must be verified using the voting certificates in TRC 1. Control-plane (CP) root certificates are used to verify other CP certificates (which are in turn used to verify path-segment construction beacons PCBs).
-
-Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting that it is the rightful owner of the corresponding public key. One of the main roles of the TRC is thus enabling the verification of **AS certificates** and PCBs.
 
 ~~~~
                                TRC 2
@@ -441,26 +521,18 @@ Each SCION AS must hold a private key (to sign PCBs) and a certificate attesting
           |Certificate| |Certificate|      |Certificate|
           +-----------+ +-----------+      +-----------+
 ~~~~
-{: #chain title="TRC contents and trust chain"}
+{: #chain title="Chain of trust within an ISD"}
 
 
-### TRC Update and Verification {#update}
+#### Discovering TRC Updates
 
-With a base TRC as trust anchor, TRCs can be updated in a verifiable manner. There are two kinds of TRC updates: regular and sensitive updates. A _regular_ TRC update happens when the TRC's validity period expires. This period is defined by the _validity_ parameter in the TRC. The default is one year. A TRC update is _sensitive_ if and only if critical sections of the TRC are affected (for example, if the set of core ASes is modified). For both regular and sensitive TRC updates, a number of votes (in the form of signatures) must be cast to approve the update. This number of votes is dictated by the voting quorum and set in each TRC with the _voting quorum_ parameter.
+SCION provides the following mechanisms for discovering TRC updates:
 
-
-### Dissemination of TRC Updates
-
-Information about a TRC update is disseminated via the SCION’s beaconing process, through the path-segment constructions beacons. Each PCB contains the version number of the currently active TRC. If an AS receives a PCB with a TRC version number higher than the locally stored TRC, it requests the PCB-sending AS for the new TRC. The new TRC is verified on the basis of the current one, and is accepted if it contains at least the required quorum of correct signatures by trust roots defined in the current TRC.
-This simple dissemination mechanism has two advantages: It is very efficient (as fresh PCBs rapidly reach all ASes), and it avoids circular dependencies with regard to the verification of PCBs and the beaconing process itself (as no server needs to be contacted over unknown paths in order to fetch the updated TRC).
+- *Beaconing Process*: The TRC version is announced in the beaconing process. Each AS must announce what it considers to be the latest TRC. Furthermore, each AS must include the hash value of the TRC contents to facilitate the discovery of discrepancies. Therefore, relying parties that are part of the beaconing process discover TRC updates passively: A core AS notices TRC updates for remote ISDs that are on the beaconing path. A non-core AS only notices TRC updates for the local ISD through the beaconing process, if it receives a PCB with a TRC version number higher than the locally stored TRC. The creation of a new TRC should trigger the generation of new control-plane messages, as the propagation of control-plane messages will help other ASes rapidly discover the new TRC. This simple dissemination mechanism has two advantages: (1) It is very efficient (as fresh PCBs rapidly reach all ASes), and (2) it avoids circular dependencies with regard to the verification of PCBs and the beaconing process itself (as no server needs to be contacted over unknown paths in order to fetch the updated TRC).
+- *Path Lookup*: In every path segment, all ASes must reference the latest TRC of their ISD. Therefore, when resolving paths, every relying party will notice TRC updates, even remote ones. Note that this mechanism only works when there is an active communication between the relying party and the ISD in question.
 
 
-### Grace Period
-
-At most two TRCs per ISD can be active at the same time. The TRC parameter _grace period_ indicates for how long the currently active TRC can still be active after a new TRC is disseminated. This so-called **grace period** starts at the beginning of the validity period of the new TRC. An older TRC can only be active until either (1) the grace period has passed, or (2) yet a newer TRC is announced. AS certificates are validated by following the chain of trust up to an active TRC.
-
-
-### Revocation and Recovery from a Catastrophic Event
+### Revocation and Recovery from a Catastrophic Event {#reset}
 
 The TRC dissemination mechanism also enables rapid revocation of trust roots. When a trust root is compromised, the other trust roots can remove it from the TRC and disseminate a new TRC alongside a PCB with a new version number.
 
@@ -468,253 +540,306 @@ In case of a catastrophic event—such as several private root keys being disclo
 
 The partition of the SCION network into ISDs guarantees that no single entity can take down the entire network. Even if several entities formed a coalition to carry out an attack, the effects of that attack would be limited to one or a few ISDs.
 
+
 ## SCION Control Plane
 
 The SCION control plane is responsible for discovering path segments and making them available to endpoints.
 
-**Note**: This section describes the SCION control plane on a very high level. A much more detailed description of SCION's control plane will follow in a separate internet draft.
+**Note**: This section describes the SCION control plane on a very high level. For a detailed specification of the SCION control plane, see {{I-D.dekater-scion-controlplane}}.
+
 
 ### Path Exploration
 
-In SCION, the path segment construction process is referred to as **beaconing**. The _control service_ of each AS is responsible for the beaconing process. The control service generates, receives, and propagates the **path-segment construction beacons (PCBs)** on a regular basis, to iteratively construct path segments.
+Path exploration is the process where an AS discovers paths to other ASes. In SCION, this process is referred to as **beaconing**. This section gives a high level explanation of the SCION beaconing process.
 
-There are three types of path segments (note that all path segments can be used to send data traffic in both directions):
-
-- A path segment from a non-core AS to a core AS is an _up-path segment_.
-- A path segment from a core AS to a non-core AS is a _down-path segment_.
-- A path segment between core ASes is a _core-path segment_.
-
-All path segments are invertible: A core-path segment can be used bidirectional, and an up-path segment can be converted into a down-path segment, or vice versa, depending on the direction of the end-to-end path.
-
-Path segment construction is conducted hierarchically on two levels:
+In SCION, the *control service* of each AS is responsible for the beaconing process. The control service generates, receives, and propagates so-called **path-segment construction beacons (PCBs)** on a regular basis, to iteratively construct path segments. PCBs contain topology and authentication information, and can also include additional metadata that helps with path management and selection. The beaconing process itself is divided into routing processes on two levels, where *inter*-ISD or core beaconing is based on the (selective) sending of PCBs without a defined direction, and *intra*-ISD beaconing on top-to-bottom propagation.
 
 - *Inter-ISD or core beaconing* is the process of constructing path segments between core ASes in the same or in different ISDs. During core beaconing, the control service of a core AS either initiates PCBs or propagates PCBs received from neighboring core ASes to other neighboring core ASes. Core beaconing is periodic; PCBs are sent over policy-compliant paths to discover multiple paths between any pair of core ASes.
 - *Intra-ISD beaconing* creates path segments from core ASes to non-core ASes. For this, the control service of a core AS creates PCBs and sends them to the non-core child ASes (typically customer ASes). The control service of a non-core child AS receives these PCBs and forwards them to its child ASes, and so on. This procedure continues until the PCB reaches an AS without any customer (leaf AS). As a result, all ASes within an ISD receive path segments to reach the core ASes of their ISD.
 
-On its way down, a PCB accumulates cryptographically protected path- and forwarding information per traversed AS. At every AS, metadata as well as information about the AS's ingress and egress interfaces (i.e., link identifiers) is added to the PCB. The ingress and egress interface IDs identify connections to neighboring ASes. These IDs only need to be unique within each AS. Therefore, they can be chosen and encoded by each AS independently and without any need for coordination.
+On its way, a PCB accumulates cryptographically protected path- and forwarding information per traversed AS. At every AS, metadata as well as information about the AS's ingress and egress interfaces (i.e., link identifiers) are added to the PCB. The ingress and egress interface IDs identify connections to neighboring ASes. These IDs only need to be unique within each AS. Therefore, they can be chosen and encoded by each AS independently and without any need for coordination.
 
-SCION also supports shortcuts and peering links. In a _shortcut_, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. _Peering links_ can be added to up- or down-path segments, resulting in an operation similar to today’s Internet.
+SCION also supports shortcuts and peering links. In a *shortcut*, a path only contains an up-path and a down-path segment, which can cross over at a non-core AS that is common to both paths. *Peering links* can be added to up- or down-path segments, resulting in an operation similar to today’s Internet.
 
-To reduce beaconing overhead and prevent possible forwarding loops, PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If the path segments of both ASes at the end of a peering link contain this peering link, then it is possible to use the peering link to shortcut the end-to-end path (i.e., without going through the core). SCION also supports peering links that cross ISD boundaries, according to SCION’s path transparency property.
+Note that PCBs do not traverse peering links. Instead, peering links are announced along with a regular path in a PCB. If both ASes at either end of a peering link have registered path segments that include this specific peering link, then it is possible to use this peering link during segment combination to create the end-to-end path.
 
-{{pcb}} shows how intra-ISD PCB propagation works, from the ISD's core AS down to child ASes. For the sake of illustration, the interfaces of each AS are numbered with integer values. In practice, each AS can choose any encoding for its interfaces; in fact, only the AS itself needs to understand its encoding. Here, AS F receives two different PCBs via two different links from core AS X. Moreover, AS F uses two different links to send two different PCBs to AS G, each containing the respective egress interfaces. AS G extends the two PCBs and forwards both of them over a single link to a child AS.
 
-~~~~
-                                  .-----.
-                                 ; Core  :
-                        +-----+  : AS X  ;
-                        |PCB  |   \ 2 1 / +-----+
-                        |Core |    `+-+'  |pcb  |
-                        |Out:2|     | |   |core |
-                        +--+--+   +-+ |   |out:1|
-                           |      |   |   +--+--+
-                           v      |   |      |
-                                .-+---+.     v
-                   .---.       /  2   3 \             .---.
-                  (  J  )- - -; 1      4 :- - - - - -(  H  )
-                   `---'      :   AS F   ;            `---'
-                            +--\7       /
-+----------+ +----------+ <-+     6  5
-|PCB       | |pcb       |        `+--+'
-|Core      | |core      |         |  |
-|Out:2     | |out:1     |         |  |
-|----------| |----------|         |  |
-|AS F      | |as f      |         |  |
-|In:2 Out:7| |in:3 out:7|         |  |
-|Peer J:1  | |peer j:1  |         |  | +----------+ +----------+
-|Peer H:4  | |peer h:4  |         |  | |PCB       | |pcb       |
-|          | |          |         |  | |Core      | |core      |
-+--+-------+ +--+-------+         |  | |Out:2     | |out:1     |
-   |            |                 |  | |----------| |----------|
-  <+           <+                 |  | |AS F      | |as f      |
-                                  |  | |In:2 Out:5| |in:3 out:5|
-         +----------+ +----------+|  | |Peer J:1  | |peer j:1  |
-         |PCB       | |pcb       ||  | |Peer H:4  | |peer h:4  |
-         |Core      | |core      ||  | |          | |          |
-         |Out:2     | |out:1     ||  | +----+-----+ +----+-----+
-         |----------| |----------||  |      |            |
-         |AS F      | |as f      ||  |      v            v
-         |In:2 Out:6| |in:3 out:6||  |
-         |Peer J:1  | |peer j:1  ||  |
-         |Peer H:4  | |peer h:4  ||  |
-         |          | |          ||  |
-         +----+-----+ +----+-----+|  |
-              |            |     .+--+-.
-              v            v   ,' 5  1  `.
-                              ;           :
-                              :   AS G    ;
-                               \         /
-                            +---` 4  3 ,'
-                          <-+     `--+'
-                                     |  +----------+ +----------+
-                                     |  |PCB       | |pcb       |
-                                     |  |Core      | |core      |
-                                     |  |Out:2     | |out:1     |
-           +----------+ +----------+ |  |----------| |----------|
-           |PCB       | |pcb       | |  |AS F      | |as f      |
-           |Core      | |core      | |  |In:2 Out:5| |in:3 out:5|
-           |Out:2     | |out:1     | |  |Peer J:1  | |peer j:1  |
-           |----------| |----------| |  |Peer H:4  | |peer h:4  |
-           |AS F      | |as f      | |  |----------| |----------|
-           |In:2 Out:6| |in:3 out:6| |  |AS G      | |as g      |
-           |Peer J:1  | |peer j:1  | |  |In:1 Out:3| |in:1 out:3|
-           |Peer H:4  | |peer h:4  | |  |          | |          |
-           |----------| |----------| |  +----+-----+ +----+-----+
-           |AS G      | |as g      | |       |            |
-           |In:5 Out:3| |in:5 out:3| v       v            v
-           |          | |          |
-           +----+-----+ +----+-----+
-                |            |
-                v            v
-~~~~
-{: #pcb title="Intra-ISD PCB propagation from the ISD core down to child ASes"}
+#### Selection of PCBs to Propagate
 
-#### Security
+As an AS receives a series of intra-ISD or core PCBs, it must select the PCBs it will use to continue beaconing. Each AS can independently set policies dictating which PCBs are propagated in which time intervals, and to which neighbors. The selection process can be based on path properties (e.g., length, disjointness across different paths) as well as on PCB properties (e.g., age, remaining lifetime of sent instances) - each AS is free to use those properties that suit the AS best. The control service can then compute the overall quality of each candidate PCB based on these properties. For this, the AS should use a selection algorithm or metric that reflects its needs and requirements and identifies the best PCBs or paths segments for this AS.
 
-Each PCB contains signatures of all on-path ASes. Every time a control service receives a PCB, it validates the PCB's authenticity. During this process, the control service can query the control service of the sending AS, for example, when it lacks an intermediate certificate.
+For a detailed description of selecting PCBs to propagate, see the section "Selection of PCBs to Propagate" in {{I-D.dekater-scion-controlplane}}.
 
-#### Policies
 
-Each AS can independently set policies dictating which PCBs are sent in which time intervals, and to which neighbors. In particular, PCBs do not need to be propagated immediately upon arrival. However, during bootstrapping and if the AS obtains a PCB containing a previously unknown path, the AS should forward the PCB immediately, to ensure quick connectivity establishment.
+
+#### Propagating a PCB
+
+Every propagation period (as configured by the AS), the control service
+
+- selects the best combinations of PCBs and interfaces connecting to a neighboring AS (i.e., a child AS or a core AS), and
+- sends each selected PCB to the selected egress interface(s) associated with it.
+
+For every selected PCB and egress interface combination, the AS extends the PCB by adding a so-called *AS entry* to the selected PCB. Such an AS entry includes a hop field that specifies the incoming (ingress) and outgoing (egress) interface for the packet forwarding through this AS, in the beaconing direction. The AS entry can also contain peer entries.
+
+For a detailed description of the propagation of a PCB, see the sections "PCB Propagation - Illustrated Example" and "Propagation of Selected PCBs" in {{I-D.dekater-scion-controlplane}}.
 
 
 ### Path Registration
 
 Path registration is the process where an AS transforms selected PCBs into path segments, and adds these segments to the relevant path databases, thus making them available to other ASes.
 
-As mentioned previously, a non-core AS typically receives several PCBs representing several path segments to the core ASes of the ISD the AS belongs to. Out of these PCBs, the non-core AS selects those down-path segments through which it wants to be reached, based on AS-specific selection criteria (see also [Path-Segment Selection](#selection)). The next step is to register the selected down-segments with the control service of the relevant core ASes, according to a process called *intra-ISD path-segment registration*. As a result, a core AS's control service contains all intra-ISD path segments registered by the non-core ASes of its ISD. In addition, each core AS control service also stores preferred core-path segments to other core ASes, in the *core-segment registration* process.
+As mentioned previously, a non-core AS typically receives several PCBs representing several path segments to the core ASes of the ISD the AS belongs to. Out of these PCBs, the non-core AS selects those down-path segments through which it wants to be reached, based on AS-specific selection criteria. The next step is to register the selected down-segments with the control service of the relevant core ASes, according to a process called *intra-ISD path-segment registration*. As a result, a core AS's control service contains all intra-ISD path segments registered by the non-core ASes of its ISD. In addition, each core AS control service also stores preferred core-path segments to other core ASes, in the *core-segment registration* process.
+
+For a detailed description of path-segment registration, see the section "Registration of Path Segments" in {{I-D.dekater-scion-controlplane}}.
 
 
-#### Path-Segment Selection {#selection}
+#### Intra-ISD Path-Segment Registration
 
-Among the received PCBs, the control service of an AS must choose (1) a set of PCBs to propagate further, and (2) a set of path segments to register. The selection of these PCBs and path segments is based on a path quality metric. This metric aims at identifying consistent, diverse, efficient, and policy-compliant paths:
+Every *registration period* (determined by each AS), the AS's control service selects two sets of PCBs to transform into two types of path segments:
 
-- _Consistency_ implies that at least one property along the path is uniform, such as an AS capability (e.g., high bandwidth).
-- _Diversity_ means that the set of paths announced over time are as path-disjoint as possible, in order to provide high-quality multipath options.
-- _Efficiency_ refers to the length, bandwidth, latency, utilization, and availability of a path, where more efficient paths are naturally preferred.
-- _Policy compliance_ implies that the path adheres to the AS’s routing policy.
+- Up-segments, which allow the infrastructure entities and endpoints in this AS to communicate with core ASes; and
+- down-segments, which allow remote entities to reach this AS.
 
-Based on past PCBs, the AS control service assigns scores to the current set of candidate path segments, and sends the best segments in the next beaconing interval.
+The up- and down-segments do not have to be equal.  An AS may want to communicate with core ASes via one or more up-segments that differ from the down-segment(s) through which it wants to be reached. Therefore, an AS can define different selection policies for the up- and down-segment sets.
 
-Core beaconing operates similarly to intra-ISD beaconing, except that core PCBs only traverse core ASes. The same path selection metrics apply, where a core AS attempts to forward the set of most desirable paths to its neighbors.
+
+#### Core Path-Segment Registration
+
+The core beaconing process creates path segments from core AS to core AS. These core-segments are then added to the control service path database of the core AS that created the segment, so that local and remote endpoints can obtain and use these core-segments. In contrast to the intra-ISD registration procedure, there is no need to register core-segments with other core ASes (as each core AS will receive PCBs originated from every other core AS).
+
 
 ### Path Lookup
 
-A host (source) who wants to start communication with another host (destination), requires up to three path segments: An up-path segment to reach the ISD core, a core-path segment to reach the destination ISD, and a down-path segment to reach the destination AS. The source host queries the control service in its AS for such segments. The control service has up-path segments stored in its database and furthermore checks if it has appropriate core- and down-path segments in its cache; in this case it returns them immediately.
+The *path lookup* is a fundamental building block of SCION's path management, as it enables endpoints to obtain path segments found during path exploration and registered during path registration. This allows the endpoints to construct end-to-end paths from the set of possible path segments returned by the path lookup process. The lookup of paths still happens in the control plane, whereas the construction of the actual end-to-end paths happens in the data plane.
 
-If not, the control service in the source AS queries core control services (using locally stored up-path segments) in the source ISD for core-path segments to the destination ISD. Then, it combines up-path segments with the newly retrieved core-path segments, and queries core control services in the remote ISD to fetch remote down-path segments. To improve overall efficiency, the local control service caches the returned path segments and uses parallelism when requesting path segments from core control services. Finally, the local control service returns all path segments to the source host.
 
-This recursive lookup significantly simplifies the process for endpoints (which only have to send a single query, similar to stub DNS resolvers). The caching strategy ensures that path lookups are fast for frequently used destinations (similar to caching in recursive DNS resolvers).
+#### Lookup Process
 
-### Link Failures
+An endpoint (source) that wants to start communication with another endpoint (destination), requires up to three path segments:
 
-Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by endpoints. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:
+- An up-path segment to reach the core of the source ISD (only if the source endpoint is a non-core AS),
+- a core-path segment to reach
 
-- The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, endpoints get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.
-- SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), the SCION control services attempt to create, select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also {{ANDERSEN2001}}, {{KATZ2012}}, {{KUSHMAN2007}}, and {{HITZ2021}}.
+  - another core AS in the source ISD, in case the destination AS is in the same source ISD, or
+  - a core AS in a remote ISD, if the destination AS is in another ISD, and
+
+- a down-path segment to reach the destination AS.
+
+**Note**: The actual number of required path segments depends on the location of the destination AS as well as on the availability of shortcuts and peering links. More information on combining and constructing paths is provided by the {{I-D.dekater-scion-dataplane}} document.
+
+The process to look up and fetch path segments consists of the following steps:
+
+1. First, the source endpoint queries the control service in its own AS (i.e., the source AS) for the required segments. The control service has up-path segments stored in its path database. Additionally, the control service checks if it has appropriate core- and down-path segments in store as well; in this case it returns them immediately.
+2. If there are no appropriate core-segments and down-segments, the control service in the source AS queries the control services of the reachable core ASes in the source ISD, for core-path segments to core ASes in the destination ISD (which is either the own or a remote ISD). To reach the core control services, the control service of the source AS uses the locally stored up-path segments.
+3. Next, the control service of the source AS combines up-path segments with the newly retrieved core-path segments. The control service then queries the control services of the remote core ASes in the destination ISD, to fetch down-path segments to the destination AS. To reach the remote core ASes, the control service of the source AS uses the previously obtained and combined up- and core segments.
+4. Finally, the control service of the source AS returns all retrieved path segments to the source endpoint.
+5. Once it has obtained all path segments, the endpoint combines them into an end-to-end path in the data plane.
+
+
+#### Caching
+
+For the sake of efficiency, the control service of the source AS should cache each returned path segment request. Caching ensures that path lookups are fast for frequently used destinations. The use of caching is also essential to ensure that the path-lookup process is scalable and can be performed with low latency. Additionally, it is good practice to send requests in parallel when requesting path segments from other control services.
+
 
 
 ## SCION Data Plane
 
-While the control plane is responsible for providing end-to-end paths, the data plane ensures that packets are forwarded on the selected path. SCION border routers forward packets to the next AS based on the AS-level path in the packet header (which is extended with ingress and egress interface identifiers for each AS), without inspecting the destination address and also without consulting an inter-domain forwarding table. Only the border router at the destination AS needs to inspect the destination address to forward it to the appropriate local endpoint.
+While the control plane is responsible for providing end-to-end paths, the data plane ensures that packets are forwarded on the selected path. The SCION data plane fundamentally differs from today's IP-based data plane in that it is *path-aware*: In SCION, inter-domain forwarding directives are embedded in the packet header.
 
-Because SCION splits the information about the locator (the path towards the destination AS) and the identifier (the destination address), the identifier can have any format that the destination AS can interpret--only the destination needs to consider that local identifier (see also {{RFC6830}}). In other words, an AS can select an arbitrary addressing format for its hosts, e.g., a 4-byte IPv4, 6-byte media access control (MAC) address, 16-byte IPv6, or any other up to 16-byte addressing scheme. A valuable consequence is that hosts with different address types can directly communicate.
+SCION routers are deployed at the edge of an AS, and peer with neighbor SCION routers. Inter-domain forwarding is based on end-to-end path information contained in the packet header. This path information consists of a sequence of hop fields. Each hop field corresponds to an AS on the path, and it includes an ingress- as well as an egress interface ID, which univocally identify the ingress and egress interfaces within the AS. The information is authenticated with a Message Authentication Code (MAC) to prevent forgery. This concept allows SCION routers to forward packets to a neighbor AS without inspecting the destination address and also without consulting an inter-domain forwarding table; the SCION router can just access the next hop from the packet header.
 
-The next two sections describe how an endpoint combines path segments into an end-to-end forwarding path, and how border routers forward packets efficiently.
+*Intra*-domain forwarding and routing are based on existing mechanisms (e.g., IP). A SCION border router reuses existing intra-domain infrastructure to communicate to other SCION routers or SCION endpoints within its AS. The last SCION router at the destination AS therefore uses the destination address to forward the packet to the appropriate local endpoint.
 
-**Note**: This section describes the SCION data plane on a very high level. A much more detailed description of SCION's data plane will follow in a separate internet draft.
+The SCION design choice has the following advantages:
+
+- It provides control and transparency over forwarding paths to endpoints.
+- It simplifies the packet-processing at routers: Instead of having to perform longest-prefix matching on IP addresses, which requires expensive hardware and substantial amounts of energy, a router can simply access the next hop from the packet header, after having verified the authenticity of the hop field's MAC.
+
+**Note**: This section describes the SCION data plane on a very high level. A much more detailed description of SCION's data plane is available in {{I-D.dekater-scion-dataplane}}.
 
 
 ### Path Construction via Segment Combination
 
-Through the path lookup, the endpoint obtains path segments that must be combined into an end-to-end path. A valid SCION **forwarding path** can be created by combining up to three path segments, in the following ways:
+Paths are discovered by the SCION control plane, which makes them available to SCION endpoints in the form of path segments. There are three kinds of path segments: up, down, and core. In the data plane, a SCION endpoint creates end-to-end paths from the path segments, by combining multiple path segments. Depending on the network topology, a SCION forwarding path can consist of one, two, or three segments. Each path segment contains several hop fields representing the ASes on the segment as well as one info field with basic information about the segment, such as a timestamp.
 
-- **Immediate combination of path segments**: The last AS on the up-path segment is also the first AS on the down-path segment. In this case, the simple combination of an up-path segment and a down-path segment creates a valid forwarding path.
-- **AS shortcut**: The up-path segment and down-path segment intersect at a non-core AS. In this case, a shorter forwarding path can be created by removing the extraneous part of the path.
-- **Peering shortcut**: A peering link exists between the two segments, so a shortcut via the peering link is possible. As in the AS shortcut case, the extraneous path segment is cut off. The peering link could be traversing to a different ISD.
-- **Combination with a core-path segment**: The last AS on the up-path segment is different from the first AS on the down-path segment. This case requires an additional core-path segment to connect the up- and down-path segment. If the communication remains within the same ISD, a local ISD core-path segment is needed; otherwise, an inter-ISD core-path segment is required.
-- **On-path**: The destination AS is part of the up-path segment or the source AS is part of the down-path segment; in this case, a single up- or down-path segment, respectively, is sufficient to create a forwarding path.
+{{combinations}} below shows the different allowed segment combinations.
 
-Once a forwarding path is chosen, it is encoded in the SCION packet header. This makes inter-domain routing tables unnecessary for border routers: Both the ingress and the egress interface of each AS on the path are encoded as **packet-carried forwarding state (PCFS)** in the packet header. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.
+**Note**: It is assumed that the source and destination endpoints are in different ASes.
 
-The SCION packet header contains of a sequence of **hop fields (HFs)**, one HF for each AS that is traversed on the end-to-end path. Each hop field contains the encoded numbers of the ingress and egress links, and thus defines which interfaces may be used to enter and leave an AS. In addition to the hop fields, each path segment contains an **info field (INF)** with basic information about the segment. A host can create an end-to-end forwarding path by extracting info fields and hop fields from path segments, as depicted in {{HFs}}. The additional meta header (META) contains pointers to the currently active INF and HF.
 
 ~~~~
-up-path segment        core-path segment        down-path segment
+                                  ------- = end-to-end path
+   C = Core AS                    - - - - = unused links
+   * = source/destination AS      ------> = direction of beaconing
 
-+-------+              +-------+                +-------+
-|+-----+|              |+-----+|                |+-----+|
-|+ INF ||----------+   |+ INF ||---+            |+ INF ||-+
-|+-----+|          |   |+-----+|   |            |+-----+| |
-|+-----+|          |   |+-----+|   |            |+-----+| |
-|| hf  ||--------+ |   || hf  ||---+--+         || hf  ||-+--+
-|+-----+|        | |   |+-----+|   |  |         |+-----+| |  |
-|+-----+|        | |   |+-----+|   |  |         |+-----+| |  |
-|| hf  ||-----+  | |   || hf  ||---+--+--+      || hf  ||-+--+--+
-|+-----+|     |  | |   |+-----+|   |  |  |      |+-----+| |  |  |
-|+-----+|     |  | |   +-------+   |  |  |      +-------+ |  |  |
-|| hf  ||--+  |  | |               |  |  |                |  |  |
-|+-----+|  |  |  | |   +--------+  |  |  |                |  |  |
-+-------+  |  |  | |   |++-----+|  |  |  |                |  |  |
-           |  |  | |   |++ Meta||  |  |  |                |  |  |
-           |  |  | |   |++-----+|  |  |  |                |  |  |
-           |  |  | |   |+-----+ |  |  |  |                |  |  |
-           |  |  | +-->|+ INF | |  |  |  |                |  |  |
-           |  |  |     |+-----+ |  |  |  |                |  |  |
-           |  |  |     |+-----+ |  |  |  |                |  |  |
-           |  |  |     |+ INF | |<-+  |  |                |  |  |
-           |  |  |     |+-----+ |     |  |                |  |  |
-           |  |  |     |+-----+ |     |  |                |  |  |
-           |  |  |     |+ INF | |<----+--+----------------+  |  |
-           |  |  |     |+-----+ |     |  |                   |  |
-           |  |  |     |+-----+ |     |  |                   |  |
-           |  |  +---->|| hf  | |     |  |                   |  |
-           |  |        |+-----+ |     |  |                   |  |
-           |  |        |+-----+ |     |  |                   |  |
-           |  +------->|| hf  | |     |  |                   |  |
-           |           |+-----+ |     |  |                   |  |
-           |           |+-----+ |     |  |                   |  |
-           +---------->|| hf  | |     |  |                   |  |
-                       |+-----+ |     |  |                   |  |
-                       |+-----+ |     |  |                   |  |
-                       || hf  | |<----+  |                   |  |
-                       |+-----+ |        |                   |  |
-                       |+-----+ |        |                   |  |
-                       || hf  | |<-------+                   |  |
-                       |+-----+ |                            |  |
-                       |+-----+ |                            |  |
-                       || hf  | |<---------------------------+  |
-                       |+-----+ |                               |
-                       |+-----+ |                               |
-                       || hf  | |<------------------------------+
-                       |+-----+ |
-                       +--------+
-                     forwarding path
+
+          Core                        Core                  Core
+      ---------->                 ---------->           ---------->
+     .-.       .-.               .-.       .-.         .-.       .-.
++-- ( C )-----( C ) --+     +-- ( C )-----(C/*)       (C/*)-----(C/*)
+|    `+'       `+'    |     |    `+'       `-'         `-'       `-'
+|     |    1a   |     |     |     |     1b                   1c
+|     |         |     |     |     |
+|     |         |     |     |     |
+|    .+.       .+.    |     |    .+.                       Core
+|   (   )     (   )   |     |   (   )                 -------------->
+|    `+'       `+'    |     |    `+'                        .-.
+|     |         |     |     |     |                   +----( C )----+
+|     |         |     |     |     |                   |     `-'     |
+|     |         |     |     |     |                   |             |
+|    .+.       .+.    |     |    .+.                 .+.     1d    .+.
++-> ( * )     ( * ) <-+     +-> ( * )               (C/*)         (C/*)
+     `-'       `-'               `-'                 `-'           `-'
+
+
+
+          .-.                      .-.                   .-.
++--   +--( C )--+   --+      +--  (C/*)        +--    - ( C ) -    --+
+|     |   `-'   |     |      |     `+'         |     |   `-'   |     |
+|     |         |     |      |      |          |                     |
+|     |    2a   |     |      |  2b  |          |     |    3a   |     |
+|     |         |     |      |      |          |                     |
+|    .+.       .+.    |      |     .+.         |    .+.       .+.    |
+|   (   )     (   )   |      |    (   )        |   (   #-----#   )   |
+|    `+'       `+'    |      |     `+'         |    `+'  Peer `+'    |
+|     |         |     |      |      |          |     |         |     |
+|     |         |     |      |      |          |     |         |     |
+|     |         |     |      |      |          |     |         |     |
+|    .+.       .+.    |      |     .+.         |    .+.       .+.    |
++-> ( * )     ( * ) <-+      +->  ( * )        +-> ( * )     ( * ) <-+
+     `-'       `-'                 `-'              `-'       `-'
+
+
+          Core                                    Core
+      ---------->                              ---------->
+     .-.       .-.             .-.            .-.       .-.        .-.
+ +--( C )- - -( C )--+  +---- ( C ) ----+    ( C )- - -( C )  +-- ( C )
+ |   `+'       `+'   |  |      `+'      |     `+'       `+'   |    `+'
+ |         3b        |  |           4a  |          4b         |  5
+ |    |         |    |  |       |       |      |         |    |     |
+ |                   |  |               |                     |
+ |   .+.       .+.   |  |      .+.      |      + - --. - +    |    .+.
+ |  (   #-----#   )  |  |   +-(   )-+   |      +--(   )--+    |   ( * )
+ |   `+'  Peer `+'   |  |   |  `-'  |   |      |   `-'   |    |    `+'
+ |    |         |    |  |   |       |   |      |         |    |     |
+ |    |         |    |  |   |       |   |      |         |    |     |
+ |    |         |    |  |   |       |   |      |         |    |     |
+ |   .+.       .+.   |  |  .+.     .+.  |     .+.       .+.   |    .+.
+ +->( * )     ( * )<-+  +>( * )   ( * )<+    ( * )     ( * )  +-> ( * )
+     `-'       `-'         `-'     `-'        `-'       `-'        `-'
 ~~~~
-{: #HFs title="Combining three path segments into a forwarding path"}
+{: #combinations title="Illustration of possible path-segment combinations. Each node represents a SCION Autonomous System."}
+
+
+The following path-segment combinations are allowed:
+
+- *Communication through core ASes*:
+
+  - *Core-segment combination* (Cases 1a, 1b, 1c, 1d in {{combinations}}): The up- and down-segments of source and destination do not have an AS in common. In this case, a core-segment is required to connect the source's up- and the destination's down-segment (Case 1a). If either the source or the destination AS is a core AS (Case 1b) or both are core ASes (Cases 1c and 1d), then no up- or down-segment(s) are required to connect the respective AS(es) to the core-segment.
+  - *Immediate combination* (Cases 2a, 2b in {{combinations}}): The last AS on the up-segment (which is necessarily a core AS) is the same as the first AS on the down-segment. In this case, a simple combination of up- and down-segments creates a valid forwarding path. In Case 2b, only one segment is required.
+
+- *Peering shortcut* (Cases 3a and 3b): A peering link exists between the up- and down-segment. The extraneous path segments to the core are cut off. Note that the up- and down-segments do not need to originate from the same core AS and the peering link could also be traversing to a different ISD.
+- *AS shortcut* (Cases 4a and 4b): The up- and down-segments intersect at a non-core AS below the ISD core, thus creating a shortcut. In this case, a shorter path is made possible by removing the extraneous part of the path to the core. Note that the up- and down-segments do not need to originate from the same core AS and can even be in different ISDs (if the AS at the intersection is part of multiple ISDs).
+- *On-path* (Case 5): In the case where the source's up-segment contains the destination AS or the destination's down-segment contains the source AS, a single segment is sufficient to construct a forwarding path. Again, no core AS is on the final path.
+
+Once a forwarding path is chosen, it is encoded in the SCION packet header, making inter-domain routing tables unnecessary for the SCION routers. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.
+
+
+### SCION Header Specification
+
+As mentioned above, when a source endpoint wants to communicate with a destination endpoint in SCION, it encodes the end-to-end path made up out of path segments in the SCION packet header. This section introduces the SCION header structure and specification. A much more detailed description of the SCION header is provided in the section "SCION Header Specification" of the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
+
+
+#### SCION Packet Header
+
+The SCION packet header is composed of a common header, an address header, a path header, and an optional extension header:
+
+~~~~
++--------------------------------------------------------+
+|                     Common header                      |
+|                                                        |
++--------------------------------------------------------+
+|                     Address header                     |
+|                                                        |
++--------------------------------------------------------+
+|                      Path header                       |
+|                                                        |
++--------------------------------------------------------+
+|              Extension header (optional)               |
+|                                                        |
++--------------------------------------------------------+
+~~~~
+{: #header title="High-level SCION header structure"}
+
+- The **common header** contains important meta information like a version number and the lengths of the header and payload. In particular, it contains flags that control the format of subsequent headers such as the address and path headers.
+- The **address header** contains the ISD-, AS-, and endpoint-addresses of source and destination.
+- The **path header** contains the full AS-level forwarding path of the packet. The `PathType` field in the common header specifies the path format used in the path header.
+- Finally, the optional **extension header** contains a variable number of hop-by-hop and end-to-end options, similar to the extensions in the IPv6 header {{RFC8200}}.
+
+This document continues with a high-level description of the SCION path header. For a detailed description of the SCION path header, and of the other SCION headers (common-, address-, and extension header), see the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
+
+
+#### Path Header
+
+The `SCION` path type is the standard SCION path type. The path header for the `SCION` path type consists of a path meta header, up to 3 info fields and up to 64 hop fields. It has the following layout:
+
+~~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                          PathMetaHdr                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           InfoField                           |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           InfoField                           |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           HopField                            |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           HopField                            |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #scion-path-header title="Layout of a standard SCION path header"}
+
+
+- The Path Meta Header (`PathMetaHdr`) indicates the currently valid info field and hop field while the packet is traversing the network along the path, as well as the number of hop fields per path segment.
+- The number of info fields (`InfoField`) equals the number of path segments that the path contains - there is one info field per path segment. Each info field contains basic information about the corresponding segment, such as a timestamp indicating the creation time. There are also two flags. One specifies whether the path segment must be traversed in construction (beaconing) direction, the other whether the first or last hop field in the path segment represents a peering hop field.
+- Each hop field (`HopField`) represents a hop through an AS on the path, with the ingress and egress interface identifiers for this AS. This information is authenticated with a Message Authentication Code (MAC) to prevent forgery.
+
+The SCION path header is created by extracting the required info fields and hop fields from the corresponding path segments, which were looked up by the source endpoint in the control plane.
+
+A detailed description of the path header and its creation is provided in the section "Path Header" of the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
 
 
 ### Path Authorization
 
-It is crucial for the data plane that endpoints only use paths constructed and authorized by ASes in the control plane. In particular, endpoints should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}).
+It is crucial for the data plane that endpoints only use paths constructed and authorized by ASes in the control plane. In particular, endpoints should not be able to craft hop fields themselves, modify hop fields in authorized path segments, or combine hop fields of different path segments (path splicing). The property that prevents this is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}).
 
-SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
+SCION uses cryptographic mechanisms to efficiently provide path authorization. The mechanisms are based on *symmetric* cryptography in the form of message-authentication codes (MACs) in the data plane to secure forwarding information encoded in hop fields. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous hop fields on the path. The MACs are then included in the forwarding path as part of the respective hop fields.
 
-### Forwarding
+Detailed information on path authorization in the SCION data plane is provided in the section "Path Authorization" of the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
 
-Routers can efficiently forward packets in the SCION architecture. In particular, the absence of inter-domain routing tables and of complex longest-IP-prefix matching performed by current routers enables the construction of more efficient routers.
-
-During packet forwarding, a SCION border router at the ingress point of the AS verifies that:
-
-- the packet entered through the correct ingress interface corresponding to the information in the HF,
-- the HF is still valid, and
-- the MAC in the HF is correct.
-
-If the packet has not yet reached the destination AS, the egress interface number in the HF of the non-destination AS refers to the egress SCION border router of this AS. In this case, the packet can be sent from the ingress SCION border router to the egress SCION border router via native intra-domain forwarding (e.g., IP or MPLS). In case the packet has arrived at the destination AS, the destination AS's border router inspects the destination address and sends the packet to the corresponding host.
 
 ### Intra-AS Communication
 
-SCION routers use IP to communicate within an AS, therefore they rely on existing intra-domain routing protocols, such as Multiprotocol Label Switching (MPLS) or others.
+As SCION is an *inter*-domain network architecture, it is not concerned with *intra*-domain forwarding. This corresponds to the general practice today where BGP and IP are used for inter-domain routing and forwarding, respectively, but ASes use an intra-domain protocol of their choice, for example OSPF or IS-IS for routing and IP, MPLS, and various layer-2 protocols for forwarding.
+
+SCION emphasizes this separation, as SCION is used exclusively for inter-domain forwarding, and re-uses the intra-domain network fabric to provide connectivity among all SCION infrastructure services, border routers, and endpoints. As a consequence, minimal change to the infrastructure is required for ISPs when deploying SCION.
+
+Although a complete SCION address is composed of the <ISD, AS, endpoint address> 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. This implies that the endpoint addresses are not required to be globally unique or globally routable, they can be selected independently by the corresponding ASes. This means, for example, that an endpoint identified by a link-local IPv6 address in the source AS can directly communicate with an endpoint identified by a globally routable IPv4 address via SCION. Alternatively, it is possible for two SCION hosts with the   same IPv4 address 10.0.0.42 but located in different ASes to communicate with each other via SCION ({{RFC1918}}).
+
 
 
 # Deployment
