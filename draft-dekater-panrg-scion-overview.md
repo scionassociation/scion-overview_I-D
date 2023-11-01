@@ -37,6 +37,7 @@ normative:
 
 
 informative:
+  RFC1918:
   RFC4264:
   RFC4033:
   RFC5218:
@@ -47,6 +48,7 @@ informative:
   RFC9049:
   RFC9217:
   RFC8170:
+  RFC8200:
   SCHUCHARD2011: DOI.10.1145/1866307.1866411
   LABOVITZ2000: DOI.10.1145/347059.347428
   GRIFFIN1999: DOI.10.1145/316194.316231
@@ -642,9 +644,9 @@ For the sake of efficiency, the control service of the source AS should cache ea
 
 ## SCION Data Plane
 
-While the control plane is responsible for providing end-to-end paths, the data plane ensures that packets are forwarded on the selected path. The SCION data plane fundamentally differs from today's IP-based data plane in that it is *path-aware*: In SCION, interdomain forwarding directives are embedded in the packet header.
+While the control plane is responsible for providing end-to-end paths, the data plane ensures that packets are forwarded on the selected path. The SCION data plane fundamentally differs from today's IP-based data plane in that it is *path-aware*: In SCION, inter-domain forwarding directives are embedded in the packet header.
 
-SCION routers are normally deployed at the edge of an AS, and peer with neighbor SCION routers. Inter-domain forwarding is based on end-to-end path information contained in the packet header. This path information consists of a sequence of hop fields (HFs). Each hop field corresponds to an AS on the path, and it includes an ingress- as well as an egress interface ID, which univocally identify the ingress and egress interfaces within the AS. The information is authenticated with a Message Authentication Code (MAC) to prevent forgery.
+SCION routers are deployed at the edge of an AS, and peer with neighbor SCION routers. Inter-domain forwarding is based on end-to-end path information contained in the packet header. This path information consists of a sequence of hop fields (HFs). Each hop field corresponds to an AS on the path, and it includes an ingress- as well as an egress interface ID, which univocally identify the ingress and egress interfaces within the AS. The information is authenticated with a Message Authentication Code (MAC) to prevent forgery.
 
 This concept allows SCION routers to forward packets to a neighbor AS without inspecting the destination address and also without consulting an inter-domain forwarding table. Intra-domain forwarding and routing are based on existing mechanisms (e.g., IP). A SCION border router reuses existing intra-domain infrastructure to communicate to other SCION routers or SCION endpoints within its AS. The last SCION router at the destination AS therefore uses the destination address to forward the packet to the appropriate local endpoint.
 
@@ -660,92 +662,189 @@ This SCION design choice has the following advantages:
 
 Paths are discovered by the SCION control plane, which makes them available to SCION endpoints in the form of path segments. There are three kinds of path segments: up, down, and core. In the data plane, a SCION endpoint creates end-to-end paths from the path segments, by combining multiple path segments. Depending on the network topology, a SCION forwarding path can consist of one, two, or three segments. Each path segment contains several hop fields representing the ASes on the segment as well as one info field with basic information about the segment, such as a timestamp.
 
-- **Immediate combination of path segments**: The last AS on the up-path segment is also the first AS on the down-path segment. In this case, the simple combination of an up-path segment and a down-path segment creates a valid forwarding path.
-- **AS shortcut**: The up-path segment and down-path segment intersect at a non-core AS. In this case, a shorter forwarding path can be created by removing the extraneous part of the path.
-- **Peering shortcut**: A peering link exists between the two segments, so a shortcut via the peering link is possible. As in the AS shortcut case, the extraneous path segment is cut off. The peering link could be traversing to a different ISD.
-- **Combination with a core-path segment**: The last AS on the up-path segment is different from the first AS on the down-path segment. This case requires an additional core-path segment to connect the up- and down-path segment. If the communication remains within the same ISD, a local ISD core-path segment is needed; otherwise, an inter-ISD core-path segment is required.
-- **On-path**: The destination AS is part of the up-path segment or the source AS is part of the down-path segment; in this case, a single up- or down-path segment, respectively, is sufficient to create a forwarding path.
+{{combinations}} below shows the different allowed segment combinations.
 
-Once a forwarding path is chosen, it is encoded in the SCION packet header. This makes inter-domain routing tables unnecessary for border routers: Both the ingress and the egress interface of each AS on the path are encoded as **packet-carried forwarding state (PCFS)** in the packet header. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.
+**Note**: It is assumed that the source and destination endpoints are in different ASes (as endpoints from the same AS use an empty forwarding path to communicate with each other).
 
-The SCION packet header contains of a sequence of **hop fields (HFs)**, one HF for each AS that is traversed on the end-to-end path. Each hop field contains the encoded numbers of the ingress and egress links, and thus defines which interfaces may be used to enter and leave an AS. In addition to the hop fields, each path segment contains an **info field (INF)** with basic information about the segment. A host can create an end-to-end forwarding path by extracting info fields and hop fields from path segments, as depicted in {{HFs}}. The additional meta header (META) contains pointers to the currently active INF and HF.
 
 ~~~~
-up-path segment        core-path segment        down-path segment
+                                  ------- = end-to-end path
+   C = Core AS                    - - - - = unused links
+   * = source/destination AS      ------> = direction of beaconing
 
-+-------+              +-------+                +-------+
-|+-----+|              |+-----+|                |+-----+|
-|+ INF ||----------+   |+ INF ||---+            |+ INF ||-+
-|+-----+|          |   |+-----+|   |            |+-----+| |
-|+-----+|          |   |+-----+|   |            |+-----+| |
-|| hf  ||--------+ |   || hf  ||---+--+         || hf  ||-+--+
-|+-----+|        | |   |+-----+|   |  |         |+-----+| |  |
-|+-----+|        | |   |+-----+|   |  |         |+-----+| |  |
-|| hf  ||-----+  | |   || hf  ||---+--+--+      || hf  ||-+--+--+
-|+-----+|     |  | |   |+-----+|   |  |  |      |+-----+| |  |  |
-|+-----+|     |  | |   +-------+   |  |  |      +-------+ |  |  |
-|| hf  ||--+  |  | |               |  |  |                |  |  |
-|+-----+|  |  |  | |   +--------+  |  |  |                |  |  |
-+-------+  |  |  | |   |++-----+|  |  |  |                |  |  |
-           |  |  | |   |++ Meta||  |  |  |                |  |  |
-           |  |  | |   |++-----+|  |  |  |                |  |  |
-           |  |  | |   |+-----+ |  |  |  |                |  |  |
-           |  |  | +-->|+ INF | |  |  |  |                |  |  |
-           |  |  |     |+-----+ |  |  |  |                |  |  |
-           |  |  |     |+-----+ |  |  |  |                |  |  |
-           |  |  |     |+ INF | |<-+  |  |                |  |  |
-           |  |  |     |+-----+ |     |  |                |  |  |
-           |  |  |     |+-----+ |     |  |                |  |  |
-           |  |  |     |+ INF | |<----+--+----------------+  |  |
-           |  |  |     |+-----+ |     |  |                   |  |
-           |  |  |     |+-----+ |     |  |                   |  |
-           |  |  +---->|| hf  | |     |  |                   |  |
-           |  |        |+-----+ |     |  |                   |  |
-           |  |        |+-----+ |     |  |                   |  |
-           |  +------->|| hf  | |     |  |                   |  |
-           |           |+-----+ |     |  |                   |  |
-           |           |+-----+ |     |  |                   |  |
-           +---------->|| hf  | |     |  |                   |  |
-                       |+-----+ |     |  |                   |  |
-                       |+-----+ |     |  |                   |  |
-                       || hf  | |<----+  |                   |  |
-                       |+-----+ |        |                   |  |
-                       |+-----+ |        |                   |  |
-                       || hf  | |<-------+                   |  |
-                       |+-----+ |                            |  |
-                       |+-----+ |                            |  |
-                       || hf  | |<---------------------------+  |
-                       |+-----+ |                               |
-                       |+-----+ |                               |
-                       || hf  | |<------------------------------+
-                       |+-----+ |
-                       +--------+
-                     forwarding path
+
+          Core                        Core                  Core
+      ---------->                 ---------->           ---------->
+     .-.       .-.               .-.       .-.         .-.       .-.
++-- ( C )-----( C ) --+     +-- ( C )-----(C/*)       (C/*)-----(C/*)
+|    `+'       `+'    |     |    `+'       `-'         `-'       `-'
+|     |    1a   |     |     |     |     1b                   1c
+|     |         |     |     |     |
+|     |         |     |     |     |
+|    .+.       .+.    |     |    .+.                       Core
+|   (   )     (   )   |     |   (   )                 -------------->
+|    `+'       `+'    |     |    `+'                        .-.
+|     |         |     |     |     |                   +----( C )----+
+|     |         |     |     |     |                   |     `-'     |
+|     |         |     |     |     |                   |             |
+|    .+.       .+.    |     |    .+.                 .+.     1d    .+.
++-> ( * )     ( * ) <-+     +-> ( * )               (C/*)         (C/*)
+     `-'       `-'               `-'                 `-'           `-'
+
+
+
+          .-.                      .-.                   .-.
++--   +--( C )--+   --+      +--  (C/*)        +--    - ( C ) -    --+
+|     |   `-'   |     |      |     `+'         |     |   `-'   |     |
+|     |         |     |      |      |          |                     |
+|     |    2a   |     |      |  2b  |          |     |    3a   |     |
+|     |         |     |      |      |          |                     |
+|    .+.       .+.    |      |     .+.         |    .+.       .+.    |
+|   (   )     (   )   |      |    (   )        |   (   #-----#   )   |
+|    `+'       `+'    |      |     `+'         |    `+'  Peer `+'    |
+|     |         |     |      |      |          |     |         |     |
+|     |         |     |      |      |          |     |         |     |
+|     |         |     |      |      |          |     |         |     |
+|    .+.       .+.    |      |     .+.         |    .+.       .+.    |
++-> ( * )     ( * ) <-+      +->  ( * )        +-> ( * )     ( * ) <-+
+     `-'       `-'                 `-'              `-'       `-'
+
+
+          Core                                    Core
+      ---------->                              ---------->
+     .-.       .-.             .-.            .-.       .-.        .-.
+ +--( C )- - -( C )--+  +---- ( C ) ----+    ( C )- - -( C )  +-- ( C )
+ |   `+'       `+'   |  |      `+'      |     `+'       `+'   |    `+'
+ |         3b        |  |           4a  |          4b         |  5
+ |    |         |    |  |       |       |      |         |    |     |
+ |                   |  |               |                     |
+ |   .+.       .+.   |  |      .+.      |      + - --. - +    |    .+.
+ |  (   #-----#   )  |  |   +-(   )-+   |      +--(   )--+    |   ( * )
+ |   `+'  Peer `+'   |  |   |  `-'  |   |      |   `-'   |    |    `+'
+ |    |         |    |  |   |       |   |      |         |    |     |
+ |    |         |    |  |   |       |   |      |         |    |     |
+ |    |         |    |  |   |       |   |      |         |    |     |
+ |   .+.       .+.   |  |  .+.     .+.  |     .+.       .+.   |    .+.
+ +->( * )     ( * )<-+  +>( * )   ( * )<+    ( * )     ( * )  +-> ( * )
+     `-'       `-'         `-'     `-'        `-'       `-'        `-'
 ~~~~
-{: #HFs title="Combining three path segments into a forwarding path"}
+{: #combinations title="Illustration of possible path-segment combinations. Each node represents a SCION Autonomous System."}
+
+
+The following path-segment combinations are allowed:
+
+- *Communication through core ASes*:
+
+  - *Core-segment combination* (Cases 1a, 1b, 1c, 1d in {{combinations}}): The up- and down-segments of source and destination do not have an AS in common. In this case, a core-segment is required to connect the source's up- and the destination's down-segment (Case 1a). If either the source or the destination AS is a core AS (Case 1b) or both are core ASes (Cases 1c and 1d), then no up- or down-segment(s) are required to connect the respective AS(es) to the core-segment.
+  - *Immediate combination* (Cases 2a, 2b in {{combinations}}): The last AS on the up-segment (which is necessarily a core AS) is the same as the first AS on the down-segment. In this case, a simple combination of up- and down-segments creates a valid forwarding path. In Case 2b, only one segment is required.
+
+- *Peering shortcut* (Cases 3a and 3b): A peering link exists between the up- and down-segment. The extraneous path segments to the core are cut off. Note that the up- and down-segments do not need to originate from the same core AS and the peering link could also be traversing to a different ISD.
+- *AS shortcut* (Cases 4a and 4b): The up- and down-segments intersect at a non-core AS below the ISD core, thus creating a shortcut. In this case, a shorter path is made possible by removing the extraneous part of the path to the core. Note that the up- and down-segments do not need to originate from the same core AS and can even be in different ISDs (if the AS at the intersection is part of multiple ISDs).
+- *On-path* (Case 5): In the case where the source's up-segment contains the destination AS or the destination's down-segment contains the source AS, a single segment is sufficient to construct a forwarding path. Again, no core AS is on the final path.
+
+Once a forwarding path is chosen, it is encoded in the SCION packet header, making inter-domain routing tables unnecessary for the SCION routers. The destination can respond to the source by reversing the end-to-end path from the packet header, or it can perform its own path lookup and combination.
+
+
+### SCION Header Specification
+
+This section gives an introduction to the SCION header structure and specification. A much more detailed description of the SCION header is provided in section "SCION Header Specification" of the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
+
+
+#### SCION Packet Header
+
+The SCION packet header is composed of a common header, an address header, a path header, and an optional extension header:
+
+~~~~
++--------------------------------------------------------+
+|                     Common header                      |
+|                                                        |
++--------------------------------------------------------+
+|                     Address header                     |
+|                                                        |
++--------------------------------------------------------+
+|                      Path header                       |
+|                                                        |
++--------------------------------------------------------+
+|              Extensions header (optional)              |
+|                                                        |
++--------------------------------------------------------+
+~~~~
+{: #header title="High-level SCION header structure"}
+
+- The **common header** contains important meta information like a version number and lengths of the header and payload. In particular, it contains flags that control the format of subsequent headers such as the address and path headers.
+- The **address header** contains the ISD-, AS-, and endpoint-addresses of source and destination.
+- The **path header** contains the full AS-level forwarding path of the packet. The `PathType` field in the common header specifies the path format used in the path header.
+- Finally, the optional **extension header** contains a variable number of hop-by-hop and end-to-end options, similar to the extensions in the IPv6 header {{RFC8200}}.
+
+
+#### Path Header
+
+The `SCION` path type is the standard SCION path type. The path header of the SCION path type consists of a path meta header, up to 3 info fields and up to 64 hop fields. It has the following layout:
+
+~~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                          PathMetaHdr                          |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           InfoField                           |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           InfoField                           |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           HopField                            |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           HopField                            |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                              ...                              |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #scion-path-header title="Layout of a standard SCION path header"}
+
+
+- The Path Meta Header (`PathMetaHdr`) indicates the currently valid info field and hop field while the packet is traversing the network along the path, as well as the number of hop fields per segment.
+- The number of info fields (`InfoField`) equals the number of path segments that the path contains - there is one info field per path segment. Each info field contains basic information about the corresponding segment, such as a timestamp indicating the creation time. There are also two flags. One specifies whether the segment must be traversed in construction direction, the other whether the first or last hop field in the segment represents a peering hop field.
+- Each hop field (`HopField`) represents a hop through an AS on the path, with the ingress and egress interface identifiers for this AS. This information is authenticated with a Message Authentication Code (MAC) to prevent forgery.
+
+The SCION header is created by extracting the required info fields and hop fields from the corresponding path segments, which were looked up by the source endpoint in the control plane.
+
+A detailed description of the path header and its creation is provided in the section "Path Header" of the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
 
 
 ### Path Authorization
 
 It is crucial for the data plane that endpoints only use paths constructed and authorized by ASes in the control plane. In particular, endpoints should not be able to craft HFs themselves, modify HFs in authorized path segments, or combine HFs of different path segments (path splicing). This property is called **path authorization** (see {{KLENZE2021}} and {{LEGNER2020}}).
 
-SCION achieves path authorization by creating message-authentication codes (MACs) during the beaconing process. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
+SCION uses cryptographic mechanisms to efficiently provide path authorization. The mechanisms are based on *symmetric* cryptography in the form of message-authentication codes (MACs) in the data plane to secure forwarding information encoded in hop fields. Each AS calculates these MACs using a local secret key (that is only shared between SCION infrastructure elements within the AS) and chains them to the previous HFs. The MACs are then included in the forwarding path as part of the respective HFs.
+
+Detailed information on path authorization in the SCION data plane is provided in the section "Path Authorization" of the SCION Data Plane draft {{I-D.dekater-scion-dataplane}}.
+
 
 ### Forwarding
 
 Routers can efficiently forward packets in the SCION architecture. In particular, the absence of inter-domain routing tables and of complex longest-IP-prefix matching performed by current routers enables the construction of more efficient routers.
 
-During packet forwarding, a SCION border router at the ingress point of the AS verifies that:
-
-- the packet entered through the correct ingress interface corresponding to the information in the HF,
-- the HF is still valid, and
-- the MAC in the HF is correct.
-
 If the packet has not yet reached the destination AS, the egress interface number in the HF of the non-destination AS refers to the egress SCION border router of this AS. In this case, the packet can be sent from the ingress SCION border router to the egress SCION border router via native intra-domain forwarding (e.g., IP or MPLS). In case the packet has arrived at the destination AS, the destination AS's border router inspects the destination address and sends the packet to the corresponding host.
+
 
 ### Intra-AS Communication
 
-SCION routers use IP to communicate within an AS, therefore they rely on existing intra-domain routing protocols, such as Multiprotocol Label Switching (MPLS) or others.
+As SCION is an inter-domain network architecture, it is not concerned with intra-domain forwarding.  This corresponds to the general practice today where BGP and IP are used for inter-domain routing and   forwarding, respectively, but ASes use an intra-domain protocol of their choice, for example OSPF or IS-IS for routing and IP, MPLS, and various layer-2 protocols for forwarding.
+
+SCION emphasizes this separation, as SCION is used exclusively for inter-domain forwarding, and re-uses the intra-domain network fabric to provide connectivity among all SCION infrastructure services, border routers, and endpoints. As a consequence, minimal change to the infrastructure is required for ISPs when deploying SCION.
+
+Although a complete SCION address is composed of the <ISD, AS, endpoint address> 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. This implies that the endpoint addresses are not required to be globally unique or globally routable, they can be selected independently by the corresponding ASes. This means, for example, that an endpoint identified by a link-local IPv6 address in the source AS can directly communicate with an endpoint identified by a globally routable IPv4 address via SCION. Alternatively, it is possible for two SCION hosts with the   same IPv4 address 10.0.0.42 but located in different ASes to communicate with each other via SCION ({{RFC1918}}).
+
 
 
 # Deployment
