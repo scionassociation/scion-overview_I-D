@@ -1,0 +1,1207 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2022-08-28T02:12:03.246624+00:00",
+  "repo": "scionassociation/scion-overview_I-D",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 3,
+      "id": "I_kwDOHF5N3M5I46FR",
+      "title": "Detailed gap analysis",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/issues/3",
+      "state": "OPEN",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "We decided to omit a detailed gap analysis in the initial version of this draft. Based on IETF feedback in the first interim meeting and at IETF 114, it might not be worthwhile to write a dedicated gap analysis draft. This is because SCION is already there, and it is already designed. A discussion on where the gaps are might not bring too much of a benefit. \r\n\r\nWe had a list of current Internet issues in [this commit](https://github.com/scionfoundation/scion-overview_I-D/commit/8259808cbbd41e8c1d8e39eb7ffc63b8d516433c) that we then removed. This list  could be handy for a more thorough motivation & gap analysis. \r\n\r\nAlso, we have the text below that could be used\r\n\r\n```\r\nFor example, as highlighted in {{I-D.rtgwg-net2cloud-problem-statement}}, achieving reliable inter-domain Internet connectivity remains an open challenge for cloud providers.\r\n\r\n  I-D.rtgwg-net2cloud-problem-statement:\r\n    title: SCION Overview\r\n    date: 2022\r\n    target: https://datatracker.ietf.org/doc/draft-ietf-rtgwg-net2cloud-problem-statement/\r\n    author:\r\n      -\r\n        ins: L. Dunbar\r\n      -\r\n        ins: A. Malis\r\n      -\r\n        ins: C. Jacquenet\r\n      -\r\n        ins: M. Toy\r\n      -\r\n        ins: K. Majumdar\r\n\t\t\r\n\t\t\r\nThe relevance of Internet's routing security issues is testified by the fact that these issues now have the attention of policymakers, while previously they were only well known in industry and academia. One example is the 2022 FCC inquiry on routing security {{FCC2022}}.\r\n\r\n  FCC2022:\r\n    title: Notice of Inquiry on Secure Internet Routing\r\n    date: 2022\r\n    target: https://www.fcc.gov/document/fcc-launches-inquiry-internet-routing-vulnerabilities\r\n    author:\r\n      ins: Federal Communications Commission\r\n```\r\n\r\n\r\nIMHO (@nicorusti ), it is worth to incorporate these into the draft. \r\n\r\nAlso, we will have to improve descriptions of the deployment model, either in this draft, or in the component analysis draft.\r\n\r\n\r\n ",
+      "createdAt": "2022-05-02T13:17:06Z",
+      "updatedAt": "2022-08-26T15:10:30Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 14,
+      "id": "I_kwDOHF5N3M5JvCMz",
+      "title": "Improve review workflow & cleanup readme",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/issues/14",
+      "state": "CLOSED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Integrate reviewable in the process? ",
+      "createdAt": "2022-05-16T12:15:29Z",
+      "updatedAt": "2022-06-24T12:15:39Z",
+      "closedAt": "2022-06-24T12:15:39Z",
+      "comments": [
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "@juagargi reviewable is now enabled on this repo.  Thank you for the hint, we will adjust our workflow soonish (perhaps after we are done with our first submission.  ",
+          "createdAt": "2022-05-16T16:32:10Z",
+          "updatedAt": "2022-05-16T16:32:10Z"
+        },
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "Reviewable is deployed and we have the option to use it later on. I'll close this issue.",
+          "createdAt": "2022-06-24T12:15:39Z",
+          "updatedAt": "2022-06-24T12:15:39Z"
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOHF5N3M5J0XVY",
+      "title": "Publish draft to Datatracker",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/issues/16",
+      "state": "CLOSED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [
+        "nicorusti",
+        "cdekater"
+      ],
+      "labels": [],
+      "body": "Follow these [instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SUBMITTING.md#github-release)\r\n\r\n- [x]  rename draft to `draft-dekater-panrg-scion-overview.md` & commit\r\n- [x] Check that your git email matches with the one in Datatracker. In your repo check:\r\n`git config --get user.email` or, if global,  ` git config --global --get user.email`\r\n- [x] Check that last commit was [successfully built](https://github.com/scionassociation/scion-overview_I-D/actions)\r\n- [x] Create new GitHub release  that uses  tag  `draft-dekater-panrg-scion-overview-00` ([example](https://github.com/panrg/path-properties/releases/tag/draft-irtf-panrg-path-properties-05))\r\n- [x] Get datatracker  email & continue",
+      "createdAt": "2022-05-17T10:59:28Z",
+      "updatedAt": "2022-05-18T14:30:55Z",
+      "closedAt": "2022-05-18T14:30:54Z",
+      "comments": [
+        {
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks, Nicola. This will definitely help!",
+          "createdAt": "2022-05-17T11:02:35Z",
+          "updatedAt": "2022-05-17T11:02:35Z"
+        },
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "https://datatracker.ietf.org/doc/draft-dekater-panrg-scion-overview/ \ud83c\udf89\ud83c\udf89",
+          "createdAt": "2022-05-18T14:30:54Z",
+          "updatedAt": "2022-05-18T14:30:54Z"
+        }
+      ]
+    },
+    {
+      "number": 30,
+      "id": "I_kwDOHF5N3M5NAJbS",
+      "title": "Interim meeting feedback",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/issues/30",
+      "state": "OPEN",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Following the Interim meeting, I feel there are some things that might fit into this draft:\r\n\r\n- [ ] Better explain the motivation behind SCION (justifying the problems it solves)\r\n- [ ] Deployments: T. Pauly mentioned that we should explain what made early deployments successful. Might be a great idea.   ",
+      "createdAt": "2022-07-01T22:32:18Z",
+      "updatedAt": "2022-07-01T22:32:18Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOHF5N3M42rrtN",
+      "title": "Initial review",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/1",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "I went through the draft, some general feedback: \r\n\r\n- Introduction: perhaps we can  create a  new short introduction paragraph, where we briefly discuss the problem and our solution. I guess we can move the more detailed  problem statement in a separate paragraph\r\n-  Lots of the challenges with today's routing are described quite well in this draft: https://www.ietf.org/archive/id/draft-king-irtf-challenges-in-routing-07.html \r\n- When we describe drawbacks, I'm not sure if we also want to mention why attepmts to fix the existing are not enough (i.e. routing with colours, SR, ...)\r\n- Do we want to move the motivation/gap analysis into a different draft?\r\n- Lots of people will ask themselves: what do I need to deploy this. I can eventually help with the deployment section\r\n- I noticed that a lot of times we use \"we\". I see that some IETF drafts also use it, but not so often. I feel that using it a lot creates a bit of a \"divide\" between what our vision is, and what others might perceive... I think this is good when writing a paper/book (because authors want to stress that they are presenting their vision), but perhaps a more neutral language is more appropriate here, as our goal is to get consensus and to have our solution as widely accepted as possible. Not something super important, but had these thoughts in mind.  ",
+      "createdAt": "2022-04-24T11:50:52Z",
+      "updatedAt": "2022-04-26T12:08:16Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "30ce630abe9571ef36e19d6b51c0ce9e89e8b5c0",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "5a37f2b5ed07f66b44e530fd8036bb04216fb101",
+      "closedAt": "2022-04-26T12:08:16Z",
+      "mergedAt": "2022-04-26T12:08:16Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "7a6bb7bd6e41ee77349fe5daca1ac61ee8c0e347"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M44shTe",
+          "commit": {
+            "abbreviatedOid": "9b2f144"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-04-24T11:55:38Z",
+          "updatedAt": "2022-04-24T11:55:38Z",
+          "comments": [
+            {
+              "originalPosition": 106,
+              "body": "I hope this justifies why this is relevant.. ? Maybe we should mention some more ICMP attacks?\r\n\r\nI'm not very familiar with them, I'm thinking about spoofed redirects, or destination unreachable, which could potentially have the impact of blocking certain kind of traffic. Maybe there is something else? ",
+              "createdAt": "2022-04-24T11:55:38Z",
+              "updatedAt": "2022-04-24T11:55:38Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M44siRb",
+          "commit": {
+            "abbreviatedOid": "9b2f144"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-04-24T12:29:40Z",
+          "updatedAt": "2022-04-24T12:29:40Z",
+          "comments": [
+            {
+              "originalPosition": 170,
+              "body": "> It is also possible to combine the services into one or more *control services*. \r\n\r\nWhat do you mean? Those services are already control services, so I'm a bit confused by this sentence. Perhaps you mean that they can be deployed on the same machine?",
+              "createdAt": "2022-04-24T12:29:40Z",
+              "updatedAt": "2022-04-24T12:29:40Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M44sia8",
+          "commit": {
+            "abbreviatedOid": "9b2f144"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-04-24T12:34:55Z",
+          "updatedAt": "2022-04-24T12:34:55Z",
+          "comments": [
+            {
+              "originalPosition": 180,
+              "body": "> Since SCION can operate using any intra-AS routing protocol \r\n\r\nMaybe we can make it a bit more clear somewhere... I think the first time we mention this is here, and I guess this might not be so obvious for the reader. Just an idea. ",
+              "createdAt": "2022-04-24T12:34:55Z",
+              "updatedAt": "2022-04-24T12:34:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M440amP",
+          "commit": {
+            "abbreviatedOid": "5a37f2b"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Hi Nicola,\r\n\r\nThanks again for your review and feedback. Very helpful!",
+          "createdAt": "2022-04-26T12:07:56Z",
+          "updatedAt": "2022-04-26T12:07:56Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOHF5N3M43Jvsd",
+      "title": "introduction review",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/2",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Please wait before merging\r\n\r\n- It might be good to mention [RFC5218](https://www.rfc-editor.org/rfc/rfc5218.html) and why SCION fulfils its criteria",
+      "createdAt": "2022-05-02T07:51:56Z",
+      "updatedAt": "2022-05-02T14:57:06Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "2790ba19483ce9c3aac145d2e6ca523cfe2ae056",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "aba77817de6b5047245c0a7c0a387f18dd0e8435",
+      "closedAt": "2022-05-02T14:57:06Z",
+      "mergedAt": "2022-05-02T14:57:06Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "29db35ee21b28aab6044d1698a83cc627309ca39"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M45JpnV",
+          "commit": {
+            "abbreviatedOid": "2b6a0aa"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-02T08:28:47Z",
+          "updatedAt": "2022-05-02T08:28:47Z",
+          "comments": [
+            {
+              "originalPosition": 23,
+              "body": "Regarding my change to the  last sentence, I think there are two things that should be there: \r\n\r\n- Needs of enterprises that work like an ecosystem\r\n- Critical infrastructure / IoT (we cannot control critical infrastructure over an unstable Internet) ",
+              "createdAt": "2022-05-02T08:28:47Z",
+              "updatedAt": "2022-05-02T08:28:47Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M45K-Eo",
+          "commit": {
+            "abbreviatedOid": "aba7781"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-02T14:56:56Z",
+          "updatedAt": "2022-05-02T14:56:56Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOHF5N3M43ONNk",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/4",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-05-03T11:47:54Z",
+      "updatedAt": "2022-05-03T13:35:49Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "7535a0a821afd171f87fb90b07a86694d7836a6e",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "ba2687f44305d645665ce1e49ab8ed6304e3479c",
+      "closedAt": "2022-05-03T13:35:49Z",
+      "mergedAt": "2022-05-03T13:35:49Z",
+      "mergedBy": "nicorusti",
+      "mergeCommit": {
+        "oid": "3fde55a343d9319c3bdbf6292e3eaf472ab7b50d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M45PnwN",
+          "commit": {
+            "abbreviatedOid": "ba2687f"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "LGTM",
+          "createdAt": "2022-05-03T13:35:19Z",
+          "updatedAt": "2022-05-03T13:35:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOHF5N3M43PLwF",
+      "title": "Small Corrections",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/5",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-05-03T15:56:33Z",
+      "updatedAt": "2022-05-03T15:57:48Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "aeecdd9cb6ab01793f2488961f57cb0e1d9bc4b4",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "56e8ee08146b645813de9035cf4fec7213c03d67",
+      "closedAt": "2022-05-03T15:57:48Z",
+      "mergedAt": "2022-05-03T15:57:48Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "7b8894d997acc724ec9a7f6572bd7794c83ad110"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOHF5N3M43grxo",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/6",
+      "state": "CLOSED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Merge of the Introduction section, which is more or less ready for a final review after several revision rounds. \r\nThe other sections (Key Concepts and Deployments) are still work in progress.",
+      "createdAt": "2022-05-09T15:05:12Z",
+      "updatedAt": "2022-05-09T15:08:44Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "7b8894d997acc724ec9a7f6572bd7794c83ad110",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "578edfea4910274c020f48d5f62eb45af9b1a484",
+      "closedAt": "2022-05-09T15:08:44Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Merge of the Introduction section, which is more or less ready for a final review after several revision rounds.\r\nThe other sections (Key Concepts and Deployments) are still work in progress.",
+          "createdAt": "2022-05-09T15:08:09Z",
+          "updatedAt": "2022-05-09T15:08:09Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOHF5N3M43gtCg",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/7",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Merge of the Introduction section, which is more or less ready for a final review after several revision rounds.\r\nThe other sections (Key Concepts and Deployments) are still work in progress.",
+      "createdAt": "2022-05-09T15:09:43Z",
+      "updatedAt": "2022-05-09T15:11:56Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "7b8894d997acc724ec9a7f6572bd7794c83ad110",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "578edfea4910274c020f48d5f62eb45af9b1a484",
+      "closedAt": "2022-05-09T15:11:56Z",
+      "mergedAt": "2022-05-09T15:11:56Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "9d2759b1e3556ef7521fe21848d64e669a38474c"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOHF5N3M43jeZT",
+      "title": "Deployment section",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/8",
+      "state": "CLOSED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "TODO: \r\n- [ ] decide if we talk about extensions and extensibility (deployment/data plane)\r\n",
+      "createdAt": "2022-05-10T07:18:04Z",
+      "updatedAt": "2022-05-15T18:12:17Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "9c800f2be5dc75d5e33df5b3ba1fb0c5c243085d",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "3ca0892ec9f797c9058e6b58b76e504b1a8babec",
+      "closedAt": "2022-05-15T18:12:17Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOHF5N3M43qknX",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/9",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "First version content of the Internet Draft is ready for Cyrill to review (except for the Deployment section and some figures). ",
+      "createdAt": "2022-05-11T16:27:21Z",
+      "updatedAt": "2022-05-11T16:28:13Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "9d2759b1e3556ef7521fe21848d64e669a38474c",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "6112ec2c5685e24ede0c0c8f4dcacdb6b51c3495",
+      "closedAt": "2022-05-11T16:28:13Z",
+      "mergedAt": "2022-05-11T16:28:13Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "ef3300e177ae191215107bc7e66b08df72b48f24"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOHF5N3M43vAAk",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/10",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Internet-Draft is now ready for review",
+      "createdAt": "2022-05-12T16:52:37Z",
+      "updatedAt": "2022-05-12T16:54:31Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "ef3300e177ae191215107bc7e66b08df72b48f24",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "af2161b002d4d8b3f47ec70c4c9b2b5b21974257",
+      "closedAt": "2022-05-12T16:54:31Z",
+      "mergedAt": "2022-05-12T16:54:31Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "9c800f2be5dc75d5e33df5b3ba1fb0c5c243085d"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOHF5N3M43yg3y",
+      "title": "Nic general review",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/11",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "To be merged after #8. Issues to be addressed: \r\n\r\n- [x] It might be good to rename the GitHub org to scion association before submission (as this will change all the repository URLs)\r\n- [x] I am not sure if RFCs  support bold, italic and so on. It looks good in the HTML-generated version, but not in the pdf. How would this look in data tracker? We should check before submission\r\n- [x] @nicorusti  review \"Why now\" paragraph in relation to points in RFC9217\n\n<!-- Reviewable:start -->\n---\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/11)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-13T14:19:55Z",
+      "updatedAt": "2022-05-17T08:03:23Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "8aec112d589e3dee62d3afc80799416ed00502f1",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-general-review",
+      "headRefOid": "06ea00e2ce233e3c4903de5ebc558af9315f9e09",
+      "closedAt": "2022-05-17T08:03:23Z",
+      "mergedAt": "2022-05-17T08:03:23Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "bbbfddfe51d54856bb9911666c8248a44efa64f4"
+      },
+      "comments": [
+        {
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I have addressed all feedback except for the ones regarding the Motivation part, which I will address tomorrow in my own branch. Also, all comments have been removed (but they are still available in a PDF and as a printed out copy).",
+          "createdAt": "2022-05-16T16:03:40Z",
+          "updatedAt": "2022-05-16T16:07:05Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M46EWEt",
+          "commit": {
+            "abbreviatedOid": "0154dd9"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-16T16:05:43Z",
+          "updatedAt": "2022-05-16T16:05:43Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOHF5N3M431ntq",
+      "title": "Nic deployment",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/12",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Most content is there, to be merged this Monday.\n\n<!-- Reviewable:start -->\n---\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/12)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-15T18:14:34Z",
+      "updatedAt": "2022-05-17T12:28:16Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "9c800f2be5dc75d5e33df5b3ba1fb0c5c243085d",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-deployment",
+      "headRefOid": "769e9f6fd37e95a7b692629e93f82dc777d6ca99",
+      "closedAt": "2022-05-17T07:45:32Z",
+      "mergedAt": "2022-05-17T07:45:32Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "8aec112d589e3dee62d3afc80799416ed00502f1"
+      },
+      "comments": [
+        {
+          "author": "juagargi",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I was able to only make a quick pass. I like the state of the I.D quite a lot :smiley: \r\n\r\nSome general remarks:\r\n- Maybe using a system like Reviewable would allow us to have cleaner reviews in Github. Currently we cannot comment on code that was not modified, rebases will restart everything, etc.\r\n- From the README description, after installing xml2rfc, running `make` should correctly compile the source, but it fails with `/usr/bin/kramdown-rfc2629:286:in `read': No such file or directory @ rb_sysopen - --v3 (Errno::ENOENT)`.\r\n- What is the content of the repository? E.g. what is the meaning of the two `.md` files?\r\n- Shorter lines will allow to have easier feedback / reviews, even if we don't use e.g. Reviewable\r\n\r\nRegarding the deployment section itself, I'm copying a diff with some changes I would propose.\r\n```\r\ndiff --git a/draft-perrig-scion-overview.md b/draft-perrig-scion-overview.md\r\nindex 647ff53..79b2ac8 100644\r\n--- a/draft-perrig-scion-overview.md\r\n+++ b/draft-perrig-scion-overview.md\r\n@@ -578,11 +578,11 @@ Communication within an AS is handled by existing intra-domain communication tec\r\n \r\n \r\n # Deployment\r\n-Deploying a next-generation architecture is a challenging task, as it needs to be integrated with and operate alongside existing infrastructure. In the following, we discuss practical deployment approaches, supporting both native SCION hosts and IP hosts.\r\n+Deploying a next-generation architecture is a challenging task, as it needs to be integrated with, and operate alongside existing infrastructure. In the following, we discuss several practical deployment approaches, supporting both native SCION hosts and IP hosts.\r\n \r\n ## Autonomous System Deployment\r\n A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers. Practice shows that all of them can be deployed on standard x86 commercial off-the-shelf servers, supporting up to 100 Gbps links. With a P4 implementation hardware it is possible to forward SCION traffic even at terabit speeds {{DERUITER2021}}.\r\n-Within an AS, SCION is deployed as an IP overlay on top of the existing network. This way SCION allows, by design, to reuse the existing intra-domain network and equipment (i.e., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS\u2019s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.\r\n+Within an AS, SCION is deployed as an IP overlay on top of the existing network. This way SCION allows, by design, to reuse the existing intra-domain network and equipment (e.g., IP, MPLS, ...). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS\u2019s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.\r\n When it comes to inter-domain communication, an overlay deployment on top of today\u2019s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, intra-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers are directly connected via a layer-2 cross-connection at a common point-of-presence, achieving connectivity with high reliability, availability, and performance.\r\n \r\n TODO: sentences mentioning throughput seem a bit out of the blue here...  Also, maybe a figure showing customer/provider deployment might not be a bad idea?\r\n@@ -590,7 +590,7 @@ TODO: sentences mentioning throughput seem a bit out of the blue here...  Also,\r\n ## Internet Exchange Points\r\n Internet Exchange Points (IXP) play an important role for SCION as they do in today\u2019s Internet.  SCION can be deployed at existing IXPs following a \"big switch\" model, where the IXP provides a large L2 switch between multiple SCION ASes. SCION has been deployed following this model at the Swiss Internet Exchange (SwissIX),  currently interconnecting major SCION Swiss ISPs and enterprises through bi-lateral peering over a dedicated SCION port.\r\n \r\n-Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model. The internal topology of an IXP to be exposed within the SCION control plane. This enables IXP customers to use SCION\u2019s multi-path and fast failover capabilities to leverage the IXP\u2019s internal links (including backup links) and to select paths depending on the application\u2019s needs.  IXPs have therefore an incentive to expose their rich internal connectivity as the benefits from SCION\u2019s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.\r\n+Additionally, thanks to its path-awareness, SCION offers the option of an enhanced deployment model, i.e. to expose the internal topology of an IXP within the SCION control plane. This enables IXP customers to use SCION\u2019s multi-path and fast failover capabilities to leverage the IXP\u2019s internal links (including backup links) and to select paths depending on the application\u2019s needs.  IXPs have therefore an incentive to expose their rich internal connectivity as the benefits from SCION\u2019s multi-path capabilities would increase their value for customers and provide them with a competitive advantage.\r\n \r\n ## End Hosts and Incremental Deployability\r\n End-users can leverage SCION in two different ways: using SCION-aware applications on a [SCION native end host](#native-endhost), or using  transparent [IP-to-SCION conversion](#sig). The benefit of using SCION natively is that the full range of advantages becomes available to applications, at the cost of installing the SCION endpoint stack and making the application SCION-aware. In the short term, the second approach is preferred.\r\n@@ -609,9 +609,9 @@ In order to allow incremental deployability and to ease transition from legacy I\r\n \r\n SCION has been deployed in production by multiple entities, growing its acceptance among industry. While early deployments started on academic and research networks, SCION has expanded to serve the financial industry, government, and healthcare.\r\n \r\n-In 2017, SCION was evaluated for production use by a central bank, with the goal of modernising the network interconnecting banks and their branches in order to improve network flexibility and cut cost. Existing lines were provisioned via dedicated layer-2 circuit switching or layer-3 MPLS\u2013is, providing availability and confidentiality. SCION approximates leased-line properties, offering geofencing, path transparency, high reliability thanks to fast failover, and flexibility, as it enables connectivity to any other entities connected to the SCION Internet. TODO: add link to press release: https://perma.cc/PU5L-ALPM\r\n+In 2017, SCION was evaluated for production use by a central bank, with the goal of modernising the network interconnecting banks and their branches in order to improve network flexibility and cut cost. Existing lines were provisioned via dedicated layer-2 circuit switching or layer-3 MPLS, providing availability and confidentiality. SCION approximates leased-line properties, offering geofencing, path transparency, high reliability thanks to fast failover, and flexibility, as it enables connectivity to any other entities connected to the SCION Internet. TODO: add link to press release: https://perma.cc/PU5L-ALPM\r\n \r\n-Positive experiences with early deployments led the Swiss financial industry to adopt its SCION connectivity to support system-critical applications, like the national real-time gross settlement (RTGS) system, connecting all country's banks to exchange real-time payment information.  The network, called Secure Swiss Finance Network (SSFN), is implemented as a SCION ISD, where the core is formed by a federation of three network service providers (core ASes) deploying SCION routers at the borders of their network.  Members of the SSFN\u2014i.e., financial institutions, are directly connected to one or more of these core ASes. They are themselves SCION ASes that additionally deploy SCION\u2013IP gateways (SIGs). These SIGs provide the entry points for members to use the SSFN as a communication platform\u2014they transparently enable traditional IP-based communication to use a SCION network.\r\n+Positive experiences with early deployments led the Swiss financial industry to adopt its SCION connectivity to support system-critical applications, like the national real-time gross settlement (RTGS) system, connecting all country's banks to exchange real-time payment information.  The network, called Secure Swiss Finance Network (SSFN), is implemented as a SCION ISD, where the core is formed by a federation of three network service providers (core ASes) deploying SCION routers at the borders of their network.  Members of the SSFN \u2014i.e., financial institutions\u2014 are directly connected to one or more of these core ASes. They are themselves SCION ASes that additionally deploy SCION\u2013IP gateways (SIGs). These SIGs provide the entry points for members to use the SSFN as a communication platform\u2014they transparently enable traditional IP-based communication to use a SCION network.\r\n \r\n SCION connectivity has also been adopted by government entities for their international communications. In addition, Swiss higher education institutions are connected thanks to SCI-ED.\r\n \r\n```",
+          "createdAt": "2022-05-16T11:52:10Z",
+          "updatedAt": "2022-05-16T11:52:10Z"
+        },
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "@juagargi thanks a lot for your feedback! \r\n\r\n> * Maybe using a system like Reviewable would allow us to have cleaner reviews in Github. Currently we cannot comment on code that was not modified, rebases will restart everything, etc.\r\n\r\nGood point. I thought GitHub PRs would be enough (I expected I could comment any line), but it seems like this feature is only planned for Q4 22. I opened #14 to track this and I'll improve our workflow \r\n\r\n> * From the README description, after installing xml2rfc, running `make` should correctly compile the source, but it fails with `/usr/bin/kramdown-rfc2629:286:in `read': No such file or directory @ rb_sysopen - --v3 (Errno::ENOENT)`.\r\n\r\nI guess you might have `xml2rfc` in the wrong path? Did you have a look at the [instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md) for setting up your  environment in the template repo? \r\n\r\n> * What is the content of the repository? E.g. what is the meaning of the two `.md` files?\r\n\r\nRight, @cdekater just deleted the wrong file.\r\n\r\n> * Shorter lines will allow to have easier feedback / reviews, even if we don't use e.g. Reviewable\r\n\r\nGood point, we'll do this after the review process. \r\n\r\nI will integrate your feedback in my section, and I'm sure next time we'll have a better review process. Thanks! \r\n",
+          "createdAt": "2022-05-16T12:31:58Z",
+          "updatedAt": "2022-05-16T12:31:58Z"
+        },
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "@cdekater this is ready to be merged. \r\n\r\nFYI, I simply enabled [reviewable](https://reviewable.io) for this repository, please ignore the reviewable buttons for now. We can try it for reviews after we submit the draft. ",
+          "createdAt": "2022-05-16T16:30:15Z",
+          "updatedAt": "2022-05-16T16:30:15Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M46B5-R",
+          "commit": {
+            "abbreviatedOid": "769e9f6"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-16T08:25:25Z",
+          "updatedAt": "2022-05-17T07:40:44Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "I agree with both comments. \r\nRegarding your last comment: We could use figures from the book to illustrate the various deployment variants (chapter 13). ",
+              "createdAt": "2022-05-16T08:25:25Z",
+              "updatedAt": "2022-05-17T07:40:45Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOHF5N3M46HSDQ",
+          "commit": {
+            "abbreviatedOid": "769e9f6"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "\n\n> Reviewed 1 of 4 files at r4, 1 of 2 files at r5, 1 of 2 files at r6, 1 of 1 files at r7, all commit messages.\n> *[Reviewable](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/12)* status: :shipit: complete! all files reviewed, all discussions resolved (waiting on @nicorusti)\n\n\n\n<!-- Sent from Reviewable.io -->\n",
+          "createdAt": "2022-05-17T07:44:19Z",
+          "updatedAt": "2022-05-17T07:44:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOHF5N3M433ylc",
+      "title": "Minor textual changes",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/13",
+      "state": "MERGED",
+      "author": "cyrill-k",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-05-16T11:29:06Z",
+      "updatedAt": "2022-05-17T12:28:03Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "fd3f3395d25bea22e9b268d1628d140cebcc9e51",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "cyrill-wip",
+      "headRefOid": "55add65f4b8590c75dc3401237f7da264b67d4c6",
+      "closedAt": "2022-05-16T12:29:38Z",
+      "mergedAt": "2022-05-16T12:29:38Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "f6377f8731d5b73f84efe533ff788247be293f44"
+      },
+      "comments": [
+        {
+          "author": "cyrill-k",
+          "authorAssociation": "COLLABORATOR",
+          "body": "- motivation is quite extensive and focused a lot on use cases\r\n- Why now section is a bit strange since the only blocking part of this paragraph is RFC9217 (which was already available as a draft for a while. Isn't the reason why now that we have a significant deployment now?\r\n- maybe remove concrete suggestions for number of core ASes\r\n- reads a bit (too much) like a sales pitch -> maybe that's okay for the first version though\r\n  - could add a section saying what does SCION provide, and what is done in orthogonal (i.e., intra-AS routing, end-to-end encryption, authentication, ...)\r\n- \"A peering link exists between ASes with a (standard or paid) relationship.\" unclear to me\r\n- could have a \"what changes and what stays the same\" section at the beginning\r\n- \"all actions are publicly visible\" why is this the case? is there a CP-PKI CT log?\r\n- path exploration: should we also mention that core-path segments are invertible/bidirectional?\r\n- different apostrophes ' vs \u2019\r\n- path registration is a bit confusing (why say also non-core ASes include a path service, isn't this obvious from the first paragraph)\r\n- maybe can write more easily: beacon service registers path segments at the local path service and the path service of a (all) core ASes.\r\n- an IPv4 host can directly communicate with an IPv6 host (is this claim sufficiently validated?)\r\n- core-segment vs core-path segment?",
+          "createdAt": "2022-05-16T12:10:07Z",
+          "updatedAt": "2022-05-16T12:10:53Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M46DBKf",
+          "commit": {
+            "abbreviatedOid": "55add65"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-16T12:29:26Z",
+          "updatedAt": "2022-05-16T12:29:26Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOHF5N3M4378hZ",
+      "title": "Merge pull request #11 from scionassociation/nic-general-review",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/15",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Review of Nicola, Adrian and Cyrill\n\n<!-- Reviewable:start -->\n---\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/15)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-17T08:05:23Z",
+      "updatedAt": "2022-05-17T08:07:49Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "nic-general-review",
+      "baseRefOid": "06ea00e2ce233e3c4903de5ebc558af9315f9e09",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "main",
+      "headRefOid": "bbbfddfe51d54856bb9911666c8248a44efa64f4",
+      "closedAt": "2022-05-17T08:07:49Z",
+      "mergedAt": "2022-05-17T08:07:48Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "b602470ec7b9091b096972d4db299529441de3a3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 17,
+      "id": "PR_kwDOHF5N3M439Wl2",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/17",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/17)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-17T13:36:57Z",
+      "updatedAt": "2022-05-17T13:38:03Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "bbbfddfe51d54856bb9911666c8248a44efa64f4",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "2741ed0e4e6889309b7df72ffb7eac0c0466f78c",
+      "closedAt": "2022-05-17T13:38:03Z",
+      "mergedAt": "2022-05-17T13:38:03Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "f12bb8a50f03b16817e030535bdc648b0b92dc49"
+      },
+      "comments": [
+        {
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I have implemented all feedback from Adrian, Nicola and Cyrill.",
+          "createdAt": "2022-05-17T13:37:49Z",
+          "updatedAt": "2022-05-17T13:37:49Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOHF5N3M439aj7",
+      "title": "Nic deployment minor changes",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/18",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Small changes\n\n<!-- Reviewable:start -->\n---\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/18)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-17T13:49:35Z",
+      "updatedAt": "2022-05-18T07:23:23Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "f12bb8a50f03b16817e030535bdc648b0b92dc49",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-deployment",
+      "headRefOid": "653036251574e143b97ec20892640d90bec8f69c",
+      "closedAt": "2022-05-17T13:51:20Z",
+      "mergedAt": "2022-05-17T13:51:20Z",
+      "mergedBy": "nicorusti",
+      "mergeCommit": {
+        "oid": "3997a180ae1d8cf16871a88648acb11e2e6fd949"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M46JSQ6",
+          "commit": {
+            "abbreviatedOid": "6530362"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "\n\n> Reviewed 1 of 1 files at r1, all commit messages.\n> *[Reviewable](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/18)* status: :shipit: complete! all files reviewed, all discussions resolved (waiting on @cdekater)\n\n\n\n<!-- Sent from Reviewable.io -->\n",
+          "createdAt": "2022-05-17T13:50:44Z",
+          "updatedAt": "2022-05-17T13:50:44Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOHF5N3M44ATlD",
+      "title": "Final review",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/19",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/19)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T07:27:41Z",
+      "updatedAt": "2022-05-18T12:09:44Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "3997a180ae1d8cf16871a88648acb11e2e6fd949",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "final-review",
+      "headRefOid": "0220994a6aad87f227cb6cf12e6df7d69604f586",
+      "closedAt": "2022-05-18T12:09:43Z",
+      "mergedAt": "2022-05-18T12:09:43Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "b225298526e43415afdbf5ee00b2c30efb1ae1b6"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M46NkfZ",
+          "commit": {
+            "abbreviatedOid": "0220994"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "\n\n> *[Reviewable](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/19)* status: 0 of 1 files reviewed, 2 unresolved discussions (waiting on @cdekater)\n\n___\n*[`draft-perrig-scion-overview.md` line 84 at r1](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/19#-N2L5eb49ylKg-Q1DUn2:-N2L5eb49ylKg-Q1DUn3:bese657) ([raw file](https://github.com/scionassociation/scion-overview_i-d/blob/0220994a6aad87f227cb6cf12e6df7d69604f586/draft-perrig-scion-overview.md#L84)):*\n> the presence of attacks \n\nthe presence of adversaries \n___\n*[`draft-perrig-scion-overview.md` line 100 at r1](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/19#-N2LScK79OFf2j6iZcKd:-N2LScK79OFf2j6iZcKe:b-51tiiq) ([raw file](https://github.com/scionassociation/scion-overview_i-d/blob/0220994a6aad87f227cb6cf12e6df7d69604f586/draft-perrig-scion-overview.md#L100)):*\n> ```Markdown\n> ### Scope of SCION\n> \n> The above section describes what SCION can do: SCION aspires to improve *inter*-AS routing and focuses on providing end-to-end connectivity. However, SCION does not solve *intra*-AS routing issues, nor does it provide end-to-end payload encryption or identity and access authentication. These topics, which are equally important for the Internet to perform well, lie outside the scope of SCION.\n> ```\n\nWhat do you mean? This sounds a bit unclear (and I'd remove it).\n\n\n\n_Code quote:_\n```Markdown\nidentity and access authentication\n```\n\n\n<!-- Sent from Reviewable.io -->\n",
+          "createdAt": "2022-05-18T09:22:56Z",
+          "updatedAt": "2022-05-18T09:22:57Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHF5N3M46OVtV",
+          "commit": {
+            "abbreviatedOid": "0220994"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "\n\n> Reviewed 1 of 1 files at r1, all commit messages.\n> *[Reviewable](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/19)* status: all files reviewed, 2 unresolved discussions (waiting on @cdekater)\n\n\n\n<!-- Sent from Reviewable.io -->\n",
+          "createdAt": "2022-05-18T12:07:07Z",
+          "updatedAt": "2022-05-18T12:07:07Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOHF5N3M46OWPn",
+          "commit": {
+            "abbreviatedOid": "0220994"
+          },
+          "author": "cdekater",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "<img class=\"emoji\" title=\":lgtm:\" alt=\":lgtm:\" align=\"absmiddle\" src=\"https://reviewable.io/lgtm.png\" height=\"20\" width=\"61\"/>\n\n> *[Reviewable](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/19#-:-N2M3Qpx-Jyg7HElOgvI:bnfp4nl)* status: all files reviewed, 2 unresolved discussions (waiting on @cdekater)\n\n\n\n<!-- Sent from Reviewable.io -->\n",
+          "createdAt": "2022-05-18T12:08:46Z",
+          "updatedAt": "2022-05-18T12:08:46Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOHF5N3M44BVmj",
+      "title": "Last Corrections",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/20",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/20)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T12:02:51Z",
+      "updatedAt": "2022-05-18T12:13:11Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "b225298526e43415afdbf5ee00b2c30efb1ae1b6",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "fba88e428b565026a25be90564a0d6821a0d8b69",
+      "closedAt": "2022-05-18T12:13:11Z",
+      "mergedAt": "2022-05-18T12:13:11Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "a58e92760727d79943d2b5da1a2a61984e23020b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 21,
+      "id": "PR_kwDOHF5N3M44Ba5F",
+      "title": "Removed some spaces",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/21",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/21)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T12:23:48Z",
+      "updatedAt": "2022-05-18T12:23:57Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "be1c17d7ea42ae9cad68d73332347f447aec69b2",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "7ee12fa52aa3c457ff11b464e45b125a5423b711",
+      "closedAt": "2022-05-18T12:23:56Z",
+      "mergedAt": "2022-05-18T12:23:56Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "1348d96fbf89fa01805cca4ed2d839e664582bdd"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 22,
+      "id": "PR_kwDOHF5N3M44ByRR",
+      "title": "Some changes to make publish work",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/22",
+      "state": "CLOSED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/22)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T13:39:54Z",
+      "updatedAt": "2022-05-18T13:44:55Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "662eb7f01d8f062d706b2200749622a315d0af3b",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "d3f8da8a2ddce84fe1cfcaa3ab78d5270616be34",
+      "closedAt": "2022-05-18T13:44:55Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOHF5N3M44B2Tz",
+      "title": "Corines branch",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/23",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/23)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T13:53:52Z",
+      "updatedAt": "2022-05-18T14:50:33Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "9148bba581d30cbe6a8321ccf2b27878f70d4c8c",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "corines-branch",
+      "headRefOid": "20fa2140cf22c88bcc5c2ef0a6fb7f596c0950d4",
+      "closedAt": "2022-05-18T13:54:56Z",
+      "mergedAt": "2022-05-18T13:54:56Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "eb112615cec9081976b5e9dc33e9626adf65dc5e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 24,
+      "id": "PR_kwDOHF5N3M44CIAL",
+      "title": "Small fixes",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/24",
+      "state": "CLOSED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/24)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T14:51:04Z",
+      "updatedAt": "2022-05-18T14:57:07Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "eb112615cec9081976b5e9dc33e9626adf65dc5e",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-submission",
+      "headRefOid": "a586d070bf4b77d727ed978edb7970a84f2a715f",
+      "closedAt": "2022-05-18T14:56:17Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOHF5N3M46PbDd",
+          "commit": {
+            "abbreviatedOid": "a586d07"
+          },
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "<img class=\"emoji\" title=\":lgtm:\" alt=\":lgtm:\" align=\"absmiddle\" src=\"https://reviewable.io/lgtm.png\" height=\"20\" width=\"61\"/>\n\n> *[Reviewable](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/24#-:-N2Mebrg7HlhTZofNm-n:bnfp4nl)* status: 0 of 1 files reviewed, all discussions resolved\n\n\n\n<!-- Sent from Reviewable.io -->\n",
+          "createdAt": "2022-05-18T14:55:30Z",
+          "updatedAt": "2022-05-18T14:55:30Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "id": "PR_kwDOHF5N3M44CJoG",
+      "title": "added -latest to docname",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/25",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/25)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-18T14:56:41Z",
+      "updatedAt": "2022-05-18T14:57:07Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "eb112615cec9081976b5e9dc33e9626adf65dc5e",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-submission",
+      "headRefOid": "a586d070bf4b77d727ed978edb7970a84f2a715f",
+      "closedAt": "2022-05-18T14:56:56Z",
+      "mergedAt": "2022-05-18T14:56:56Z",
+      "mergedBy": "nicorusti",
+      "mergeCommit": {
+        "oid": "fd54931317aca691a735966d8e43735a44a31c58"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 26,
+      "id": "PR_kwDOHF5N3M44GH31",
+      "title": "Two post-release corrections",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/26",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Found and removed an unremoved comment from the submitted draft and added a missing parenthesis.\n\n<!-- Reviewable:start -->\n---\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/26)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-19T06:31:58Z",
+      "updatedAt": "2022-05-19T06:33:38Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "66930c5355f97c5a2b850b7aed1420283b2a1cc4",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "bded41b7c2a627c4148cbb72a562a36459f85516",
+      "closedAt": "2022-05-19T06:33:37Z",
+      "mergedAt": "2022-05-19T06:33:37Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "e413bdd930db202408b58985ff054f5fb71e1b4b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 27,
+      "id": "PR_kwDOHF5N3M44Q_z7",
+      "title": "Correct Typo",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/27",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/27)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-23T06:25:02Z",
+      "updatedAt": "2022-05-23T06:27:19Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "e413bdd930db202408b58985ff054f5fb71e1b4b",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "8654ebd2d4ae4355ca8b3cbe722fa4221a9a5c7b",
+      "closedAt": "2022-05-23T06:27:19Z",
+      "mergedAt": "2022-05-23T06:27:19Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "6f418ae322d0ef876468b8e86c54b11059ae0bfd"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 28,
+      "id": "PR_kwDOHF5N3M44X2FL",
+      "title": "Minor correction",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/28",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/28)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-05-24T15:19:31Z",
+      "updatedAt": "2022-05-24T15:20:45Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "6f418ae322d0ef876468b8e86c54b11059ae0bfd",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "c9e55983074b85eea94a1efeb55d4e2c9ebf6969",
+      "closedAt": "2022-05-24T15:20:44Z",
+      "mergedAt": "2022-05-24T15:20:44Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "898bb4d75efff48467e722cb2f19c05e7e0dc43a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 29,
+      "id": "PR_kwDOHF5N3M4412QU",
+      "title": "multipath instead of multi-path",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/29",
+      "state": "MERGED",
+      "author": "cdekater",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/29)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-06-01T11:17:05Z",
+      "updatedAt": "2022-06-01T11:19:52Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "898bb4d75efff48467e722cb2f19c05e7e0dc43a",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "post-release-corrections",
+      "headRefOid": "d04ef70eb16325f74695e558625b120a38cbe6fd",
+      "closedAt": "2022-06-01T11:19:52Z",
+      "mergedAt": "2022-06-01T11:19:52Z",
+      "mergedBy": "cdekater",
+      "mergeCommit": {
+        "oid": "8642cda1797b32ccdaf8c0fdc7dcb0da660e11a4"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 31,
+      "id": "PR_kwDOHF5N3M494ktj",
+      "title": "Add references to component analysis & PKI drafts",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/31",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_i-d/31)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2022-08-26T18:09:06Z",
+      "updatedAt": "2022-08-26T21:13:07Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "8642cda1797b32ccdaf8c0fdc7dcb0da660e11a4",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "nic-review",
+      "headRefOid": "8a1ea9180dd0d402a75f022794ed45756e313cb6",
+      "closedAt": "2022-08-26T21:13:07Z",
+      "mergedAt": "2022-08-26T21:13:07Z",
+      "mergedBy": "nicorusti",
+      "mergeCommit": {
+        "oid": "36703cb188d239abec3c72cab3467b13db85d2b3"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
