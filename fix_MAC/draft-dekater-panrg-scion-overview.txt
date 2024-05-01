@@ -5,9 +5,9 @@
 PANRG                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                         SCION Association
-Expires: 11 July 2024                                          A. Perrig
+Expires: 2 November 2024                                       A. Perrig
                                                              ETH Zuerich
-                                                          8 January 2024
+                                                              1 May 2024
 
 
                              SCION Overview
@@ -72,7 +72,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 11 July 2024.
+   This Internet-Draft will expire on 2 November 2024.
 
 Copyright Notice
 
@@ -1724,10 +1724,10 @@ Table of Contents
 
 Acknowledgments
 
-   Many thanks go to Cyrill Krähenbühl and Juan A.  Garcia-Pardo for
-   reviewing this document.  We are also indebted to Laurent Chuat,
-   Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter
-   Müller, for writing the book "The Complete Guide to SCION" (see
+   Many thanks go to Cyrill Krähenbühl, Juan A.  Garcia-Pardo, and Kevin
+   Meynell for reviewing this document.  We are also indebted to Laurent
+   Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and
+   Peter Müller, for writing the book "The Complete Guide to SCION" (see
    [CHUAT22]), which provides the background information needed to write
    this informational draft.
 
