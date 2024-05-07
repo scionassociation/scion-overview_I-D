@@ -4,7 +4,7 @@ abbrev: "SCION I-D"
 category: info
 submissiontype: IRTF
 
-docname: 
+docname: draft-dekater-panrg-scion-overview-latest
 
 v: 3
 area: IRTF
@@ -16,7 +16,7 @@ venue:
   mail: panrg@irtf.org
   arch: https://datatracker.ietf.org/rg/panrg
   github: scionassociation/scion-overview_I-D
-  latest: https://github.com/scionassociation/scion-overview_I-D
+  latest: https://scionassociation.github.io/scion-overview_I-D/draft-dekater-panrg-scion-overview.html
 
 author:
  -   ins: C. de Kater
@@ -863,7 +863,7 @@ We then describe some of the early adopters deployment experiences. A more detai
 ## Autonomous System Deployment {#deployment-as}
 
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
-Within an AS, SCION over the existing network so makes use of existing intra-domain network and equipment (e.g. IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that the internal entities of an AS are considered to be trustworthy, so will not compromise or degrade any security properties SCION delivers. When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable as SCION would inherit issues from its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.
+Within an AS, SCION runs over the existing network so makes use of existing intra-domain network and equipment (e.g. IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that the internal entities of an AS are considered to be trustworthy, so will not compromise or degrade any security properties SCION delivers. When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable as SCION would inherit issues from its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.
 
 All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
 
@@ -911,7 +911,7 @@ The ISD and SCION AS number are SCION-specific numbers. They are currently alloc
 
 # Security Considerations
 
-The goal of SCION is to provide a secure inter-domain network architecture by default. This document provides an overview of core components, but the security implications and considerations are discussed in the Internet Drafts relating to each specific component (see {{I-D.dekater-scion-pki}}, {{I-D.dekater-scion-controlplace}}, and {{I-D.dekater-scion-dataplane}}).
+The goal of SCION is to provide a secure inter-domain network architecture by default. This document provides an overview of core components, but the security implications and considerations are discussed in the Internet Drafts relating to each specific component (see {{I-D.dekater-scion-pki}}, {{I-D.dekater-scion-controlplane}}, and {{I-D.dekater-scion-dataplane}}).
 
 
 --- back
