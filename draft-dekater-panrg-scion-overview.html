@@ -13,24 +13,24 @@
        This document discusses the motivations behind the SCION architecture and gives a high-level overview of its fundamental components, including its authentication model and the setup of the control- and data plane. As SCION is already in production use today, the document concludes with an overview of SCION deployments. 
        For detailed descriptions of SCION's components, refer to  ,  , and  . A more detailed analysis of relationships and dependencies between components is available in  . 
     " name="description">
-<meta content="xml2rfc 3.18.2" name="generator">
+<meta content="xml2rfc 3.21.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-dekater-panrg-scion-overview-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.18.2
-    Python 3.11.6
-    ConfigArgParse 1.5.3
+  xml2rfc 3.21.0
+    Python 3.11.9
+    ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
     Jinja2 3.1.2
     lxml 4.9.3
-    platformdirs 3.11.0
+    platformdirs 4.2.1
     pycountry 22.3.5
-    PyYAML 6.0
+    PyYAML 6.0.1
     requests 2.31.0
-    setuptools 67.7.2
+    setuptools 68.2.2
     six 1.16.0
-    wcwidth 0.2.9
+    wcwidth 0.2.13
 -->
 <link href="draft-dekater-panrg-scion-overview.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1029,11 +1029,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">SCION I-D</td>
-<td class="right">November 2023</td>
+<td class="right">May 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">de Kater, et al.</td>
-<td class="center">Expires 4 May 2024</td>
+<td class="center">Expires 8 November 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1046,12 +1046,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-dekater-panrg-scion-overview-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2023-11-01" class="published">1 November 2023</time>
+<time datetime="2024-05-07" class="published">7 May 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-05-04">4 May 2024</time></dd>
+<dd class="expires"><time datetime="2024-11-08">8 November 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1111,7 +1111,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 4 May 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 8 November 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1120,7 +1120,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2023 IETF Trust and the persons identified as the
+            Copyright (c) 2024 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1141,38 +1141,41 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
-                <p id="section-toc.1-1.1.2.1.1"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-why-scion-motivation" class="internal xref">Why SCION - Motivation</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1.2.1">
-                    <p id="section-toc.1-1.1.2.1.2.1.1" class="keepWithNext"><a href="#section-1.1.1" class="auto internal xref">1.1.1</a>.  <a href="#name-scope-of-scion" class="internal xref">Scope of SCION</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1.2.2">
-                    <p id="section-toc.1-1.1.2.1.2.2.1" class="keepWithNext"><a href="#section-1.1.2" class="auto internal xref">1.1.2</a>.  <a href="#name-practical-considerations-ba" class="internal xref">Practical Considerations Based on Related RFCs</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1.2.3">
-                    <p id="section-toc.1-1.1.2.1.2.3.1" class="keepWithNext"><a href="#section-1.1.3" class="auto internal xref">1.1.3</a>.  <a href="#name-why-now" class="internal xref">Why Now?</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
-                <p id="section-toc.1-1.1.2.2.1"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-scion-overview" class="internal xref">SCION Overview</a></p>
+                <p id="section-toc.1-1.1.2.2.1"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-why-scion-motivation" class="internal xref">Why SCION - Motivation</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2.2.1">
-                    <p id="section-toc.1-1.1.2.2.2.1.1"><a href="#section-1.2.1" class="auto internal xref">1.2.1</a>.  <a href="#name-network-architecture-and-na" class="internal xref">Network Architecture and Naming</a></p>
+                    <p id="section-toc.1-1.1.2.2.2.1.1" class="keepWithNext"><a href="#section-1.2.1" class="auto internal xref">1.2.1</a>.  <a href="#name-scope-of-scion" class="internal xref">Scope of SCION</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2.2.2">
-                    <p id="section-toc.1-1.1.2.2.2.2.1"><a href="#section-1.2.2" class="auto internal xref">1.2.2</a>.  <a href="#name-routing" class="internal xref">Routing</a></p>
+                    <p id="section-toc.1-1.1.2.2.2.2.1" class="keepWithNext"><a href="#section-1.2.2" class="auto internal xref">1.2.2</a>.  <a href="#name-practical-considerations-ba" class="internal xref">Practical Considerations Based on Related RFCs</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2.2.3">
-                    <p id="section-toc.1-1.1.2.2.2.3.1"><a href="#section-1.2.3" class="auto internal xref">1.2.3</a>.  <a href="#name-link-failures" class="internal xref">Link Failures</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2.2.4">
-                    <p id="section-toc.1-1.1.2.2.2.4.1"><a href="#section-1.2.4" class="auto internal xref">1.2.4</a>.  <a href="#name-formal-verification" class="internal xref">Formal Verification</a></p>
+                    <p id="section-toc.1-1.1.2.2.2.3.1"><a href="#section-1.2.3" class="auto internal xref">1.2.3</a>.  <a href="#name-why-now" class="internal xref">Why Now?</a></p>
 </li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
-                <p id="section-toc.1-1.1.2.3.1"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+                <p id="section-toc.1-1.1.2.3.1"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-scion-overview" class="internal xref">SCION Overview</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3.2.1">
+                    <p id="section-toc.1-1.1.2.3.2.1.1"><a href="#section-1.3.1" class="auto internal xref">1.3.1</a>.  <a href="#name-network-architecture-and-na" class="internal xref">Network Architecture and Naming</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3.2.2">
+                    <p id="section-toc.1-1.1.2.3.2.2.1"><a href="#section-1.3.2" class="auto internal xref">1.3.2</a>.  <a href="#name-routing" class="internal xref">Routing</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3.2.3">
+                    <p id="section-toc.1-1.1.2.3.2.3.1"><a href="#section-1.3.3" class="auto internal xref">1.3.3</a>.  <a href="#name-link-failures" class="internal xref">Link Failures</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3.2.4">
+                    <p id="section-toc.1-1.1.2.3.2.4.1"><a href="#section-1.3.4" class="auto internal xref">1.3.4</a>.  <a href="#name-formal-verification" class="internal xref">Formal Verification</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.4">
+                <p id="section-toc.1-1.1.2.4.1"><a href="#section-1.4" class="auto internal xref">1.4</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
 </li>
             </ul>
 </li>
@@ -1287,143 +1290,151 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide further insight into SCION's key concepts and deployment scenarios. The document concludes with some concrete case studies where SCION has been successfully deployed in production.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<div id="why">
+<div id="terms">
 <section id="section-1.1">
-        <h3 id="name-why-scion-motivation">
-<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-why-scion-motivation" class="section-name selfRef">Why SCION - Motivation</a>
+        <h3 id="name-terminology">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
         </h3>
-<p id="section-1.1-1">Since its inception, the Internet has continued to expand, encompassing new uses over time. The continuous expansion has brought many issues to light, including a lack of control, limitations in scalability, performance and security, occurrences of severe outages, weak fault isolation, and energy consumption. With the core focus on functionality and operation, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see <span>[<a href="#SCHUCHARD2011" class="cite xref">SCHUCHARD2011</a>]</span>, <span>[<a href="#LABOVITZ2000" class="cite xref">LABOVITZ2000</a>]</span>, <span>[<a href="#GRIFFIN1999" class="cite xref">GRIFFIN1999</a>]</span>, <span>[<a href="#SAHOO2009" class="cite xref">SAHOO2009</a>]</span>, and <span>[<a href="#RFC4264" class="cite xref">RFC4264</a>]</span>.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1-2">There have been numerous initiatives to address the above issues. Although these initiatives have brought many improvements, concerns regarding security and scalability still remain. For more details, see, e.g., <span>[<a href="#RFC4033" class="cite xref">RFC4033</a>]</span>, <span>[<a href="#RFC6480" class="cite xref">RFC6480</a>]</span>, <span>[<a href="#RFC8205" class="cite xref">RFC8205</a>]</span>, and <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, as well as <span>[<a href="#LYCHEV2013" class="cite xref">LYCHEV2013</a>]</span>, <span>[<a href="#LI2014" class="cite xref">LI2014</a>]</span>, <span>[<a href="#COOPER2013" class="cite xref">COOPER2013</a>]</span>, <span>[<a href="#ROTHENBERGER2017" class="cite xref">ROTHENBERGER2017</a>]</span>, <span>[<a href="#MORILLO2021" class="cite xref">MORILLO2021</a>]</span>, and <span>[<a href="#KING2022" class="cite xref">KING2022</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
-<p id="section-1.1-3">As a consequence, today's Internet fails to fulfil many users' requirements. This especially pertains to the demands of enterprises globally exchanging sensitive information, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators. These users require the Internet to be highly available at all times. They expect reliable operation of the global network also in case of failures. They need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4">SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-1"><strong>MAC</strong>: Message Authentication Code. In the rest of this document, "MAC" always refers to "Message Authentication Code" and never to "Medium Access Control". When "Medium Access Control address" is implied, the phrase "Link Layer Address" is used.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="why">
+<section id="section-1.2">
+        <h3 id="name-why-scion-motivation">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-why-scion-motivation" class="section-name selfRef">Why SCION - Motivation</a>
+        </h3>
+<p id="section-1.2-1">Since its inception, the Internet has continued to expand, encompassing new uses over time. The continuous expansion has brought many issues to light, including a lack of control, limitations in scalability, performance and security, occurrences of severe outages, weak fault isolation, and energy consumption. With the core focus on functionality and operation, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see <span>[<a href="#SCHUCHARD2011" class="cite xref">SCHUCHARD2011</a>]</span>, <span>[<a href="#LABOVITZ2000" class="cite xref">LABOVITZ2000</a>]</span>, <span>[<a href="#GRIFFIN1999" class="cite xref">GRIFFIN1999</a>]</span>, <span>[<a href="#SAHOO2009" class="cite xref">SAHOO2009</a>]</span>, and <span>[<a href="#RFC4264" class="cite xref">RFC4264</a>]</span>.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">There have been numerous initiatives to address the above issues. Although these initiatives have brought many improvements, concerns regarding security and scalability still remain. For more details, see, e.g., <span>[<a href="#RFC4033" class="cite xref">RFC4033</a>]</span>, <span>[<a href="#RFC6480" class="cite xref">RFC6480</a>]</span>, <span>[<a href="#RFC8205" class="cite xref">RFC8205</a>]</span>, and <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, as well as <span>[<a href="#LYCHEV2013" class="cite xref">LYCHEV2013</a>]</span>, <span>[<a href="#LI2014" class="cite xref">LI2014</a>]</span>, <span>[<a href="#COOPER2013" class="cite xref">COOPER2013</a>]</span>, <span>[<a href="#ROTHENBERGER2017" class="cite xref">ROTHENBERGER2017</a>]</span>, <span>[<a href="#MORILLO2021" class="cite xref">MORILLO2021</a>]</span>, and <span>[<a href="#KING2022" class="cite xref">KING2022</a>]</span>.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">As a consequence, today's Internet fails to fulfil many users' requirements. This especially pertains to the demands of enterprises globally exchanging sensitive information, such as financial institutions, healthcare providers, universities, multinationals, governments, critical and transportation infrastructure operators. These users require the Internet to be highly available at all times. They expect reliable operation of the global network also in case of failures. They need availability guarantees across multiple routing domains, even in the presence of attacks. They further want to rely on an Internet that can be multilaterally governed and is free from global kill-switches.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-4">SCION has been developed in order to meet the above-mentioned requirements. SCION aims to reach the following goals:<a href="#section-1.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-5.1">
-            <p id="section-1.1-5.1.1">Provide high-availability architecture (also in the presence of adversaries)<a href="#section-1.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.2-5.1">
+            <p id="section-1.2-5.1.1">Provide high-availability architecture (also in the presence of adversaries)<a href="#section-1.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.2">
-            <p id="section-1.1-5.2.1">Provide fast failover in the case of inter-domain link or router failures<a href="#section-1.1-5.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-5.2">
+            <p id="section-1.2-5.2.1">Provide fast failover in the case of inter-domain link or router failures<a href="#section-1.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.3">
-            <p id="section-1.1-5.3.1">Prevent from IP-address hijacking, DoS, and other attacks<a href="#section-1.1-5.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-5.3">
+            <p id="section-1.2-5.3.1">Prevent from IP-address hijacking, DoS, and other attacks<a href="#section-1.2-5.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.4">
-            <p id="section-1.1-5.4.1">Enable path transparency as well as application-specific path optimizations<a href="#section-1.1-5.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-5.4">
+            <p id="section-1.2-5.4.1">Enable path transparency as well as application-specific path optimizations<a href="#section-1.2-5.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.5">
-            <p id="section-1.1-5.5.1">Improve the inter-domain control plane's scalability<a href="#section-1.1-5.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-5.5">
+            <p id="section-1.2-5.5.1">Improve the inter-domain control plane's scalability<a href="#section-1.2-5.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.6">
-            <p id="section-1.1-5.6.1">Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and all other applications requiring high-performance connectivity.<a href="#section-1.1-5.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-5.6">
+            <p id="section-1.2-5.6.1">Prepare the Internet for tomorrow's applications, such as virtual reality, Internet of Things (IoT), and all other applications requiring high-performance connectivity.<a href="#section-1.2-5.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div id="scope-of-scion">
-<section id="section-1.1.1">
+<section id="section-1.2.1">
           <h4 id="name-scope-of-scion">
-<a href="#section-1.1.1" class="section-number selfRef">1.1.1. </a><a href="#name-scope-of-scion" class="section-name selfRef">Scope of SCION</a>
+<a href="#section-1.2.1" class="section-number selfRef">1.2.1. </a><a href="#name-scope-of-scion" class="section-name selfRef">Scope of SCION</a>
           </h4>
-<p id="section-1.1.1-1">The above section describes SCION's aspiration to improve <em>inter</em>-AS routing and to focus on providing end-to-end connectivity. However, SCION does not solve <em>intra</em>-AS routing issues, nor does it provide end-to-end payload encryption, and identity authentication. These topics, which are equally important for the Internet to perform well, lie outside the scope of SCION.<a href="#section-1.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.2.1-1">The above section describes SCION's aspiration to improve <em>inter</em>-AS routing and to focus on providing end-to-end connectivity. However, SCION does not solve <em>intra</em>-AS routing issues, nor does it provide end-to-end payload encryption, and identity authentication. These topics, which are equally important for the Internet to perform well, lie outside the scope of SCION.<a href="#section-1.2.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="practical-considerations-based-on-related-rfcs">
-<section id="section-1.1.2">
+<section id="section-1.2.2">
           <h4 id="name-practical-considerations-ba">
-<a href="#section-1.1.2" class="section-number selfRef">1.1.2. </a><a href="#name-practical-considerations-ba" class="section-name selfRef">Practical Considerations Based on Related RFCs</a>
+<a href="#section-1.2.2" class="section-number selfRef">1.2.2. </a><a href="#name-practical-considerations-ba" class="section-name selfRef">Practical Considerations Based on Related RFCs</a>
           </h4>
-<p id="section-1.1.2-1">The SCION inter-domain routing concept has initially been developed by researchers of the ETH Zuerich <span>[<a href="#PERRIG2017" class="cite xref">PERRIG2017</a>]</span>, and could in the meantime also gain attention and recognition in the international academic world. However, for an IT architecture to be successful, it must work well in practice, too. This section pays attention to the implementation considerations of a conceptual framework such as SCION in real life, on the basis of some RFCs exploring this topic. It also verifies in how far SCION meets the requirements mentioned and questions raised in these RFCs.<a href="#section-1.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2.2-1">The SCION inter-domain routing concept has initially been developed by researchers of the ETH Zuerich <span>[<a href="#PERRIG2017" class="cite xref">PERRIG2017</a>]</span>, and could in the meantime also gain attention and recognition in the international academic world. However, for an IT architecture to be successful, it must work well in practice, too. This section pays attention to the implementation considerations of a conceptual framework such as SCION in real life, on the basis of some RFCs exploring this topic. It also verifies in how far SCION meets the requirements mentioned and questions raised in these RFCs.<a href="#section-1.2.2-1" class="pilcrow">¶</a></p>
 <div id="avoiding-pitfalls">
-<section id="section-1.1.2.1">
+<section id="section-1.2.2.1">
             <h5 id="name-avoiding-pitfalls">
-<a href="#section-1.1.2.1" class="section-number selfRef">1.1.2.1. </a><a href="#name-avoiding-pitfalls" class="section-name selfRef">Avoiding Pitfalls</a>
+<a href="#section-1.2.2.1" class="section-number selfRef">1.2.2.1. </a><a href="#name-avoiding-pitfalls" class="section-name selfRef">Avoiding Pitfalls</a>
             </h5>
-<p id="section-1.1.2.1-1"><span>[<a href="#RFC9049" class="cite xref">RFC9049</a>]</span> describes why previous proposals to tackle some of the Internet's fundamental issues did not manage to succeed. SCION seems to avoid the pitfalls mentioned in that document. For example, SCION does not have to be adopted by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION benefit from it, also ISPs and operators benefit from deploying SCION: early deployments showed that providers can charge the use of SCION as premium connectivity, with users who are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for high-impact changes in an operational network.<a href="#section-1.1.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.1.2.1-2">Another RFC that must be mentioned in this context is <span>[<a href="#RFC5218" class="cite xref">RFC5218</a>]</span>, "What Makes for a Successful Protocol?". SCION seems to fulfil most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and allows for multiple implementations, both open and closed source. As existing SCION implementations are easily portable, adoption in mainstream platforms is also possible.<a href="#section-1.1.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.2.2.1-1"><span>[<a href="#RFC9049" class="cite xref">RFC9049</a>]</span> describes why previous proposals to tackle some of the Internet's fundamental issues did not manage to succeed. SCION seems to avoid the pitfalls mentioned in that document. For example, SCION does not have to be adopted by the entire Internet to be effective: The routing architecture provides benefits already to early adapters. Even if only a small part of the global network works with SCION, adapters will still take advantage of using the SCION routing technology. Moreover, not only users of SCION benefit from it, also ISPs and operators benefit from deploying SCION: early deployments showed that providers can charge the use of SCION as premium connectivity, with users who are willing to pay for it. Furthermore, SCION can be installed on top of and function alongside the existing routing infrastructure and protocols--there is no need for high-impact changes in an operational network.<a href="#section-1.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.2.2.1-2">Another RFC that must be mentioned in this context is <span>[<a href="#RFC5218" class="cite xref">RFC5218</a>]</span>, "What Makes for a Successful Protocol?". SCION seems to fulfil most factors that contribute to the success of a protocol, as described in section 2.1 of the RFC. This includes such factors as offering a positive net value (i.e., the benefits of deploying SCION outweigh the costs), incremental deployability, and open source code availability. More importantly, SCION averts the failure criteria mentioned in section 1.4 of the RFC: SCION is already deployed and in use by many actors of the Swiss financial and academic ecosystems, and allows for multiple implementations, both open and closed source. As existing SCION implementations are easily portable, adoption in mainstream platforms is also possible.<a href="#section-1.2.2.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="answering-questions">
-<section id="section-1.1.2.2">
+<section id="section-1.2.2.2">
             <h5 id="name-answering-questions">
-<a href="#section-1.1.2.2" class="section-number selfRef">1.1.2.2. </a><a href="#name-answering-questions" class="section-name selfRef">Answering Questions</a>
+<a href="#section-1.2.2.2" class="section-number selfRef">1.2.2.2. </a><a href="#name-answering-questions" class="section-name selfRef">Answering Questions</a>
             </h5>
-<p id="section-1.1.2.2-1">SCION can be considered a <em>path-aware internetworking</em> architecture, as described in <span>[<a href="#RFC9217" class="cite xref">RFC9217</a>]</span>. This RFC poses (open) questions that must be answered in order to realize such a path-aware networking system. It was originally written to frame discussions in the Path Aware Networking Research Group (PANRG), and has been published to snapshot current thinking in this space.<a href="#section-1.1.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.1.2.2-2">SCION intends to answer the questions raised in this RFC. This especially pertains to the second, third, seventh, and eighth question:<a href="#section-1.1.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2.2.2-1">SCION can be considered a <em>path-aware internetworking</em> architecture, as described in <span>[<a href="#RFC9217" class="cite xref">RFC9217</a>]</span>. This RFC poses (open) questions that must be answered in order to realize such a path-aware networking system. It was originally written to frame discussions in the Path Aware Networking Research Group (PANRG), and has been published to snapshot current thinking in this space.<a href="#section-1.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2.2.2-2">SCION intends to answer the questions raised in this RFC. This especially pertains to the second, third, seventh, and eighth question:<a href="#section-1.2.2.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1.2.2-3.1">
-                <p id="section-1.1.2.2-3.1.1">How do endpoints and applications get access to accurate, useful, and trustworthy path properties?<a href="#section-1.1.2.2-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.2.2.2-3.1">
+                <p id="section-1.2.2.2-3.1.1">How do endpoints and applications get access to accurate, useful, and trustworthy path properties?<a href="#section-1.2.2.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.1.2.2-3.2">
-                <p id="section-1.1.2.2-3.2.1">How can endpoints select paths to use for traffic in a way that can be trusted by the network, the endpoints, and the applications using them?<a href="#section-1.1.2.2-3.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.2.2.2-3.2">
+                <p id="section-1.2.2.2-3.2.1">How can endpoints select paths to use for traffic in a way that can be trusted by the network, the endpoints, and the applications using them?<a href="#section-1.2.2.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.1.2.2-3.3">
-                <p id="section-1.1.2.2-3.3.1">How can a path-aware network in a path-aware internetwork be effectively operated, given control inputs from network administrators, application designers, and end users?<a href="#section-1.1.2.2-3.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.2.2.2-3.3">
+                <p id="section-1.2.2.2-3.3.1">How can a path-aware network in a path-aware internetwork be effectively operated, given control inputs from network administrators, application designers, and end users?<a href="#section-1.2.2.2-3.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.1.2.2-3.4">
-                <p id="section-1.1.2.2-3.4.1">How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?<a href="#section-1.1.2.2-3.4.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.2.2.2-3.4">
+                <p id="section-1.2.2.2-3.4.1">How can the incentives of network operators and end users be aligned to realize the vision of path-aware networking, and how can the transition from current ("path-oblivious") to path-aware networking be managed?<a href="#section-1.2.2.2-3.4.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-1.1.2.2-4">SCION's answers to these questions can be found in <span><a href="#key" class="internal xref">Key Concepts</a> (<a href="#key" class="auto internal xref">Section 2</a>)</span> and <span><a href="#deploy" class="internal xref">Deployments</a> (<a href="#deploy" class="auto internal xref">Section 3.4</a>)</span>, respectively.<a href="#section-1.1.2.2-4" class="pilcrow">¶</a></p>
+<p id="section-1.2.2.2-4">SCION's answers to these questions can be found in <span><a href="#key" class="internal xref">Key Concepts</a> (<a href="#key" class="auto internal xref">Section 2</a>)</span> and <span><a href="#deploy" class="internal xref">Deployments</a> (<a href="#deploy" class="auto internal xref">Section 3.4</a>)</span>, respectively.<a href="#section-1.2.2.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="why-now">
-<section id="section-1.1.3">
+<section id="section-1.2.3">
           <h4 id="name-why-now">
-<a href="#section-1.1.3" class="section-number selfRef">1.1.3. </a><a href="#name-why-now" class="section-name selfRef">Why Now?</a>
+<a href="#section-1.2.3" class="section-number selfRef">1.2.3. </a><a href="#name-why-now" class="section-name selfRef">Why Now?</a>
           </h4>
-<p id="section-1.1.3-1">The emergence of multiple SCION implementations and early deployments highlights the need for standardization. The time seems therefore ripe to take SCION to the IETF, also in order to contribute to the important discussion regarding path-aware networking.<a href="#section-1.1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.2.3-1">The emergence of multiple SCION implementations and early deployments highlights the need for standardization. The time seems therefore ripe to take SCION to the IETF, also in order to contribute to the important discussion regarding path-aware networking.<a href="#section-1.2.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="scion-overview">
-<section id="section-1.2">
+<section id="section-1.3">
         <h3 id="name-scion-overview">
-<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-scion-overview" class="section-name selfRef">SCION Overview</a>
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-scion-overview" class="section-name selfRef">SCION Overview</a>
         </h3>
-<p id="section-1.2-1">SCION has been designed to address the fundamental issues of today's Internet depicted in <span><a href="#why" class="internal xref">Why SCION - Motivation</a> (<a href="#why" class="auto internal xref">Section 1.1</a>)</span>. The following section gives a high-level overview of SCION's main elements, providing a basic understanding of this next-generation inter-network architecture.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-1">SCION has been designed to address the fundamental issues of today's Internet depicted in <span><a href="#why" class="internal xref">Why SCION - Motivation</a> (<a href="#why" class="auto internal xref">Section 1.2</a>)</span>. The following section gives a high-level overview of SCION's main elements, providing a basic understanding of this next-generation inter-network architecture.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
 <div id="network-architecture-and-naming">
-<section id="section-1.2.1">
+<section id="section-1.3.1">
           <h4 id="name-network-architecture-and-na">
-<a href="#section-1.2.1" class="section-number selfRef">1.2.1. </a><a href="#name-network-architecture-and-na" class="section-name selfRef">Network Architecture and Naming</a>
+<a href="#section-1.3.1" class="section-number selfRef">1.3.1. </a><a href="#name-network-architecture-and-na" class="section-name selfRef">Network Architecture and Naming</a>
           </h4>
-<p id="section-1.2.1-1">SCION's main goal is to offer highly available and efficient inter-domain packet delivery—even in the presence of actively malicious entities. To achieve scalability and sovereignty, SCION organizes existing ASes into groups of independent routing planes, called <strong>Isolation Domains (ISD)</strong>. An AS can be a member of multiple ISDs. All ASes in an ISD agree on a set of trust roots, called the <strong>Trust Root Configuration (TRC)</strong>. The ISD is governed by a set of <strong>core ASes</strong>, which provide connectivity to other ISDs and manage the trust roots. Typically, a few distinguished ASes within an ISD form the ISD’s core.<a href="#section-1.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-1.2.1-2">Isolation domains serve the following purposes:<a href="#section-1.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.3.1-1">SCION's main goal is to offer highly available and efficient inter-domain packet delivery—even in the presence of actively malicious entities. To achieve scalability and sovereignty, SCION organizes existing ASes into groups of independent routing planes, called <strong>Isolation Domains (ISD)</strong>. An AS can be a member of multiple ISDs. All ASes in an ISD agree on a set of trust roots, called the <strong>Trust Root Configuration (TRC)</strong>. The ISD is governed by a set of <strong>core ASes</strong>, which provide connectivity to other ISDs and manage the trust roots. Typically, a few distinguished ASes within an ISD form the ISD’s core.<a href="#section-1.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.1-2">Isolation domains serve the following purposes:<a href="#section-1.3.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.1-3.1">
-              <p id="section-1.2.1-3.1.1">They allow SCION to support trust heterogeneity, as each ISD can independently define its roots of trust;<a href="#section-1.2.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.3.1-3.1">
+              <p id="section-1.3.1-3.1.1">They allow SCION to support trust heterogeneity, as each ISD can independently define its roots of trust;<a href="#section-1.3.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1.2.1-3.2">
-              <p id="section-1.2.1-3.2.1">They provide transparency for trust relationships;<a href="#section-1.2.1-3.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-1.3.1-3.2">
+              <p id="section-1.3.1-3.2.1">They provide transparency for trust relationships;<a href="#section-1.3.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1.2.1-3.3">
-              <p id="section-1.2.1-3.3.1">They isolate the routing process within an ISD from external influences such as attacks and misconfigurations; and<a href="#section-1.2.1-3.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-1.3.1-3.3">
+              <p id="section-1.3.1-3.3.1">They isolate the routing process within an ISD from external influences such as attacks and misconfigurations; and<a href="#section-1.3.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1.2.1-3.4">
-              <p id="section-1.2.1-3.4.1">They improve the scalability of the routing protocol by separating it into a process within and one between ISDs.<a href="#section-1.2.1-3.4.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-1.3.1-3.4">
+              <p id="section-1.3.1-3.4.1">They improve the scalability of the routing protocol by separating it into a process within and one between ISDs.<a href="#section-1.3.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-1.2.1-4">ISDs provide natural isolation of routing failures and misconfigurations, provide meaningful and enforceable trust, enable endpoints to optionally restrict traffic forwarding to trusted parts of the Internet infrastructure only, and enable scalable routing updates with high path-freshness.<a href="#section-1.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.3.1-4">ISDs provide natural isolation of routing failures and misconfigurations, provide meaningful and enforceable trust, enable endpoints to optionally restrict traffic forwarding to trusted parts of the Internet infrastructure only, and enable scalable routing updates with high path-freshness.<a href="#section-1.3.1-4" class="pilcrow">¶</a></p>
 <div id="links">
-<section id="section-1.2.1.1">
+<section id="section-1.3.1.1">
             <h5 id="name-links">
-<a href="#section-1.2.1.1" class="section-number selfRef">1.2.1.1. </a><a href="#name-links" class="section-name selfRef">Links</a>
+<a href="#section-1.3.1.1" class="section-number selfRef">1.3.1.1. </a><a href="#name-links" class="section-name selfRef">Links</a>
             </h5>
-<p id="section-1.2.1.1-1">Within and between ISDs, SCION supports three types of links: (1) core links, (2) parent-child links, and (3) peering links.<a href="#section-1.2.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.1.1-1">Within and between ISDs, SCION supports three types of links: (1) core links, (2) parent-child links, and (3) peering links.<a href="#section-1.3.1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.1.1-2.1">
-                <p id="section-1.2.1.1-2.1.1">A <strong>core link</strong> always connects two core ASes, which are either within the same or in a different ISD. Core links can exist for various underlying business relationships, including provider-customer (where the customer pays the provider for traffic) and peering relationships.<a href="#section-1.2.1.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.3.1.1-2.1">
+                <p id="section-1.3.1.1-2.1.1">A <strong>core link</strong> always connects two core ASes, which are either within the same or in a different ISD. Core links can exist for various underlying business relationships, including provider-customer (where the customer pays the provider for traffic) and peering relationships.<a href="#section-1.3.1.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.2.1.1-2.2">
-                <p id="section-1.2.1.1-2.2.1">A <strong>parent-child link</strong> creates a hierarchy between the parent and the child. ASes with a parent-child link typically have a provider-customer relationship.<a href="#section-1.2.1.1-2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.3.1.1-2.2">
+                <p id="section-1.3.1.1-2.2.1">A <strong>parent-child link</strong> creates a hierarchy between the parent and the child. ASes with a parent-child link typically have a provider-customer relationship.<a href="#section-1.3.1.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.2.1.1-2.3">
-                <p id="section-1.2.1.1-2.3.1"><strong>Peering links</strong> exist between ASes with a (settlement-free or paid) peering relationship. Peering links can only be used to reach destinations within or downstream of the peering AS. They can be established between any two core or non-core ASes, and between core and non-core ASes. Peering links can also cross ISD boundaries.<a href="#section-1.2.1.1-2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.3.1.1-2.3">
+                <p id="section-1.3.1.1-2.3.1"><strong>Peering links</strong> exist between ASes with a (settlement-free or paid) peering relationship. Peering links can only be used to reach destinations within or downstream of the peering AS. They can be established between any two core or non-core ASes, and between core and non-core ASes. Peering links can also cross ISD boundaries.<a href="#section-1.3.1.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-1.2.1.1-3">See <a href="#architecture" class="auto internal xref">Figure 1</a> for a high-level overview of the SCION network structure.<a href="#section-1.2.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.3.1.1-3">See <a href="#architecture" class="auto internal xref">Figure 1</a> for a high-level overview of the SCION network structure.<a href="#section-1.3.1.1-3" class="pilcrow">¶</a></p>
 <span id="name-scion-network-structure"></span><div id="architecture">
 <figure id="figure-1">
-              <div class="alignLeft art-text artwork" id="section-1.2.1.1-4.1">
+              <div class="alignLeft art-text artwork" id="section-1.3.1.1-4.1">
 <pre>
 +-------------------------------------+
 |                                     |
@@ -1469,30 +1480,30 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </section>
 </div>
 <div id="routing">
-<section id="section-1.2.2">
+<section id="section-1.3.2">
           <h4 id="name-routing">
-<a href="#section-1.2.2" class="section-number selfRef">1.2.2. </a><a href="#name-routing" class="section-name selfRef">Routing</a>
+<a href="#section-1.3.2" class="section-number selfRef">1.3.2. </a><a href="#name-routing" class="section-name selfRef">Routing</a>
           </h4>
-<p id="section-1.2.2-1">SCION provides path-aware inter-domain routing between ASes across the Internet. The SCION control plane is responsible for discovering these inter-domain paths and making them available to the endpoints within the ASes. SCION inter-domain routing operates on two levels: Within a SCION isolation domain (ISD), which is called <em>intra</em>-ISD routing, and between ISDs, called <em>inter</em>-ISD routing. Both levels use the so-called <em>path-segment construction beacons (PCBs)</em> to explore network paths. A PCB is initiated by a core AS and then disseminated either within an ISD to explore intra-ISD paths, or among core ASes, to explore core paths across different ISDs.<a href="#section-1.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.2.2-2">The PCBs accumulate cryptographically protected path and forwarding information on AS-level, and store this information in the form of <em>hop fields</em>. Endpoints use information from these hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called <em>packet-carried forwarding state</em>. The concept also supports multi-path communication among endpoints.<a href="#section-1.2.2-2" class="pilcrow">¶</a></p>
-<p id="section-1.2.2-3">The creation of an end-to-end forwarding path consists of the following processes:<a href="#section-1.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.3.2-1">SCION provides path-aware inter-domain routing between ASes across the Internet. The SCION control plane is responsible for discovering these inter-domain paths and making them available to the endpoints within the ASes. SCION inter-domain routing operates on two levels: Within a SCION isolation domain (ISD), which is called <em>intra</em>-ISD routing, and between ISDs, called <em>inter</em>-ISD routing. Both levels use the so-called <em>path-segment construction beacons (PCBs)</em> to explore network paths. A PCB is initiated by a core AS and then disseminated either within an ISD to explore intra-ISD paths, or among core ASes, to explore core paths across different ISDs.<a href="#section-1.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.2-2">The PCBs accumulate cryptographically protected path and forwarding information on AS-level, and store this information in the form of <em>hop fields</em>. Endpoints use information from these hop fields to create end-to-end forwarding paths for data packets, who carry this information in their packet headers. This concept is called <em>packet-carried forwarding state</em>. The concept also supports multi-path communication among endpoints.<a href="#section-1.3.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.3.2-3">The creation of an end-to-end forwarding path consists of the following processes:<a href="#section-1.3.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.2-4.1">
-              <p id="section-1.2.2-4.1.1"><em>Path exploration (or beaconing)</em>: This is the process where an AS discovers paths to other ASes.<a href="#section-1.2.2-4.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.3.2-4.1">
+              <p id="section-1.3.2-4.1.1"><em>Path exploration (or beaconing)</em>: This is the process where an AS discovers paths to other ASes.<a href="#section-1.3.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1.2.2-4.2">
-              <p id="section-1.2.2-4.2.1"><em>Path registration</em>: This is the process where an AS selects a few PCBs, according to defined policies, turns the selected PCBs into path segments, and adds these path segments to the relevant path infrastructure, thus making them available to other ASes.<a href="#section-1.2.2-4.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-1.3.2-4.2">
+              <p id="section-1.3.2-4.2.1"><em>Path registration</em>: This is the process where an AS selects a few PCBs, according to defined policies, turns the selected PCBs into path segments, and adds these path segments to the relevant path infrastructure, thus making them available to other ASes.<a href="#section-1.3.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1.2.2-4.3">
-              <p id="section-1.2.2-4.3.1"><em>Path resolution</em>: This is the process of actually creating an end-to-end forwarding path from the source endpoint to the destination. For this, an endpoint performs (a) a path lookup step, to obtain path segments, and (b) a path combination step, to combine the forwarding path from the segments. This last step takes place in the data plane.<a href="#section-1.2.2-4.3.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-1.3.2-4.3">
+              <p id="section-1.3.2-4.3.1"><em>Path resolution</em>: This is the process of actually creating an end-to-end forwarding path from the source endpoint to the destination. For this, an endpoint performs (a) a path lookup step, to obtain path segments, and (b) a path combination step, to combine the forwarding path from the segments. This last step takes place in the data plane.<a href="#section-1.3.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-1.2.2-5">All processes operate concurrently.<a href="#section-1.2.2-5" class="pilcrow">¶</a></p>
-<p id="section-1.2.2-6">For detailed information on path exploration, registration, and lookup, see <span>[<a href="#I-D.dekater-scion-controlplane" class="cite xref">I-D.dekater-scion-controlplane</a>]</span>. For a detailed description of the path combination and construction process, see <span>[<a href="#I-D.dekater-scion-dataplane" class="cite xref">I-D.dekater-scion-dataplane</a>]</span>.<a href="#section-1.2.2-6" class="pilcrow">¶</a></p>
-<p id="section-1.2.2-7"><a href="#beaconing" class="auto internal xref">Figure 2</a> below shows the SCION routing processes and their relation to each other.<a href="#section-1.2.2-7" class="pilcrow">¶</a></p>
+<p id="section-1.3.2-5">All processes operate concurrently.<a href="#section-1.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-1.3.2-6">For detailed information on path exploration, registration, and lookup, see <span>[<a href="#I-D.dekater-scion-controlplane" class="cite xref">I-D.dekater-scion-controlplane</a>]</span>. For a detailed description of the path combination and construction process, see <span>[<a href="#I-D.dekater-scion-dataplane" class="cite xref">I-D.dekater-scion-dataplane</a>]</span>.<a href="#section-1.3.2-6" class="pilcrow">¶</a></p>
+<p id="section-1.3.2-7"><a href="#beaconing" class="auto internal xref">Figure 2</a> below shows the SCION routing processes and their relation to each other.<a href="#section-1.3.2-7" class="pilcrow">¶</a></p>
 <span id="name-scion-routing-processes-and"></span><div id="beaconing">
 <figure id="figure-2">
-            <div class="alignLeft art-text artwork" id="section-1.2.2-8.1">
+            <div class="alignLeft art-text artwork" id="section-1.3.2-8.1">
 <pre>
 +-------------------------+       +-------------------------+
 | Exploration (Beaconing) |------&gt;|      Registration       |
@@ -1515,93 +1526,93 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </figcaption></figure>
 </div>
 <div id="path-segments">
-<section id="section-1.2.2.1">
+<section id="section-1.3.2.1">
             <h5 id="name-path-segments">
-<a href="#section-1.2.2.1" class="section-number selfRef">1.2.2.1. </a><a href="#name-path-segments" class="section-name selfRef">Path Segments</a>
+<a href="#section-1.3.2.1" class="section-number selfRef">1.3.2.1. </a><a href="#name-path-segments" class="section-name selfRef">Path Segments</a>
             </h5>
-<p id="section-1.2.2.1-1">As described previously, the main goal of SCION's control plane is to create and manage path segments, which can then be combined into forwarding paths to transmit packets in the data plane. SCION distinguishes the following types of path segments:<a href="#section-1.2.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.1-1">As described previously, the main goal of SCION's control plane is to create and manage path segments, which can then be combined into forwarding paths to transmit packets in the data plane. SCION distinguishes the following types of path segments:<a href="#section-1.3.2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.2.1-2.1">
-                <p id="section-1.2.2.1-2.1.1">A path segment from a non-core AS to a core AS is an <strong>up-segment</strong>.<a href="#section-1.2.2.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.3.2.1-2.1">
+                <p id="section-1.3.2.1-2.1.1">A path segment from a non-core AS to a core AS is an <strong>up-segment</strong>.<a href="#section-1.3.2.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.2.2.1-2.2">
-                <p id="section-1.2.2.1-2.2.1">A path segment from a core AS to a non-core AS is a <strong>down-segment</strong>.<a href="#section-1.2.2.1-2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.3.2.1-2.2">
+                <p id="section-1.3.2.1-2.2.1">A path segment from a core AS to a non-core AS is a <strong>down-segment</strong>.<a href="#section-1.3.2.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.2.2.1-2.3">
-                <p id="section-1.2.2.1-2.3.1">A path segment between core ASes is a <strong>core-segment</strong>.<a href="#section-1.2.2.1-2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.3.2.1-2.3">
+                <p id="section-1.3.2.1-2.3.1">A path segment between core ASes is a <strong>core-segment</strong>.<a href="#section-1.3.2.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-1.2.2.1-3">Each path segment either ends at a core AS, or starts at a core AS, or both.<a href="#section-1.2.2.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.2.2.1-4"><strong>Note</strong>: There are no SCION path segments that start and end at a non-core AS. However, when combining path segments into an end-to-end SCION path, it is possible to use peering links.<a href="#section-1.2.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.2.2.1-5">All path segments are invertible: A core-segment can be used bidirectionally, and an up-segment can be converted into a down-segment, or vice versa, depending on the direction of the end-to-end path. This means that all path segments can be used to send data traffic in both directions.<a href="#section-1.2.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.1-3">Each path segment either ends at a core AS, or starts at a core AS, or both.<a href="#section-1.3.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.1-4"><strong>Note</strong>: There are no SCION path segments that start and end at a non-core AS. However, when combining path segments into an end-to-end SCION path, it is possible to use peering links.<a href="#section-1.3.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.1-5">All path segments are invertible: A core-segment can be used bidirectionally, and an up-segment can be converted into a down-segment, or vice versa, depending on the direction of the end-to-end path. This means that all path segments can be used to send data traffic in both directions.<a href="#section-1.3.2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="isd-and-as-numbering">
-<section id="section-1.2.2.2">
+<section id="section-1.3.2.2">
             <h5 id="name-isd-and-as-numbering">
-<a href="#section-1.2.2.2" class="section-number selfRef">1.2.2.2. </a><a href="#name-isd-and-as-numbering" class="section-name selfRef">ISD and AS numbering</a>
+<a href="#section-1.3.2.2" class="section-number selfRef">1.3.2.2. </a><a href="#name-isd-and-as-numbering" class="section-name selfRef">ISD and AS numbering</a>
             </h5>
-<p id="section-1.2.2.2-1">The inter-domain SCION routing is based on the &lt;ISD, AS&gt; tuple. Although a complete SCION address is composed of the &lt;ISD, AS, endpoint address&gt; 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. The endpoint address can be of variable length, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example - in fact, the endpoint address is the "normal", currently used, non-SCION-specific endpoint address.<a href="#section-1.2.2.2-1" class="pilcrow">¶</a></p>
-<p id="section-1.2.2.2-2"><strong>Note</strong>: As a consequence of the fact that SCION relies on existing routing protocols (e.g., IS-IS, OSPF, SR) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding, existing internal routers do not need to be changed to support SCION.<a href="#section-1.2.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.2-1">The inter-domain SCION routing is based on the &lt;ISD, AS&gt; tuple. Although a complete SCION address is composed of the &lt;ISD, AS, endpoint address&gt; 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. The endpoint address can be of variable length, does not need to be globally unique, and can thus be an IPv4, IPv6, or link layer address, for example - in fact, the endpoint address is the "normal", currently used, non-SCION-specific endpoint address.<a href="#section-1.3.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.2-2"><strong>Note</strong>: As a consequence of the fact that SCION relies on existing routing protocols (e.g., IS-IS, OSPF, SR) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding, existing internal routers do not need to be changed to support SCION.<a href="#section-1.3.2.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="infra-components">
-<section id="section-1.2.2.3">
+<section id="section-1.3.2.3">
             <h5 id="name-control-service">
-<a href="#section-1.2.2.3" class="section-number selfRef">1.2.2.3. </a><a href="#name-control-service" class="section-name selfRef">Control Service</a>
+<a href="#section-1.3.2.3" class="section-number selfRef">1.3.2.3. </a><a href="#name-control-service" class="section-name selfRef">Control Service</a>
             </h5>
-<p id="section-1.2.2.3-1">The <strong>control service</strong> is responsible for the path exploration and registration processes in the control plane. It is the main control-plane infrastructure component within each SCION AS. The control service of an AS has the following tasks:<a href="#section-1.2.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.3-1">The <strong>control service</strong> is responsible for the path exploration and registration processes in the control plane. It is the main control-plane infrastructure component within each SCION AS. The control service of an AS has the following tasks:<a href="#section-1.3.2.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.2.3-2.1">
-                <p id="section-1.2.2.3-2.1.1">Generating, receiving, and propagating PCBs. Periodically, the control service of a core AS generates a set of PCBs, which are forwarded to the child ASes or neighboring core ASes. In the latter case, the PCBs are sent over policy-compliant paths to discover multiple paths between any pair of core ASes.<a href="#section-1.2.2.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.3.2.3-2.1">
+                <p id="section-1.3.2.3-2.1.1">Generating, receiving, and propagating PCBs. Periodically, the control service of a core AS generates a set of PCBs, which are forwarded to the child ASes or neighboring core ASes. In the latter case, the PCBs are sent over policy-compliant paths to discover multiple paths between any pair of core ASes.<a href="#section-1.3.2.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.2.2.3-2.2">
-                <p id="section-1.2.2.3-2.2.1">Selecting and registering the set of path segments via which the AS wants to be reached.<a href="#section-1.2.2.3-2.2.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.3.2.3-2.2">
+                <p id="section-1.3.2.3-2.2.1">Selecting and registering the set of path segments via which the AS wants to be reached.<a href="#section-1.3.2.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="section-1.2.2.3-2.3">
-                <p id="section-1.2.2.3-2.3.1">Managing certificates and keys to secure inter-AS communication. Each PCB contains signatures of all on-path ASes. Every time the control service of an AS receives a PCB, it validates the PCB's authenticity. When the control service lacks an intermediate certificate, it can query the control service of the neighboring AS that sent the PCB.<a href="#section-1.2.2.3-2.3.1" class="pilcrow">¶</a></p>
+              <li class="normal" id="section-1.3.2.3-2.3">
+                <p id="section-1.3.2.3-2.3.1">Managing certificates and keys to secure inter-AS communication. Each PCB contains signatures of all on-path ASes. Every time the control service of an AS receives a PCB, it validates the PCB's authenticity. When the control service lacks an intermediate certificate, it can query the control service of the neighboring AS that sent the PCB.<a href="#section-1.3.2.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
-<p id="section-1.2.2.3-3"><strong>Note:</strong> The control service of an AS must not be confused with a border router. The control service of a specific AS is part of the control plane and responsible for <em>finding and registering suitable paths</em>. It can be deployed anywhere inside the AS. A border router belongs to the data plane; its main task is to <em>forward data packets</em>. Border routers are deployed at the edge of an AS.<a href="#section-1.2.2.3-3" class="pilcrow">¶</a></p>
+<p id="section-1.3.2.3-3"><strong>Note:</strong> The control service of an AS must not be confused with a border router. The control service of a specific AS is part of the control plane and responsible for <em>finding and registering suitable paths</em>. It can be deployed anywhere inside the AS. A border router belongs to the data plane; its main task is to <em>forward data packets</em>. Border routers are deployed at the edge of an AS.<a href="#section-1.3.2.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="link-failures">
-<section id="section-1.2.3">
+<section id="section-1.3.3">
           <h4 id="name-link-failures">
-<a href="#section-1.2.3" class="section-number selfRef">1.2.3. </a><a href="#name-link-failures" class="section-name selfRef">Link Failures</a>
+<a href="#section-1.3.3" class="section-number selfRef">1.3.3. </a><a href="#name-link-failures" class="section-name selfRef">Link Failures</a>
           </h4>
-<p id="section-1.2.3-1">Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by endpoints. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:<a href="#section-1.2.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.3-1">Unlike in the current Internet, link failures are not automatically resolved by the network, but require active handling by endpoints. Since SCION forwarding paths are static, they break when one of the links fails. Link failures are handled by a two-pronged approach that typically masks link failures without any outage to the application and rapidly re-establishes fresh working paths:<a href="#section-1.3.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.2.3-2.1">
-              <p id="section-1.2.3-2.1.1">The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, endpoints get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.<a href="#section-1.2.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.3.3-2.1">
+              <p id="section-1.3.3-2.1.1">The SCION Control Message Protocol (SCMP) (the SCION equivalent of ICMP) is used for signaling connectivity problems. Instead of relying on application- or transport-layer timeouts, endpoints get immediate feedback from the network if a path stops working, and can quickly switch to an alternative path.<a href="#section-1.3.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-1.2.3-2.2">
-              <p id="section-1.2.3-2.2.1">SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), the SCION control services attempt to create, select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also <span>[<a href="#ANDERSEN2001" class="cite xref">ANDERSEN2001</a>]</span>, <span>[<a href="#KATZ2012" class="cite xref">KATZ2012</a>]</span>, <span>[<a href="#KUSHMAN2007" class="cite xref">KUSHMAN2007</a>]</span>, and <span>[<a href="#HITZ2021" class="cite xref">HITZ2021</a>]</span>.<a href="#section-1.2.3-2.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-1.3.3-2.2">
+              <p id="section-1.3.3-2.2.1">SCION endpoints are encouraged to use multipath communication by default, thus masking a link failure with another working path. As multipath communication can increase availability (even in environments with very limited path choices), the SCION control services attempt to create, select and announce disjoint paths, and endpoints compose path segments to achieve maximum resilience to path failure. Consequently, most link failures in SCION remain unnoticed by the application, unlike the frequent (albeit mostly brief) outages in the current Internet. See also <span>[<a href="#ANDERSEN2001" class="cite xref">ANDERSEN2001</a>]</span>, <span>[<a href="#KATZ2012" class="cite xref">KATZ2012</a>]</span>, <span>[<a href="#KUSHMAN2007" class="cite xref">KUSHMAN2007</a>]</span>, and <span>[<a href="#HITZ2021" class="cite xref">HITZ2021</a>]</span>.<a href="#section-1.3.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
 </div>
 <div id="formal-verification">
-<section id="section-1.2.4">
+<section id="section-1.3.4">
           <h4 id="name-formal-verification">
-<a href="#section-1.2.4" class="section-number selfRef">1.2.4. </a><a href="#name-formal-verification" class="section-name selfRef">Formal Verification</a>
+<a href="#section-1.3.4" class="section-number selfRef">1.3.4. </a><a href="#name-formal-verification" class="section-name selfRef">Formal Verification</a>
           </h4>
-<p id="section-1.2.4-1">An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich <span>[<a href="#KLENZE2021" class="cite xref">KLENZE2021</a>]</span>. This guarantees that packet forwarding as well as SCION's authentication mechanisms and implementations are correct and consistent.<a href="#section-1.2.4-1" class="pilcrow">¶</a></p>
+<p id="section-1.3.4-1">An additional feature of SCION is its formal verification. The SCION network system consists of a variety of components such as routers, servers, and edge devices. Such a complex system eludes the mental capacities of human beings for considering all possible states and interactions. That is why SCION includes a formal verification framework developed by the Department of Computer Science of the ETH Zurich <span>[<a href="#KLENZE2021" class="cite xref">KLENZE2021</a>]</span>. This guarantees that packet forwarding as well as SCION's authentication mechanisms and implementations are correct and consistent.<a href="#section-1.3.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="conventions-and-definitions">
-<section id="section-1.3">
+<section id="section-1.4">
         <h3 id="name-conventions-and-definitions">
-<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+<a href="#section-1.4" class="section-number selfRef">1.4. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
         </h3>
-<p id="section-1.3-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+<p id="section-1.4-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
-appear in all capitals, as shown here.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+appear in all capitals, as shown here.<a href="#section-1.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2166,9 +2177,8 @@ The following section discusses practical considerations for deploying SCION and
         <h3 id="name-autonomous-system-deploymen">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-autonomous-system-deploymen" class="section-name selfRef">Autonomous System Deployment</a>
         </h3>
-<p id="section-3.1-1">A SCION AS needs to deploy the SCION <span><a href="#infra-components" class="internal xref">infrastructure components</a> (<a href="#infra-components" class="auto internal xref">Section 1.2.2.3</a>)</span> and border routers.
-Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
-When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">A SCION AS needs to deploy the SCION <span><a href="#infra-components" class="internal xref">infrastructure components</a> (<a href="#infra-components" class="auto internal xref">Section 1.3.2.3</a>)</span> and border routers.
+Within an AS, SCION runs over the existing network so makes use of existing intra-domain network and equipment (e.g. IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that the internal entities of an AS are considered to be trustworthy, so will not compromise or degrade any security properties SCION delivers. When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable as SCION would inherit issues from its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2">All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype <span><a href="#DERUITER2021" class="internal xref">P4 implementation</a> [<a href="#DERUITER2021" class="cite xref">DERUITER2021</a>]</span> showed that it is possible to forward SCION traffic even at terabit speeds.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1-3">Overall, an AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
@@ -2229,8 +2239,8 @@ The concept of the SCION ISD also provides a mechanism to implement strict gover
       <h2 id="name-iana-considerations">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-4-1">Currently, this document has no request for action to IANA.
-However, when full specification of SCION is available, requests for IANA actions are expected regarding the registration of optional packet header fields as well as the coordination of SCION ISD and AS number assignments.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">This document has no IANA actions.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">The ISD and SCION AS number are SCION-specific numbers. They are currently allocated by Anapaya Systems, a provider of SCION-based networking software and solutions (see Anapaya ISD AS assignments https://docs.anapaya.net/en/latest/resources/isd-as-assignments/). This task is currently being transitioned from Anapaya to the SCION Association.<a href="#section-4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -2238,7 +2248,7 @@ However, when full specification of SCION is available, requests for IANA action
       <h2 id="name-security-considerations">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-5-1">SCION has been designed from the outset to offer security by default, and thus there are manifold security considerations. As a matter of fact, SCION's protocol design has been formally verified and the open source router implementation is undergoing formal verification (see also <span>[<a href="#KLENZE2021" class="cite xref">KLENZE2021</a>]</span>). Describing all security considerations here, therefore, would go beyond the scope of this document. A separate document including all security implications and considerations will follow later.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-1">The goal of SCION is to provide a secure inter-domain network architecture by default. This document provides an overview of core components, but the security implications and considerations are discussed in the Internet Drafts relating to each specific component (see <span>[<a href="#I-D.dekater-scion-pki" class="cite xref">I-D.dekater-scion-pki</a>]</span>, <span>[<a href="#I-D.dekater-scion-controlplane" class="cite xref">I-D.dekater-scion-controlplane</a>]</span>, and <span>[<a href="#I-D.dekater-scion-dataplane" class="cite xref">I-D.dekater-scion-dataplane</a>]</span>).<a href="#section-5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-6">
@@ -2417,7 +2427,7 @@ However, when full specification of SCION is available, requests for IANA action
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-A-1">Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" (see <span>[<a href="#CHUAT22" class="cite xref">CHUAT22</a>]</span>), which provides the background information needed to write this informational draft.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">Many thanks go to Cyrill Krähenbühl, Juan A. Garcia-Pardo, and Kevin Meynell for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" (see <span>[<a href="#CHUAT22" class="cite xref">CHUAT22</a>]</span>), which provides the background information needed to write this informational draft.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
@@ -2430,7 +2440,7 @@ However, when full specification of SCION is available, requests for IANA action
 <div dir="auto" class="left"><span class="org">SCION Association</span></div>
 <div class="email">
 <span>Email:</span>
-<a href="mailto:cdk@scion.org" class="email">cdk@scion.org</a>
+<a href="mailto:c_de_kater@gmx.ch" class="email">c_de_kater@gmx.ch</a>
 </div>
 </address>
 <address class="vcard">

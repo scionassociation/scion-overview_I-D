@@ -5,9 +5,9 @@
 PANRG                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                         SCION Association
-Expires: 4 May 2024                                            A. Perrig
+Expires: 8 November 2024                                       A. Perrig
                                                              ETH Zuerich
-                                                         1 November 2023
+                                                              7 May 2024
 
 
                              SCION Overview
@@ -72,11 +72,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 May 2024.
+   This Internet-Draft will expire on 8 November 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -88,16 +88,17 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction
-     1.1.  Why SCION - Motivation
-       1.1.1.  Scope of SCION
-       1.1.2.  Practical Considerations Based on Related RFCs
-       1.1.3.  Why Now?
-     1.2.  SCION Overview
-       1.2.1.  Network Architecture and Naming
-       1.2.2.  Routing
-       1.2.3.  Link Failures
-       1.2.4.  Formal Verification
-     1.3.  Conventions and Definitions
+     1.1.  Terminology
+     1.2.  Why SCION - Motivation
+       1.2.1.  Scope of SCION
+       1.2.2.  Practical Considerations Based on Related RFCs
+       1.2.3.  Why Now?
+     1.3.  SCION Overview
+       1.3.1.  Network Architecture and Naming
+       1.3.2.  Routing
+       1.3.3.  Link Failures
+       1.3.4.  Formal Verification
+     1.4.  Conventions and Definitions
    2.  Key Concepts
      2.1.  The Control-Plane PKI
        2.1.1.   Control-Plane PKI - Overview
@@ -137,7 +138,14 @@ Table of Contents
    some concrete case studies where SCION has been successfully deployed
    in production.
 
-1.1.  Why SCION - Motivation
+1.1.  Terminology
+
+   *MAC*: Message Authentication Code.  In the rest of this document,
+   "MAC" always refers to "Message Authentication Code" and never to
+   "Medium Access Control".  When "Medium Access Control address" is
+   implied, the phrase "Link Layer Address" is used.
+
+1.2.  Why SCION - Motivation
 
    Since its inception, the Internet has continued to expand,
    encompassing new uses over time.  The continuous expansion has
@@ -189,7 +197,7 @@ Table of Contents
       reality, Internet of Things (IoT), and all other applications
       requiring high-performance connectivity.
 
-1.1.1.  Scope of SCION
+1.2.1.  Scope of SCION
 
    The above section describes SCION's aspiration to improve _inter_-AS
    routing and to focus on providing end-to-end connectivity.  However,
@@ -198,7 +206,7 @@ Table of Contents
    topics, which are equally important for the Internet to perform well,
    lie outside the scope of SCION.
 
-1.1.2.  Practical Considerations Based on Related RFCs
+1.2.2.  Practical Considerations Based on Related RFCs
 
    The SCION inter-domain routing concept has initially been developed
    by researchers of the ETH Zuerich [PERRIG2017], and could in the
@@ -210,7 +218,7 @@ Table of Contents
    also verifies in how far SCION meets the requirements mentioned and
    questions raised in these RFCs.
 
-1.1.2.1.  Avoiding Pitfalls
+1.2.2.1.  Avoiding Pitfalls
 
    [RFC9049] describes why previous proposals to tackle some of the
    Internet's fundamental issues did not manage to succeed.  SCION seems
@@ -240,7 +248,7 @@ Table of Contents
    As existing SCION implementations are easily portable, adoption in
    mainstream platforms is also possible.
 
-1.1.2.2.  Answering Questions
+1.2.2.2.  Answering Questions
 
    SCION can be considered a _path-aware internetworking_ architecture,
    as described in [RFC9217].  This RFC poses (open) questions that must
@@ -272,22 +280,22 @@ Table of Contents
    SCION's answers to these questions can be found in Key Concepts
    (Section 2) and Deployments (Section 3.4), respectively.
 
-1.1.3.  Why Now?
+1.2.3.  Why Now?
 
    The emergence of multiple SCION implementations and early deployments
    highlights the need for standardization.  The time seems therefore
    ripe to take SCION to the IETF, also in order to contribute to the
    important discussion regarding path-aware networking.
 
-1.2.  SCION Overview
+1.3.  SCION Overview
 
    SCION has been designed to address the fundamental issues of today's
-   Internet depicted in Why SCION - Motivation (Section 1.1).  The
+   Internet depicted in Why SCION - Motivation (Section 1.2).  The
    following section gives a high-level overview of SCION's main
    elements, providing a basic understanding of this next-generation
    inter-network architecture.
 
-1.2.1.  Network Architecture and Naming
+1.3.1.  Network Architecture and Naming
 
    SCION's main goal is to offer highly available and efficient inter-
    domain packet delivery—even in the presence of actively malicious
@@ -319,7 +327,7 @@ Table of Contents
    of the Internet infrastructure only, and enable scalable routing
    updates with high path-freshness.
 
-1.2.1.1.  Links
+1.3.1.1.  Links
 
    Within and between ISDs, SCION supports three types of links: (1)
    core links, (2) parent-child links, and (3) peering links.
@@ -380,7 +388,7 @@ Table of Contents
 
                    Figure 1: SCION network structure
 
-1.2.2.  Routing
+1.3.2.  Routing
 
    SCION provides path-aware inter-domain routing between ASes across
    the Internet.  The SCION control plane is responsible for discovering
@@ -447,7 +455,7 @@ Table of Contents
         Figure 2: SCION routing processes and their relation to each
                 other.  All processes operate concurrently.
 
-1.2.2.1.  Path Segments
+1.3.2.1.  Path Segments
 
    As described previously, the main goal of SCION's control plane is to
    create and manage path segments, which can then be combined into
@@ -474,23 +482,23 @@ Table of Contents
    path.  This means that all path segments can be used to send data
    traffic in both directions.
 
-1.2.2.2.  ISD and AS numbering
+1.3.2.2.  ISD and AS numbering
 
    The inter-domain SCION routing is based on the <ISD, AS> tuple.
    Although a complete SCION address is composed of the <ISD, AS,
    endpoint address> 3-tuple, the endpoint address is not used for
    inter-domain routing or forwarding.  The endpoint address can be of
    variable length, does not need to be globally unique, and can thus be
-   an IPv4, IPv6, or MAC address, for example - in fact, the endpoint
-   address is the "normal", currently used, non-SCION-specific endpoint
-   address.
+   an IPv4, IPv6, or link layer address, for example - in fact, the
+   endpoint address is the "normal", currently used, non-SCION-specific
+   endpoint address.
 
    *Note*: As a consequence of the fact that SCION relies on existing
    routing protocols (e.g., IS-IS, OSPF, SR) and communication fabric
    (e.g., IP, MPLS) for intra-domain forwarding, existing internal
    routers do not need to be changed to support SCION.
 
-1.2.2.3.  Control Service
+1.3.2.3.  Control Service
 
    The *control service* is responsible for the path exploration and
    registration processes in the control plane.  It is the main control-
@@ -520,7 +528,7 @@ Table of Contents
    belongs to the data plane; its main task is to _forward data
    packets_. Border routers are deployed at the edge of an AS.
 
-1.2.3.  Link Failures
+1.3.3.  Link Failures
 
    Unlike in the current Internet, link failures are not automatically
    resolved by the network, but require active handling by endpoints.
@@ -546,7 +554,7 @@ Table of Contents
       brief) outages in the current Internet.  See also [ANDERSEN2001],
       [KATZ2012], [KUSHMAN2007], and [HITZ2021].
 
-1.2.4.  Formal Verification
+1.3.4.  Formal Verification
 
    An additional feature of SCION is its formal verification.  The SCION
    network system consists of a variety of components such as routers,
@@ -558,7 +566,7 @@ Table of Contents
    as SCION's authentication mechanisms and implementations are correct
    and consistent.
 
-1.3.  Conventions and Definitions
+1.4.  Conventions and Definitions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -1341,22 +1349,20 @@ Table of Contents
 3.1.  Autonomous System Deployment
 
    A SCION AS needs to deploy the SCION infrastructure components
-   (Section 1.2.2.3) and border routers.  Within an AS, SCION is often
-   deployed as an IP overlay on top of the existing network.  This way
-   SCION allows to reuse the existing intra-domain network and equipment
-   (e.g., IP, MPLS).  Customer-side SCION border routers directly
-   connect to the provider-side border routers using last-mile
-   connections.  The SCION design assumes that AS’s internal entities
-   are considered to be trustworthy, therefore the IP overlay or the
-   first-hop routing does not compromise or degrade any security
-   properties SCION delivers.  When it comes to inter-domain
-   communication, an overlay deployment on top of today’s Internet is
-   not desirable, as SCION would inherit issues from its weak underlay.
-   Thus, inter-AS SCION links are usually deployed in parallel to
-   existing links, in order to preserve its security properties.  That
-   is, two SCION border routers from neighbour ASes are directly
-   connected via a layer-2 cross-connection at a common point-of-
-   presence.
+   (Section 1.3.2.3) and border routers.  Within an AS, SCION runs over
+   the existing network so makes use of existing intra-domain network
+   and equipment (e.g.  IP, MPLS).  Customer-side SCION border routers
+   directly connect to the provider-side border routers using last-mile
+   connections.  The SCION design assumes that the internal entities of
+   an AS are considered to be trustworthy, so will not compromise or
+   degrade any security properties SCION delivers.  When it comes to
+   inter-domain communication, an overlay deployment on top of today’s
+   Internet is not desirable as SCION would inherit issues from its weak
+   underlay.  Thus, inter-AS SCION links are usually deployed in
+   parallel to existing links, in order to preserve its security
+   properties.  That is, two SCION border routers from neighbour ASes
+   are directly connected via a layer-2 cross-connection at a common
+   point-of-presence.
 
    All SCION AS components can be deployed on standard x86 commercial
    off-the-shelf servers or virtual machines.  In fact, SCION border
@@ -1473,22 +1479,23 @@ Table of Contents
 
 4.  IANA Considerations
 
-   Currently, this document has no request for action to IANA.  However,
-   when full specification of SCION is available, requests for IANA
-   actions are expected regarding the registration of optional packet
-   header fields as well as the coordination of SCION ISD and AS number
-   assignments.
+   This document has no IANA actions.
+
+   The ISD and SCION AS number are SCION-specific numbers.  They are
+   currently allocated by Anapaya Systems, a provider of SCION-based
+   networking software and solutions (see Anapaya ISD AS assignments
+   https://docs.anapaya.net/en/latest/resources/isd-as-assignments/).
+   This task is currently being transitioned from Anapaya to the SCION
+   Association.
 
 5.  Security Considerations
 
-   SCION has been designed from the outset to offer security by default,
-   and thus there are manifold security considerations.  As a matter of
-   fact, SCION's protocol design has been formally verified and the open
-   source router implementation is undergoing formal verification (see
-   also [KLENZE2021]).  Describing all security considerations here,
-   therefore, would go beyond the scope of this document.  A separate
-   document including all security implications and considerations will
-   follow later.
+   The goal of SCION is to provide a secure inter-domain network
+   architecture by default.  This document provides an overview of core
+   components, but the security implications and considerations are
+   discussed in the Internet Drafts relating to each specific component
+   (see [I-D.dekater-scion-pki], [I-D.dekater-scion-controlplane], and
+   [I-D.dekater-scion-dataplane]).
 
 6.  References
 
@@ -1716,10 +1723,10 @@ Table of Contents
 
 Acknowledgments
 
-   Many thanks go to Cyrill Krähenbühl and Juan A.  Garcia-Pardo for
-   reviewing this document.  We are also indebted to Laurent Chuat,
-   Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter
-   Müller, for writing the book "The Complete Guide to SCION" (see
+   Many thanks go to Cyrill Krähenbühl, Juan A.  Garcia-Pardo, and Kevin
+   Meynell for reviewing this document.  We are also indebted to Laurent
+   Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and
+   Peter Müller, for writing the book "The Complete Guide to SCION" (see
    [CHUAT22]), which provides the background information needed to write
    this informational draft.
 
@@ -1727,7 +1734,7 @@ Authors' Addresses
 
    Corine de Kater
    SCION Association
-   Email: cdk@scion.org
+   Email: c_de_kater@gmx.ch
 
 
    Nicola Rustignoli
