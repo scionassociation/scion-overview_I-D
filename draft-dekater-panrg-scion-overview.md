@@ -5,6 +5,7 @@ category: info
 submissiontype: IRTF
 
 docname: draft-dekater-panrg-scion-overview-latest
+
 v: 3
 area: IRTF
 workgroup: PANRG
@@ -21,7 +22,7 @@ author:
  -   ins: C. de Kater
      name: Corine de Kater
      org: SCION Association
-     email: cdk@scion.org
+     email: c_de_kater@gmx.ch
 
  -   ins: N. Rustignoli
      name: Nicola Rustignoli
@@ -247,6 +248,10 @@ For detailed descriptions of SCION's components, refer to {{I-D.dekater-scion-pk
 
 The Introduction section explores the motivation to develop SCION, followed by a short description of SCION's main elements. The sections after the Introduction provide further insight into SCION's key concepts and deployment scenarios. The document concludes with some concrete case studies where SCION has been successfully deployed in production.
 
+## Terminology {#terms}
+
+**MAC**: Message Authentication Code. In the rest of this document, "MAC" always refers to "Message Authentication Code" and never to "Medium Access Control". When "Medium Access Control address" is implied, the phrase "Link Layer Address" is used.
+
 ## Why SCION - Motivation {#why}
 
 Since its inception, the Internet has continued to expand, encompassing new uses over time. The continuous expansion has brought many issues to light, including a lack of control, limitations in scalability, performance and security, occurrences of severe outages, weak fault isolation, and energy consumption. With the core focus on functionality and operation, the current Internet offers little protection against attacks such as spoofing, IP-address hijacking, denial-of-service, and combinations of these. For more background information, see {{SCHUCHARD2011}}, {{LABOVITZ2000}}, {{GRIFFIN1999}}, {{SAHOO2009}}, and {{RFC4264}}.
@@ -416,7 +421,7 @@ All path segments are invertible: A core-segment can be used bidirectionally, an
 
 #### ISD and AS numbering
 
-The inter-domain SCION routing is based on the <ISD, AS> tuple. Although a complete SCION address is composed of the <ISD, AS, endpoint address> 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. The endpoint address can be of variable length, does not need to be globally unique, and can thus be an IPv4, IPv6, or MAC address, for example - in fact, the endpoint address is the "normal", currently used, non-SCION-specific endpoint address.
+The inter-domain SCION routing is based on the <ISD, AS> tuple. Although a complete SCION address is composed of the <ISD, AS, endpoint address> 3-tuple, the endpoint address is not used for inter-domain routing or forwarding. The endpoint address can be of variable length, does not need to be globally unique, and can thus be an IPv4, IPv6, or link layer address, for example - in fact, the endpoint address is the "normal", currently used, non-SCION-specific endpoint address.
 
 **Note**: As a consequence of the fact that SCION relies on existing routing protocols (e.g., IS-IS, OSPF, SR) and communication fabric (e.g., IP, MPLS) for intra-domain forwarding, existing internal routers do not need to be changed to support SCION.
 
@@ -858,12 +863,11 @@ We then describe some of the early adopters deployment experiences. A more detai
 ## Autonomous System Deployment {#deployment-as}
 
 A SCION AS needs to deploy the SCION [infrastructure components](#infra-components) and border routers.
-Within an AS, SCION is often deployed as an IP overlay on top of the existing network. This way SCION allows to reuse the existing intra-domain network and equipment (e.g., IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that AS’s internal entities are considered to be trustworthy, therefore the IP overlay or the first-hop routing does not compromise or degrade any security properties SCION delivers.
-When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable, as SCION would inherit issues from  its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.
+Within an AS, SCION runs over the existing network so makes use of existing intra-domain network and equipment (e.g. IP, MPLS). Customer-side SCION border routers directly connect to the provider-side border routers using last-mile connections. The SCION design assumes that the internal entities of an AS are considered to be trustworthy, so will not compromise or degrade any security properties SCION delivers. When it comes to inter-domain communication, an overlay deployment on top of today’s Internet is not desirable as SCION would inherit issues from its weak underlay. Thus, inter-AS SCION links are usually deployed in parallel to existing links, in order to preserve its security properties. That is, two SCION border routers from neighbour ASes are directly connected via a layer-2 cross-connection at a common point-of-presence.
 
- All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
+All SCION AS components can be deployed on standard x86 commercial off-the-shelf servers or virtual machines. In fact, SCION border routers do not rely on forwarding tables, therefore they do not require specialized hardware. Practice shows that off-the-shelf hardware can handle up to 100 Gbps links, while a prototype [P4 implementation](#DERUITER2021) showed that it is possible to forward SCION traffic even at terabit speeds.
 
- Overall, an AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs.
+Overall, an AS can be connected to SCION without high-impact changes to its network. In addition, use of commodity hardware for both control and data-plane components reduces initial deployment costs.
 
 
 ## Internet Exchange Points {#deployment-ixp}
@@ -901,17 +905,18 @@ In addition to productive deployments, SCION also comprises a global SCION resea
 
 # IANA Considerations
 
-Currently, this document has no request for action to IANA.
-However, when full specification of SCION is available, requests for IANA actions are expected regarding the registration of optional packet header fields as well as the coordination of SCION ISD and AS number assignments.
+This document has no IANA actions.
 
+The ISD and SCION AS number are SCION-specific numbers. They are currently allocated by Anapaya Systems, a provider of SCION-based networking software and solutions (see Anapaya ISD AS assignments https://docs.anapaya.net/en/latest/resources/isd-as-assignments/). This task is currently being transitioned from Anapaya to the SCION Association.
 
 # Security Considerations
 
-SCION has been designed from the outset to offer security by default, and thus there are manifold security considerations. As a matter of fact, SCION's protocol design has been formally verified and the open source router implementation is undergoing formal verification (see also {{KLENZE2021}}). Describing all security considerations here, therefore, would go beyond the scope of this document. A separate document including all security implications and considerations will follow later.
+The goal of SCION is to provide a secure inter-domain network architecture by default. This document provides an overview of core components, but the security implications and considerations are discussed in the Internet Drafts relating to each specific component (see {{I-D.dekater-scion-pki}}, {{I-D.dekater-scion-controlplane}}, and {{I-D.dekater-scion-dataplane}}).
+
 
 --- back
 
 # Acknowledgments
 {:numbered="false"}
 
-Many thanks go to Cyrill Krähenbühl and Juan A. Garcia-Pardo for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" (see {{CHUAT22}}), which provides the background information needed to write this informational draft.
+Many thanks go to Cyrill Krähenbühl, Juan A. Garcia-Pardo, and Kevin Meynell for reviewing this document. We are also indebted to Laurent Chuat, Markus Legner, David Basin, David Hausheer, Samuel Hitz, and Peter Müller, for writing the book "The Complete Guide to SCION" (see {{CHUAT22}}), which provides the background information needed to write this informational draft.
