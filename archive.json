@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-21T00:10:26.948142+00:00",
+  "timestamp": "2024-07-23T00:09:16.963248+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -191,9 +191,17 @@
       "labels": [],
       "body": "There is too much content on the components. Now that we have specification drafts, the overview should be heavily trimmed and references updated.",
       "createdAt": "2023-08-11T20:00:51Z",
-      "updatedAt": "2023-08-11T20:00:51Z",
+      "updatedAt": "2024-07-21T13:16:24Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "nicorusti",
+          "authorAssociation": "MEMBER",
+          "body": "This is still a pending issue..  One of the reviewers (Harald) was a bit thrown off by this. Maybe we can add a disclaimer at the beginning of the draft?",
+          "createdAt": "2024-07-21T13:16:23Z",
+          "updatedAt": "2024-07-21T13:16:23Z"
+        }
+      ]
     },
     {
       "number": 36,
