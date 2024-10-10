@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-10-08T00:10:16.346194+00:00",
+  "timestamp": "2024-10-10T00:10:13.428095+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -189,9 +189,9 @@
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
-      "body": "There is too much content on the components. Now that we have specification drafts, the overview should be heavily trimmed and references updated.",
+      "body": "There is too much content on the components. Now that we have specification drafts, the overview should be heavily trimmed and references updated. We must make it clear that readers should NOT read this draft, but the ISE ones. \r\n\r\nAlso: \r\n- [ ] Remove claim in -overview draft that IPv4 hosts can talk to IPv6 hosts (throws people off)\r\n- [ ] Add note in the overview draft that this draft is NOT updated - look at ISE drafts (from https://github.com/scionassociation/scion-dp_I-D/issues/43 ) \r\n\r\nDo this only if we ever update the draft again ",
       "createdAt": "2023-08-11T20:00:51Z",
-      "updatedAt": "2024-07-21T13:16:24Z",
+      "updatedAt": "2024-10-08T09:20:37Z",
       "closedAt": null,
       "comments": [
         {
