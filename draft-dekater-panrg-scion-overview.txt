@@ -5,9 +5,9 @@
 PANRG                                                        C. de Kater
 Internet-Draft                                             N. Rustignoli
 Intended status: Informational                         SCION Association
-Expires: 12 January 2025                                       A. Perrig
+Expires: 8 August 2025                                         A. Perrig
                                                              ETH Zuerich
-                                                            11 July 2024
+                                                         4 February 2025
 
 
                              SCION Overview
@@ -72,11 +72,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 January 2025.
+   This Internet-Draft will expire on 8 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1351,7 +1351,7 @@ Table of Contents
    A SCION AS needs to deploy the SCION infrastructure components
    (Section 1.3.2.3) and border routers.  Within an AS, SCION runs over
    the existing network so makes use of existing intra-domain network
-   and equipment (e.g.  IP, MPLS).  Customer-side SCION border routers
+   and equipment (e.g. IP, MPLS).  Customer-side SCION border routers
    directly connect to the provider-side border routers using last-mile
    connections.  The SCION design assumes that the internal entities of
    an AS are considered to be trustworthy, so will not compromise or
@@ -1521,8 +1521,8 @@ Table of Contents
    [ANDERSEN2001]
               Andersen, D., Balakrishnan, H., Kaashoek, F., and R.
               Morris, "Resilient overlay networks", ACM, Proceedings of
-              the eighteenth ACM symposium on Operating
-              systems principles, DOI 10.1145/502034.502048, October
+              the eighteenth ACM symposium on Operating systems
+              principles pp. 131-145, DOI 10.1145/502034.502048, October
               2001, <https://doi.org/10.1145/502034.502048>.
 
    [CHUAT22]  Chuat, L., Legner, M., Basin, D., Hausheer, D., Hitz, S.,
@@ -1534,8 +1534,8 @@ Table of Contents
               Cooper, D., Heilman, E., Brogle, K., Reyzin, L., and S.
               Goldberg, "On the risk of misbehaving RPKI authorities",
               ACM, Proceedings of the Twelfth ACM Workshop on Hot Topics
-              in Networks, DOI 10.1145/2535771.2535787, November 2013,
-              <https://doi.org/10.1145/2535771.2535787>.
+              in Networks pp. 1-7, DOI 10.1145/2535771.2535787, November
+              2013, <https://doi.org/10.1145/2535771.2535787>.
 
    [DERUITER2021]
               de Ruiter, J. and C. Schutijser, "Next-generation internet
@@ -1593,9 +1593,9 @@ Table of Contents
    [KLENZE2021]
               Klenze, T., Sprenger, C., and D. Basin, "Formal
               Verification of Secure Forwarding Protocols", IEEE, 2021
-              IEEE 34th Computer Security Foundations Symposium (CSF),
-              DOI 10.1109/csf51468.2021.00018, June 2021,
-              <https://doi.org/10.1109/csf51468.2021.00018>.
+              IEEE 34th Computer Security Foundations Symposium
+              (CSF) pp. 1-16, DOI 10.1109/csf51468.2021.00018, June
+              2021, <https://doi.org/10.1109/csf51468.2021.00018>.
 
    [KUSHMAN2007]
               Kushman, N., Kandula, S., and D. Katabi, "Can you hear me
@@ -1700,7 +1700,7 @@ Table of Contents
    [ROTHENBERGER2017]
               Rothenberger, B., Asoni, D., Barrera, D., and A. Perrig,
               "Internet Kill Switches Demystified", ACM, Proceedings of
-              the 10th European Workshop on Systems Security,
+              the 10th European Workshop on Systems Security pp. 1-6,
               DOI 10.1145/3065913.3065922, April 2017,
               <https://doi.org/10.1145/3065913.3065922>.
 
@@ -1717,7 +1717,7 @@ Table of Contents
               Kim, Y., and E. Vasserman, "Losing control of the
               internet: using the data plane to attack the control
               plane", ACM, Proceedings of the 17th ACM conference on
-              Computer and communications security,
+              Computer and communications security pp. 726-728,
               DOI 10.1145/1866307.1866411, October 2010,
               <https://doi.org/10.1145/1866307.1866411>.
 
