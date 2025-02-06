@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-30T00:10:13.886721+00:00",
+  "timestamp": "2025-02-06T00:10:22.344951+00:00",
   "repo": "scionassociation/scion-overview_I-D",
   "labels": [
     {
@@ -1417,6 +1417,34 @@
       "mergedBy": "nicorusti",
       "mergeCommit": {
         "oid": "0f3ea9f3c2636b667541fd8180e2359830b30f8a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 41,
+      "id": "PR_kwDOHF5N3M6J9J5K",
+      "title": "Update actions",
+      "url": "https://github.com/scionassociation/scion-overview_I-D/pull/41",
+      "state": "MERGED",
+      "author": "nicorusti",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "\n\n<!-- Reviewable:start -->\nThis change is\u2002[<img src=\"https://reviewable.io/review_button.svg\" height=\"34\" align=\"absmiddle\" alt=\"Reviewable\"/>](https://reviewable.io/reviews/scionassociation/scion-overview_I-D/41)\n<!-- Reviewable:end -->\n",
+      "createdAt": "2025-02-04T08:40:47Z",
+      "updatedAt": "2025-02-04T08:40:57Z",
+      "baseRepository": "scionassociation/scion-overview_I-D",
+      "baseRefName": "main",
+      "baseRefOid": "0f3ea9f3c2636b667541fd8180e2359830b30f8a",
+      "headRepository": "scionassociation/scion-overview_I-D",
+      "headRefName": "update-actions",
+      "headRefOid": "1f235cc58a2389a5a4641abd7aba7f50875eda2c",
+      "closedAt": "2025-02-04T08:40:54Z",
+      "mergedAt": "2025-02-04T08:40:54Z",
+      "mergedBy": "nicorusti",
+      "mergeCommit": {
+        "oid": "d0fe40e09764a5889c172738e1723d4354003503"
       },
       "comments": [],
       "reviews": []
